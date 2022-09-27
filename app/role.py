@@ -4,18 +4,22 @@ from flask import jsonify
 
 db = SQLAlchemy(app)
 
-class Role(db.Model):
-    __tablename__ = 'Role'
-    Role_ID = db.Column(db.Integer, primary_key=True)
-    Role_Name = db.Column(db.String)
+class Job_Role(db.Model):
+    __tablename__ = 'Job_Role'
+    Job_ID = db.Column(db.Integer, primary_key=True)
+    Job_Role = db.Column(db.String)
+    Job_Title = db.Column(db.String)
+
     def __init__(self, name):
         self.name = name
    
 
     def json(self):
         return {
-            "role_id": self.role_id,
-            "name": self.name
+            "Job_ID": self.Job_ID,
+            "Job_Role": self.Job_Role,
+            "Job_Title":self.Job_Title,
+
         }
 
 
@@ -25,18 +29,20 @@ def testRole():
 
 @app.route("/role")
 def getRole():
-    roleList = Role.query.all()
+    roleList = Job_Role.query.all()
     if len(roleList):
         return jsonify(
            {
                "code": 200,
+               "error": False,
                "data": [role.json() for role in roleList]
            }
        )
     return jsonify(
         {
             "code": 200,
-            "message": "There are no roles."
+            "error": False,
+            "data": "There are no roles."
         }
     ), 200
 
