@@ -60,7 +60,7 @@ def getRole():
         {
             "code": 200,
             "error": False,
-            "data": "There are no roles."
+            "data": []
         }
     ), 200
 

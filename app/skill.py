@@ -30,13 +30,16 @@ def getSkill():
         return jsonify(
            {
                "code": 200,
-               "data": [skill.json() for skill in skillList]
+               "data": [skill.json() for skill in skillList],
+               "error" : False
            }
        )
     return jsonify(
         {
             "code": 200,
-            "message": "There are no skills."
+            "data": [],
+            "message": "There are no skills.",
+            "error" : False
         }
     ), 200
 
