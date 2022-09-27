@@ -22,8 +22,11 @@ class Job_Role(db.Model):
     Job_Title = db.Column(db.String)
     Skills = db.relationship('Skill', secondary=Role_has_Skill)
 
-    def __init__(self, name):
-        self.name = name
+    def __init__(self,Job_ID,Job_Role,Job_Title,Skills):
+        self.Job_ID = Job_ID
+        self.Job_Role = Job_Role
+        self.Job_Title = Job_Title
+        self.Skills = Skills
    
 
     def json(self):
