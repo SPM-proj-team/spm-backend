@@ -31,10 +31,11 @@ def get_all():
         return jsonify(
             {
                 "code": 200,
-                "data": {
-                    "allSkills": [skill.json() for skill in allSkills] 
+                "data": 
+                    [skill.json() for skill in allSkills],
                     # a list of objects (avail) is returned
-                }
+                "error": False
+                
             }
         )
     return jsonify(

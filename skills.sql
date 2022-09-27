@@ -20,23 +20,23 @@ SET time_zone = "+00:00";
 --
 -- Database: `availability`
 --
-CREATE DATABASE IF NOT EXISTS `skills` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `skills`;
+CREATE SCHEMA IF NOT EXISTS `spm_db` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `spm_db`;
 
 -- --------------------------------------------------------
 --
 -- Table structure for table `availability`
 --
 
-DROP TABLE IF EXISTS `skills`;
-CREATE TABLE IF NOT EXISTS `skills` (
-  `skillID` char(13) NOT NULL,
-  `skillName` varchar(64) NOT NULL,
-  PRIMARY KEY (`skillID`)
+DROP TABLE IF EXISTS `skill`;
+CREATE TABLE IF NOT EXISTS `skill` (
+  `Skill_ID` char(13) NOT NULL,
+  `name` varchar(64) NOT NULL,
+  PRIMARY KEY (`Skill_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-INSERT INTO `skills` (`skillID`, `skillName`) VALUES
+INSERT INTO `skill` (`Skill_ID`, `name`) VALUES
 ('S001', 'Critical Thinking'),
 ('S002', 'People Management');
 COMMIT;
