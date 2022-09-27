@@ -1,8 +1,7 @@
-from app import app
+from app import app, db
 from flask_sqlalchemy import SQLAlchemy
 from flask import jsonify
 
-db = SQLAlchemy(app)
 # 
 # Courses Class 
 # 

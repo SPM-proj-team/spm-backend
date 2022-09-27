@@ -55,7 +55,8 @@ CREATE TABLE IF NOT EXISTS `Learning_Journey` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `Learning_Journey` (`Learning_Journey_Name`, `Staff_ID`, `Description`) VALUES
-('Learning Journey for Full Stack Developer Role', 1, 'lorem ipsum');
+('Learning Journey for Full Stack Developer Role', 1, 'lorem ipsum'),
+('Learning Journey for Dummies', 1, 'lorem ipsum for dummies');
 COMMIT;
 
 --
@@ -107,7 +108,9 @@ CREATE TABLE IF NOT EXISTS `Learning_Journey_has_Course` (
 INSERT INTO `Learning_Journey_has_Course` (`Course_ID`, `Learning_Journey_ID`) VALUES
 ('IS412', 1),
 ('IS212', 1),
-('IS211', 1);
+('IS211', 1),
+('MGMT001', 2),
+('COR1305', 2);
 COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
