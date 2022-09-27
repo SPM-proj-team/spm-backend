@@ -21,13 +21,15 @@ class Job_Role(db.Model):
             "Job_Title":self.Job_Title,
 
         }
+        
+# Association Table
 
 
 @app.route("/role/test")
 def testRole():
     return "role route is working"
 
-@app.route("/role")
+@app.route("/roles")
 def getRole():
     roleList = Job_Role.query.all()
     if len(roleList):
