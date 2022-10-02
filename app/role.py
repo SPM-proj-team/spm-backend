@@ -20,12 +20,14 @@ class Job_Role(db.Model):
     Job_ID = db.Column(db.Integer, primary_key=True)
     Job_Role = db.Column(db.String)
     Job_Title = db.Column(db.String)
+    Department = db.Column(db.String)
     Skills = db.relationship('Skill', secondary=Role_has_Skill)
 
-    def __init__(self,Job_ID,Job_Role,Job_Title,Skills):
+    def __init__(self,Job_ID,Job_Role,Job_Title, Department, Skills):
         self.Job_ID = Job_ID
         self.Job_Role = Job_Role
         self.Job_Title = Job_Title
+        self.Department = Department
         self.Skills = Skills
    
 
@@ -35,6 +37,7 @@ class Job_Role(db.Model):
             "Job_ID": self.Job_ID,
             "Job_Role": self.Job_Role,
             "Job_Title":self.Job_Title,
+            "Department":self.Department,
             "Skills": [skill.json() for skill in self.Skills]
         }
         
