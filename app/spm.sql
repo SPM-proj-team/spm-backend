@@ -115,3 +115,94 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+
+CREATE SCHEMA IF NOT EXISTS spm_db DEFAULT CHARACTER SET utf8 ;
+use spm_db;
+-- Job_role Table 
+DROP TABLE IF EXISTS `Course`;
+CREATE TABLE Course (
+    Course_ID varchar(20) NOT NULL,
+    Course_Name varchar(45) NOT NULL,
+    Course_Desc varchar(255) NOT NULL,
+    Course_Type varchar(10) NOT NUll,
+    Course_Status varchar(15) NOT NUll,
+    Course_Category varchar(50) NOT NUll,
+    PRIMARY KEY (Course_ID)
+);
+-- population of data
+insert into Course values 
+("IS212",
+"Software Project Management",
+"Equipment student with knowledge about agile approach regarding software project development ",
+"Type_1",
+"Open",
+"Course_Category_1")
+,
+("BAP101",
+"Enterprise Business System",
+"Enterprise Business System Description",
+"Type_1",
+"Open",
+"Course_Category_1"),
+("BAP102",
+"Sales Management System",
+"Sales Management System Description ",
+"Type_1",
+"Open",
+"Course_Category_1"),
+("BAP103",
+"Busioness Process and Modeling",
+"Busioness Process and Modeling Description",
+"Type_1",
+"Open",
+"Course_Category_1");
+
+DROP TABLE IF EXISTS `skill`;
+CREATE TABLE IF NOT EXISTS `skill` (
+  `Skill_ID` VARCHAR(13) NOT NULL,
+  `name` varchar(64) NOT NULL,
+  PRIMARY KEY (`Skill_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `skill` (`Skill_ID`, `name`) VALUES
+('S001', 'Critical Thinking'),
+('S002', 'People Management'),
+("S003", 'Business Application');
+
+
+DROP TABLE IF EXISTS `Course_has_Skill`;
+CREATE TABLE Course_has_Skill (
+    Skill_ID VARCHAR(13) NOT NULL,
+    Course_ID varchar(20) NOT NULL,
+    CONSTRAINT Course_ID FOREIGN KEY (Course_ID)
+    REFERENCES Course(Course_ID),
+    CONSTRAINT Skill_ID FOREIGN KEY (Skill_ID)
+    REFERENCES skill(Skill_ID)
+);
+
+INSERT INTO `Course_has_Skill` VALUES
+('S001',"IS212"),
+('S002',"IS212"),
+('S001','BAP101'),
+('S002','BAP101'),
+('S003','BAP101'),
+('S003','BAP102'),
+('S003','BAP103');
+DROP TABLE IF EXISTS `Role_has_Skill`;
+CREATE TABLE Role_has_Skill (
+    Job_ID int NOT NULL,
+    Skill_ID char(13) NOT NULL,
+    CONSTRAINT Job_ID FOREIGN KEY (Job_ID)
+    REFERENCES Job_Role(Job_ID),
+    CONSTRAINT Skill_ID FOREIGN KEY (Skill_ID)
+    REFERENCES skill(Skill_ID)
+);
+
+INSERT INTO `Role_has_Skill` VALUES
+(1,'S001'),
+(1,'S002'),
+(2,'S002'),
+(2,'S001')
+
+
