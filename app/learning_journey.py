@@ -4,7 +4,7 @@ from flask import jsonify, request
 
 # Learning Journey Association Table
 Learning_Journey_has_Course = db.Table('Learning_Journey_has_Course',
-                                db.Column('Course_ID', db.String, db.ForeignKey('Courses.Course_ID')),
+                                db.Column('Course_ID', db.String, db.ForeignKey('Course.Course_ID')),
                                 db.Column('Learning_Journey_ID', db.Integer, db.ForeignKey('Learning_Journey.Learning_Journey_ID'))
                                 )
 # 
@@ -16,7 +16,7 @@ class LearningJourney(db.Model):
     Learning_Journey_Name = db.Column(db.String)
     Staff_ID = db.Column(db.Integer)
     Description = db.Column(db.String)
-    Courses = db.relationship('Courses', secondary= Learning_Journey_has_Course)
+    Courses = db.relationship('Course', secondary= Learning_Journey_has_Course)
 
     def __init__(self, Learning_Journey_Name, Staff_ID, Description):
         self.Learning_Journey_Name = Learning_Journey_Name
