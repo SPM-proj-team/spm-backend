@@ -164,7 +164,7 @@ CREATE TABLE Role_has_Skill (
     Skill_ID char(13) NOT NULL,
     CONSTRAINT Job_ID FOREIGN KEY (Job_ID)
     REFERENCES Job_Role(Job_ID),
-    CONSTRAINT Skill_ID FOREIGN KEY (Skill_ID)
+    CONSTRAINT Role_Job_Skill_ID FOREIGN KEY (Skill_ID)
     REFERENCES skill(Skill_ID)
 );
 

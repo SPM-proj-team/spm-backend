@@ -38,7 +38,7 @@ class Job_Role(db.Model):
             "Job_Role": self.Job_Role,
             "Job_Title":self.Job_Title,
             "Department":self.Department,
-            "Skills": [skill.json() for skill in self.Skills]
+            "Skills": [skill.jsonWithCourse() for skill in self.Skills]
         }
         
 
@@ -66,4 +66,6 @@ def getRole():
             "data": []
         }
     ), 200
+
+
 
