@@ -8,11 +8,6 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      DB_NAME: test_spm_db # ${{ secrets.DB_NAME }}
-      DB_USERNAME: root # ${{ secrets.DB_USERNAME }}
-      DB_PASSWORD: password # ${{ secrets.DB_PASSWORD }}
-      DB_HOSTNAME: '127.0.0.1' # ${{ secrets.DB_HOSTNAME }}
     services:
       mysql:
         image: mysql:8.0
@@ -37,22 +32,17 @@ jobs:
     - name: Create env file
       run: |
         touch .env
-        echo DB_HOSTNAME=${{ env.DB_HOSTNAME }} >> .env
+        echo DB_HOSTNAME=${{ secrets.DB_HOSTNAME }} >> .env
         echo DB_PORT=8888 >> .env
-        echo DB_USERNAME=${{ env.DB_USERNAME }} >> .env
-        echo DB_PASSWORD=${{ env.DB_PASSWORD }} >> .env
-        echo DB_NAME=${{ env.DB_NAME }} >> .env
-        cat .env
-        echo "test"
-        echo ${{ secrets.DB_NAME }}
+        echo DB_USERNAME=${{ secrets.DB_USERNAME }} >> .env
+        echo DB_PASSWORD=${{ secrets.DB_PASSWORD }} >> .env
+        echo DB_NAME=${{ secrets.DB_NAME }} >> .env
 
     - name: Setup MySQL database
       run: |
-        # sudo systemctl enable mysql.service
-        # sudo systemctl start mysql.service
-        mysql -h ${{ env.DB_HOSTNAME }} --port 8888 -e "DROP SCHEMA IF EXISTS ${{ env.DB_NAME }};" -u${{ env.DB_USERNAME }} -p${{ env.DB_PASSWORD }}
-        mysql -h ${{ env.DB_HOSTNAME }} --port 8888 -u${{ env.DB_USERNAME }} -p${{ env.DB_PASSWORD }} < tests/sql/test_spm.sql
-        mysql -h ${{ env.DB_HOSTNAME }} --port 8888 -e "SHOW schemas;" -u${{ env.DB_USERNAME }} -p${{ env.DB_PASSWORD }}
+        mysql -h ${{ secrets.DB_HOSTNAME }} --port 8888 -e "DROP SCHEMA IF EXISTS ${{ secrets.DB_NAME }};" -u${{ secrets.DB_USERNAME }} -p${{ secrets.DB_PASSWORD }}
+        mysql -h ${{ secrets.DB_HOSTNAME }} --port 8888 -u${{ secrets.DB_USERNAME }} -p${{ secrets.DB_PASSWORD }} < tests/sql/test_spm.sql
+        mysql -h ${{ secrets.DB_HOSTNAME }} --port 8888 -e "SHOW schemas;" -u${{ secrets.DB_USERNAME }} -p${{ secrets.DB_PASSWORD }}
 #     - name: Lint with flake8
 #       run: |
 #         # stop the build if there are Python syntax errors or undefined names
