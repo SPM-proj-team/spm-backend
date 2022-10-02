@@ -13,3 +13,4 @@ db = SQLAlchemy(app)
 from .role import Job_Role
 from .skill import Skill
 from .course import Course
+from .learning_journey import LearningJourney
