@@ -5,11 +5,13 @@ from flask import jsonify
 db = SQLAlchemy(app)
 
 class Skill(db.Model):
-    __tablename__ = 'skill'
-    skill_id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String)
-    def __init__(self, name):
-        self.name = name
+    __tablename__ = 'Skill'
+    Skill_ID = db.Column(db.Integer, primary_key=True)
+    Name = db.Column(db.String)
+
+    def __init__(self, Skill_ID, Name):
+        self.Skill_ID = Skill_ID
+        self.Name = Name
 
     def json(self):
         return {

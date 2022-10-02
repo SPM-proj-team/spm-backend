@@ -7,5 +7,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+mysqlconnector://testuser:testpas
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_recycle': 299}
 
-from app import skill
-from app import role
+from .role import Job_Role
+from .skill import Skill
+from .course import Course
