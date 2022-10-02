@@ -1,8 +1,8 @@
-from app import app
+from app import app,db
 from flask_sqlalchemy import SQLAlchemy
 from flask import jsonify
 
-db = SQLAlchemy(app)
+# db = SQLAlchemy(app)
 
 class Skill(db.Model):
     __tablename__ = 'Skill'
@@ -15,28 +15,31 @@ class Skill(db.Model):
 
     def json(self):
         return {
-            "skill_id": self.skill_id,
-            "name": self.name
+            "Skill_id": self.Skill_ID,
+            "name": self.Name
         }
 
 @app.route("/skill/test")
 def testSkill():
     return "Skill route is working"
 
-@app.route("/skill")
+@app.route("/skills")
 def getSkill():
     skillList = Skill.query.all()
     if len(skillList):
         return jsonify(
            {
                "code": 200,
-               "data": [skill.json() for skill in skillList]
+               "data": [skill.json() for skill in skillList],
+               "error" : False
            }
        )
     return jsonify(
         {
             "code": 200,
-            "message": "There are no skills."
+            "data": [],
+            "message": "There are no skills.",
+            "error" : False
         }
     ), 200
 
