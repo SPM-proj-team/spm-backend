@@ -17,12 +17,48 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
---
--- Database: `availability`
---
 DROP SCHEMA IF EXISTS `spm_db`;
 CREATE SCHEMA IF NOT EXISTS `spm_db` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE `spm_db`;
+
+-- Course Table 
+DROP TABLE IF EXISTS `Course`;
+CREATE TABLE Course (
+    Course_ID varchar(20) NOT NULL,
+    Course_Name varchar(45) NOT NULL,
+    Course_Desc varchar(255) NOT NULL,
+    Course_Type varchar(10) NOT NUll,
+    Course_Status varchar(15) NOT NUll,
+    Course_Category varchar(50) NOT NUll,
+    PRIMARY KEY (Course_ID)
+);
+-- population of data
+insert into Course values 
+("IS212",
+"Software Project Management",
+"Equipment student with knowledge about agile approach regarding software project development ",
+"Type_1",
+"Open",
+"Course_Category_1")
+,
+("BAP101",
+"Enterprise Business System",
+"Enterprise Business System Description",
+"Type_1",
+"Open",
+"Course_Category_1"),
+("BAP102",
+"Sales Management System",
+"Sales Management System Description ",
+"Type_1",
+"Open",
+"Course_Category_1"),
+("BAP103",
+"Busioness Process and Modeling",
+"Busioness Process and Modeling Description",
+"Type_1",
+"Open",
+"Course_Category_1");
 
 -- --------------------------------------------------------
 --
@@ -38,7 +74,8 @@ CREATE TABLE IF NOT EXISTS `skill` (
 
 INSERT INTO `skill` (`Skill_ID`, `name`) VALUES
 ('S001', 'Critical Thinking'),
-('S002', 'People Management');
+('S002', 'People Management'),
+('S003', 'Business Applications');
 COMMIT;
 -- --------------------------------------------------------
 --
@@ -83,61 +120,22 @@ CREATE TABLE IF NOT EXISTS `Learning_Journey_has_Course` (
   `Course_ID` varchar(20) NOT NULL,
   `Learning_Journey_ID` int NOT NULL,
   PRIMARY KEY (`Course_ID`, `Learning_Journey_ID`),
-  FOREIGN KEY (`Course_ID`) REFERENCES Courses (`Course_ID`),
+  FOREIGN KEY (`Course_ID`) REFERENCES Course (`Course_ID`),
   FOREIGN KEY (`Learning_Journey_ID`) REFERENCES Learning_Journey (`Learning_Journey_ID`)
 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `Learning_Journey_has_Course` (`Course_ID`, `Learning_Journey_ID`) VALUES
-('IS412', 1),
+('BAP101', 1),
 ('IS212', 1),
-('IS211', 1),
-('MGMT001', 2),
-('COR1305', 2);
+('BAP101', 2),
+('BAP102', 2),
+('BAP103', 2);
+
 COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
-
--- Course Table 
-DROP TABLE IF EXISTS `Course`;
-CREATE TABLE Course (
-    Course_ID varchar(20) NOT NULL,
-    Course_Name varchar(45) NOT NULL,
-    Course_Desc varchar(255) NOT NULL,
-    Course_Type varchar(10) NOT NUll,
-    Course_Status varchar(15) NOT NUll,
-    Course_Category varchar(50) NOT NUll,
-    PRIMARY KEY (Course_ID)
-);
--- population of data
-insert into Course values 
-("IS212",
-"Software Project Management",
-"Equipment student with knowledge about agile approach regarding software project development ",
-"Type_1",
-"Open",
-"Course_Category_1")
-,
-("BAP101",
-"Enterprise Business System",
-"Enterprise Business System Description",
-"Type_1",
-"Open",
-"Course_Category_1"),
-("BAP102",
-"Sales Management System",
-"Sales Management System Description ",
-"Type_1",
-"Open",
-"Course_Category_1"),
-("BAP103",
-"Busioness Process and Modeling",
-"Busioness Process and Modeling Description",
-"Type_1",
-"Open",
-"Course_Category_1");
 
 
 
@@ -152,8 +150,8 @@ CREATE TABLE Course_has_Skill (
 );
 
 INSERT INTO `Course_has_Skill` VALUES
-('S001',"IS212"),
-('S002',"IS212"),
+('S001', "IS212"),
+('S002', "IS212"),
 ('S001','BAP101'),
 ('S002','BAP101'),
 ('S003','BAP101'),
