@@ -33,32 +33,31 @@ CREATE TABLE Course (
     PRIMARY KEY (Course_ID)
 );
 -- population of data
-insert into Course values 
-("IS212",
-"Software Project Management",
-"Equipment student with knowledge about agile approach regarding software project development ",
-"Type_1",
-"Open",
-"Course_Category_1")
-,
-("BAP101",
-"Enterprise Business System",
-"Enterprise Business System Description",
-"Type_1",
-"Open",
-"Course_Category_1"),
-("BAP102",
-"Sales Management System",
-"Sales Management System Description ",
-"Type_1",
-"Open",
-"Course_Category_1"),
-("BAP103",
-"Busioness Process and Modeling",
-"Busioness Process and Modeling Description",
-"Type_1",
-"Open",
-"Course_Category_1");
+INSERT INTO Course (`Course_ID`, `Course_Name`, `Course_Desc`, `Course_Type`, `Course_Status`, `Course_Category`) VALUES 
+('IS212',
+'Software Project Management',
+'Equip student with knowledge about agile approach regarding software project development ',
+'Type_1',
+'Open',
+'Course_Category_1'),
+('BAP101',
+'Enterprise Business System',
+'Enterprise Business System Description',
+'Type_1',
+'Open',
+'Course_Category_1'),
+('BAP102',
+'Sales Management System',
+'Sales Management System Description',
+'Type_1',
+'Open',
+'Course_Category_1'),
+('BAP103',
+'Busioness Process and Modeling',
+'Busioness Process and Modeling Description',
+'Type_1',
+'Open',
+'Course_Category_1');
 
 -- --------------------------------------------------------
 --
@@ -90,7 +89,10 @@ CREATE TABLE Job_Role (
     PRIMARY KEY (Job_ID)
 );
 -- population of data
-insert into Job_Role values (1,"CEO","The big boss","C-suite"),(2,"Operations manager","Manager","operations"),(3,"Operations Slave","Staff","HR");
+INSERT INTO `Job_Role` (`Job_Role`, `Job_Title`, `Department`) VALUES 
+('CEO','The big boss','C-suite'),
+('Operations manager','Manager', 'operations'),
+('Operations Slave','Staff','HR');
 
 --
 -- Table structure for table `Learning_Journey`
@@ -107,7 +109,8 @@ CREATE TABLE IF NOT EXISTS `Learning_Journey` (
 
 INSERT INTO `Learning_Journey` (`Learning_Journey_Name`, `Staff_ID`, `Description`) VALUES
 ('Learning Journey for Full Stack Developer Role', 1, 'lorem ipsum'),
-('Learning Journey for Dummies', 1, 'lorem ipsum for dummies');
+('Learning Journey for Dummies', 1, 'lorem ipsum for dummies'),
+('Advanced Learning Journey', 2, 'lorem ipsum for dummies');
 COMMIT;
 
 
@@ -130,44 +133,47 @@ INSERT INTO `Learning_Journey_has_Course` (`Course_ID`, `Learning_Journey_ID`) V
 ('IS212', 1),
 ('BAP101', 2),
 ('BAP102', 2),
-('BAP103', 2);
+('BAP103', 2),
+('IS212', 3),
+('BAP101', 3),
+('BAP102', 3);
 
 COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 
-
+--
+-- Table structure for association table `Role_has_Skill`
+--
 DROP TABLE IF EXISTS `Role_has_Skill`;
-CREATE TABLE Role_has_Skill (
+CREATE TABLE IF NOT EXISTS `Role_has_Skill` (
     Job_ID int NOT NULL,
     Skill_ID char(13) NOT NULL,
-    CONSTRAINT Role_Job_ID FOREIGN KEY (Job_ID)
-    REFERENCES Job_Role(Job_ID),
-    CONSTRAINT Role_Job_Skill_ID FOREIGN KEY (Skill_ID)
-    REFERENCES Skill(Skill_ID)
-);
+    FOREIGN KEY (`Job_ID`) REFERENCES Job_Role(`Job_ID`),
+    FOREIGN KEY (`Skill_ID`) REFERENCES Skill(`Skill_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `Role_has_Skill` VALUES
+INSERT INTO `Role_has_Skill` (`Job_ID`, `Skill_ID`) VALUES
 (1,'S001'),
 (1,'S002'),
 (2,'S002'),
 (2,'S001');
 
-
+--
+-- Table structure for association table `Course_has_Skill`
+--
 DROP TABLE IF EXISTS `Course_has_Skill`;
-CREATE TABLE Course_has_Skill (
+CREATE TABLE IF NOT EXISTS `Course_has_Skill` (
     Skill_ID VARCHAR(13) NOT NULL,
     Course_ID varchar(20) NOT NULL,
-    CONSTRAINT Skill_Course_ID FOREIGN KEY (Course_ID)
-    REFERENCES Course(Course_ID),
-    CONSTRAINT Course_Skill_ID FOREIGN KEY (Skill_ID)
-    REFERENCES Skill(Skill_ID)
-);
+    FOREIGN KEY (`Course_ID`) REFERENCES Course(`Course_ID`),
+    FOREIGN KEY (`Skill_ID`) REFERENCES Skill(`Skill_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `Course_has_Skill` VALUES
-('S001', "IS212"),
-('S002', "IS212"),
+INSERT INTO `Course_has_Skill` (`Skill_ID`, `Course_ID`) VALUES
+('S001', 'IS212'),
+('S002', 'IS212'),
 ('S001','BAP101'),
 ('S002','BAP101'),
 ('S003','BAP101'),
@@ -175,4 +181,3 @@ INSERT INTO `Course_has_Skill` VALUES
 ('S003','BAP103');
 
 COMMIT;
-

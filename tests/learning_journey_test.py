@@ -143,7 +143,9 @@ def initialise_db():
 
 def test_get_all_learning_journeys():
     with app.test_client() as test_client:
-        response = test_client.get('/learning_journey')
+        response = test_client.get('/learning_journey',
+                                   data = json.dumps(dict(Staff_ID=1)),
+                                   content_type='application/json')
         assert response.status_code == 200
         all_learning_journeys = response.get_json()['data']
         assert len(all_learning_journeys) > 0

@@ -109,7 +109,8 @@ CREATE TABLE IF NOT EXISTS `Learning_Journey` (
 
 INSERT INTO `Learning_Journey` (`Learning_Journey_Name`, `Staff_ID`, `Description`) VALUES
 ('Learning Journey for Full Stack Developer Role', 1, 'lorem ipsum'),
-('Learning Journey for Dummies', 1, 'lorem ipsum for dummies');
+('Learning Journey for Dummies', 1, 'lorem ipsum for dummies'),
+('Advanced Learning Journey', 2, 'lorem ipsum for dummies');
 COMMIT;
 
 
@@ -132,7 +133,10 @@ INSERT INTO `Learning_Journey_has_Course` (`Course_ID`, `Learning_Journey_ID`) V
 ('IS212', 1),
 ('BAP101', 2),
 ('BAP102', 2),
-('BAP103', 2);
+('BAP103', 2),
+('IS212', 3),
+('BAP101', 3),
+('BAP102', 3);
 
 COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
