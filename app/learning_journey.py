@@ -37,8 +37,9 @@ def testLearningJourney():
     return "Learning Journey route is working! congrats"
 
 @app.route("/learning_journey")
-def getLearning_Journeys():
-    learningJourneyList = LearningJourney.query.all()
+def getLearning_Journeys_byStaffID():
+    Staff_ID = request.json['Staff_ID']
+    learningJourneyList = LearningJourney.query.filter_by(Staff_ID = Staff_ID).all()
     if len(learningJourneyList):
         return jsonify(
            {
@@ -56,7 +57,7 @@ def getLearning_Journeys():
     ), 200
 
 @app.route("/learning_journey/<int:Learning_Journey_ID>")
-def getCourses_by_LearningJourney(Learning_Journey_ID):
+def getCourses_by_one_LearningJourney(Learning_Journey_ID):
     Staff_ID = request.json['Staff_ID']
     print(Staff_ID)
     selectedLJ = LearningJourney.query.filter_by(Learning_Journey_ID = Learning_Journey_ID,Staff_ID = Staff_ID).all()
