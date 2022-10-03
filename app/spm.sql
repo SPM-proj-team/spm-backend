@@ -65,14 +65,14 @@ insert into Course values
 -- Table structure for table `skill`
 --
 
-DROP TABLE IF EXISTS `skill`;
-CREATE TABLE IF NOT EXISTS `skill` (
+DROP TABLE IF EXISTS `Skill`;
+CREATE TABLE IF NOT EXISTS `Skill` (
   `Skill_ID` char(13) NOT NULL,
   `name` varchar(64) NOT NULL,
   PRIMARY KEY (`Skill_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `skill` (`Skill_ID`, `name`) VALUES
+INSERT INTO `Skill` (`Skill_ID`, `name`) VALUES
 ('S001', 'Critical Thinking'),
 ('S002', 'People Management'),
 ('S003', 'Business Applications');
@@ -138,15 +138,31 @@ COMMIT;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 
 
+DROP TABLE IF EXISTS `Role_has_Skill`;
+CREATE TABLE Role_has_Skill (
+    Job_ID int NOT NULL,
+    Skill_ID char(13) NOT NULL,
+    CONSTRAINT Role_Job_ID FOREIGN KEY (Job_ID)
+    REFERENCES Job_Role(Job_ID),
+    CONSTRAINT Role_Job_Skill_ID FOREIGN KEY (Skill_ID)
+    REFERENCES Skill(Skill_ID)
+);
+
+INSERT INTO `Role_has_Skill` VALUES
+(1,'S001'),
+(1,'S002'),
+(2,'S002'),
+(2,'S001');
+
 
 DROP TABLE IF EXISTS `Course_has_Skill`;
 CREATE TABLE Course_has_Skill (
     Skill_ID VARCHAR(13) NOT NULL,
     Course_ID varchar(20) NOT NULL,
-    CONSTRAINT Course_ID FOREIGN KEY (Course_ID)
+    CONSTRAINT Skill_Course_ID FOREIGN KEY (Course_ID)
     REFERENCES Course(Course_ID),
-    CONSTRAINT Skill_ID FOREIGN KEY (Skill_ID)
-    REFERENCES skill(Skill_ID)
+    CONSTRAINT Course_Skill_ID FOREIGN KEY (Skill_ID)
+    REFERENCES Skill(Skill_ID)
 );
 
 INSERT INTO `Course_has_Skill` VALUES
@@ -158,20 +174,4 @@ INSERT INTO `Course_has_Skill` VALUES
 ('S003','BAP102'),
 ('S003','BAP103');
 
-DROP TABLE IF EXISTS `Role_has_Skill`;
-CREATE TABLE Role_has_Skill (
-    Job_ID int NOT NULL,
-    Skill_ID char(13) NOT NULL,
-    CONSTRAINT Job_ID FOREIGN KEY (Job_ID)
-    REFERENCES Job_Role(Job_ID),
-    CONSTRAINT Role_Job_Skill_ID FOREIGN KEY (Skill_ID)
-    REFERENCES skill(Skill_ID)
-);
-
-INSERT INTO `Role_has_Skill` VALUES
-(1,'S001'),
-(1,'S002'),
-(2,'S002'),
-(2,'S001');
-
-
+COMMIT;
