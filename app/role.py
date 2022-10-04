@@ -67,5 +67,25 @@ def getRole():
         }
     ), 200
 
+@app.route("/roles/<int:id>")
+def getRoleByID(id : int):
+    
+    roleList = Job_Role.query.filter_by(Job_ID = id).all()
+    if len(roleList):
+        return jsonify(
+           {
+               "code": 200,
+               "error": False,
+               "data": [role.json() for role in roleList]
+           }
+       )
+    return jsonify(
+        {
+            "code": 200,
+            "error": False,
+            "data": []
+        }
+    ), 200
+
 
 
