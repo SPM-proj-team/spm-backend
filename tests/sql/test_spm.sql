@@ -104,15 +104,77 @@ CREATE TABLE IF NOT EXISTS `Learning_Journey` (
   `Learning_Journey_Name` varchar(45) NOT NULL,
   `Staff_ID` int NOT NULL,
   `Description` varchar(256),
+  `Role_Job_ID` int NOT NULL,
   PRIMARY KEY (`Learning_Journey_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `Learning_Journey` (`Learning_Journey_Name`, `Staff_ID`, `Description`) VALUES
-('Learning Journey for Full Stack Developer Role', 1, 'lorem ipsum'),
-('Learning Journey for Dummies', 1, 'lorem ipsum for dummies'),
-('Advanced Learning Journey', 2, 'lorem ipsum for dummies');
+INSERT INTO `Learning_Journey` (`Learning_Journey_Name`, `Staff_ID`, `Description`, `Role_Job_ID`) VALUES
+('Learning Journey for Full Stack Developer Role', 1, 'lorem ipsum', 1),
+('Learning Journey for Dummies', 1, 'lorem ipsum for dummies', 2),
+('Advanced Learning Journey', 2, 'lorem ipsum for dummies', 3);
 COMMIT;
 
+--
+-- Table structure for table `Registration`
+--
+
+DROP TABLE IF EXISTS `Registration`;
+CREATE TABLE IF NOT EXISTS `Registration` (
+  `Reg_ID` int NOT NULL,
+  `Course_ID` varchar(20) NOT NULL,
+  `Staff_ID` int NOT NULL,
+  `Reg_Status` varchar(20) NOT NULL,
+  `Completion_Status` varchar(20),
+  PRIMARY KEY (`Reg_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `Registration` (`Reg_ID`, `Course_ID`, `Staff_ID`, `Reg_Status`, `Completion_Status`) VALUES
+(1, 1, 1, 'Registered',  'Completed'),
+(2, 1, 2, 'Registered',  'OnGoing'),
+(3, 2, 1, 'Waitlist',  ''),
+(4, 2, 2, 'Rejected',  '');
+COMMIT;
+
+--
+-- Table structure for table `Staff`
+--
+
+DROP TABLE IF EXISTS `Staff`;
+CREATE TABLE IF NOT EXISTS `Staff` (
+  `Staff_ID` int NOT NULL AUTO_INCREMENT,
+  `Staff_FName` varchar(50) NOT NULL,
+  `Staff_LName` varchar(50) NOT NULL,
+  `Dept` varchar(50) NOT NULL,
+  `Email` varchar(50),
+  `Role_ID` int NOT NULL,
+  PRIMARY KEY (`Staff_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `Staff` (`Staff_FName`, `Staff_LName`, `Dept`, `Email`, `Role_ID`) VALUES
+('John', 'Sim', 'Chairman',  'jack.sim@allinone.com.sg', 1),
+('Jack', 'Sim', 'CEO',  'jack.sim@allinone.com.sg', 1),
+('Derek', 'Tan', 'Sales',  'Derek.Tan@allinone.com.sg', 3),
+('Susan', 'Goh', 'Sales',  'Susan.Goh@allinone.com.sg', 2),
+('Noah', 'Goh', 'Ops',  'Noah.Goh@allinone.com.sg', 4);
+COMMIT;
+
+--
+-- Table structure for table `Access_Role`
+--
+
+DROP TABLE IF EXISTS `Access_Role`;
+CREATE TABLE IF NOT EXISTS `Access_Role` (
+  `Role_ID` int NOT NULL AUTO_INCREMENT,
+  `Role_Name` varchar(20) NOT NULL,
+  PRIMARY KEY (`Role_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `Access_Role` (`Role_Name`) VALUES
+('Admin'),
+('User'),
+('Manager'),
+('Trainer');
+COMMIT;
 
 --
 -- Table structure for table `Learning_Journey_has_Course`
@@ -148,8 +210,8 @@ COMMIT;
 --
 DROP TABLE IF EXISTS `Role_has_Skill`;
 CREATE TABLE IF NOT EXISTS `Role_has_Skill` (
-    Job_ID int NOT NULL,
-    Skill_ID char(13) NOT NULL,
+    `Job_ID` int NOT NULL,
+    `Skill_ID` char(13) NOT NULL,
     FOREIGN KEY (`Job_ID`) REFERENCES Job_Role(`Job_ID`),
     FOREIGN KEY (`Skill_ID`) REFERENCES Skill(`Skill_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -165,8 +227,8 @@ INSERT INTO `Role_has_Skill` (`Job_ID`, `Skill_ID`) VALUES
 --
 DROP TABLE IF EXISTS `Course_has_Skill`;
 CREATE TABLE IF NOT EXISTS `Course_has_Skill` (
-    Skill_ID VARCHAR(13) NOT NULL,
-    Course_ID varchar(20) NOT NULL,
+    `Skill_ID` VARCHAR(13) NOT NULL,
+    `Course_ID` varchar(20) NOT NULL,
     FOREIGN KEY (`Course_ID`) REFERENCES Course(`Course_ID`),
     FOREIGN KEY (`Skill_ID`) REFERENCES Skill(`Skill_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -179,5 +241,23 @@ INSERT INTO `Course_has_Skill` (`Skill_ID`, `Course_ID`) VALUES
 ('S003','BAP101'),
 ('S003','BAP102'),
 ('S003','BAP103');
+
+--
+-- Table structure for association table `User_has_Skill`
+--
+DROP TABLE IF EXISTS `User_has_Skill`;
+CREATE TABLE IF NOT EXISTS `User_has_Skill` (
+    `Skill_ID` char(13) NOT NULL,
+    `Staff_ID` int NOT NULL,
+    `Date_Acquired` DATE NOT NULL,
+    FOREIGN KEY (`Skill_ID`) REFERENCES Skill(`Skill_ID`),
+    FOREIGN KEY (`Staff_ID`) REFERENCES Staff(`Staff_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `User_has_Skill` (`Skill_ID`, `Staff_ID`, `Date_Acquired`) VALUES
+('S001', 1, '2021-12-31'),
+('S002', 1, '2022-03-03'),
+('S001', 2, '2021-01-01'),
+('S003', 3, '2022-01-01');
 
 COMMIT;
