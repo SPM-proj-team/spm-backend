@@ -5,6 +5,7 @@ from flask import jsonify
 
 class Course(db.Model):
     __tablename__ = 'Course'
+    
     Course_ID = db.Column(db.String, primary_key=True)
     Course_Name = db.Column(db.String)
     Course_Desc = db.Column(db.String)
