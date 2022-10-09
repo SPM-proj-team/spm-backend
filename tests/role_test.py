@@ -82,10 +82,17 @@ def test_get_all_roles():
         assert len(all_roles) > 0
 
 
-# def test_get_single_role():
-#     with app.test_client() as test_client:
-#         response = test_client.get(f"/roles/{role['id']}")
-#         assert response.status_code == 200
+def test_get_single_role():
+    with app.test_client() as test_client:
+        response = test_client.get(f"/roles/1")
+        assert response.status_code == 200
+        assert len(response.get_json()['data']) > 0
+
+def test_get_single_role_not_found():
+    with app.test_client() as test_client:
+        response = test_client.get(f"/roles/99")
+        assert response.status_code == 200
+        assert len(response.get_json()['data']) == 0
 
 
 # def test_update_role():
