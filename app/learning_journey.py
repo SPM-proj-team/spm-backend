@@ -36,7 +36,7 @@ class LearningJourney(db.Model):
 def testLearningJourney():
     return "Learning Journey route is working! congrats"
 
-@app.route("/learning_journey")
+@app.route("/learning_journey", methods=["POST"])
 def getLearning_Journeys_byStaffID():
     Staff_ID = request.json['Staff_ID']
     learningJourneyList = LearningJourney.query.filter_by(Staff_ID = Staff_ID).all()
