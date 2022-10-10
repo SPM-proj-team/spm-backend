@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask import jsonify
 
 
+
 class Course(db.Model):
     __tablename__ = 'Course'
     
@@ -12,6 +13,7 @@ class Course(db.Model):
     Course_Type = db.Column(db.String)
     Course_Status = db.Column(db.String)
     Course_Category = db.Column(db.String)
+
 
     def __init__(self, Course_ID, Course_Name,Course_Desc,Course_Type,Course_Status,Course_Category):
         self. Course_ID = Course_ID
@@ -30,6 +32,16 @@ class Course(db.Model):
             "Course_Status": self.Course_Status,
             "Course_Category": self.Course_Category,
         }
+    def jsonWithSkill(self):
+        return {
+            "Course_ID": self.Course_ID,
+            "Course_Name": self.Course_Name,
+            "Course_Desc": self.Course_Desc,
+            "Course_Type": self.Course_Type,
+            "Course_Status": self.Course_Status,
+            "Course_Category": self.Course_Category,
+            "Skills": [skill.json() for skill in self.Skills]
+        }
 
 @app.route("/course/test")
 def testCourse():
@@ -42,7 +54,7 @@ def getCourse():
         return jsonify(
            {
                "code": 200,
-               "data": [course.json() for course in courseList],
+               "data": [course.jsonWithSkill() for course in courseList],
                "error" : False
            }
        )
