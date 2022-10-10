@@ -1,7 +1,8 @@
 from app import app, db
 from flask_sqlalchemy import SQLAlchemy
+from app import role
 from flask import jsonify, request
-
+from app.role import Job_Role
 # Learning Journey Association Table
 Learning_Journey_has_Course = db.Table('Learning_Journey_has_Course',
                                 db.Column('Course_ID', db.String, db.ForeignKey('Course.Course_ID')),
@@ -17,6 +18,8 @@ class LearningJourney(db.Model):
     Staff_ID = db.Column(db.Integer)
     Description = db.Column(db.String)
     Courses = db.relationship('Course', secondary= Learning_Journey_has_Course)
+    Job_Role_ID = db.Column(db.Integer, db.ForeignKey('Job_Role.Job_ID'))
+    
 
     def __init__(self, Learning_Journey_Name, Staff_ID, Description):
         self.Learning_Journey_Name = Learning_Journey_Name
@@ -29,7 +32,8 @@ class LearningJourney(db.Model):
             "Learning_Journey_Name": self.Learning_Journey_Name,
             "Staff_ID": self.Staff_ID,
             "Description": self.Description,
-            "Courses": [course.json() for course in self.Courses]
+            "Courses": [course.json() for course in self.Courses],
+            "Role": self.Job_Role.json()
         }
 
 @app.route("/learning_journey/test")

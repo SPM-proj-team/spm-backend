@@ -22,6 +22,7 @@ class Job_Role(db.Model):
     Job_Title = db.Column(db.String)
     Department = db.Column(db.String)
     Skills = db.relationship('Skill', secondary=Role_has_Skill)
+    Learning_Journeys = db.relationship('LearningJourney', backref='Job_Role')
 
     def __init__(self,Job_ID,Job_Role,Job_Title, Department, Skills):
         self.Job_ID = Job_ID
@@ -32,7 +33,14 @@ class Job_Role(db.Model):
    
 
     def json(self):
-        print(type(self.Skills))
+        return {
+            "Job_ID": self.Job_ID,
+            "Job_Role": self.Job_Role,
+            "Job_Title":self.Job_Title,
+            "Department":self.Department,
+            
+        }
+    def jsonWithSkill(self):
         return {
             "Job_ID": self.Job_ID,
             "Job_Role": self.Job_Role,
@@ -56,7 +64,7 @@ def getRole():
            {
                "code": 200,
                "error": False,
-               "data": [role.json() for role in roleList]
+               "data": [role.jsonWithSkill() for role in roleList]
            }
        )
     return jsonify(
@@ -76,7 +84,7 @@ def getRoleByID(id : int):
            {
                "code": 200,
                "error": False,
-               "data": [role.json() for role in roleList]
+               "data": [role.jsonWithSkill() for role in roleList]
            }
        )
     return jsonify(
