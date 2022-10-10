@@ -26,7 +26,7 @@ class LearningJourney(db.Model):
         self.Staff_ID = Staff_ID
         self.Description = Description
 
-    def json(self):
+    def jsonWithCourseAndRole(self):
         return {
             "Learning_Journey_ID": self.Learning_Journey_ID,
             "Learning_Journey_Name": self.Learning_Journey_Name,
@@ -48,7 +48,7 @@ def getLearning_Journeys_byStaffID():
         return jsonify(
            {
                "code": 200,
-               "data": [lj.json() for lj in learningJourneyList],
+               "data": [lj.jsonWithCourseAndRole() for lj in learningJourneyList],
                "error": False
            }
        )
@@ -69,7 +69,7 @@ def getCourses_by_one_LearningJourney(Learning_Journey_ID):
         return jsonify(
            {
                "code": 200,
-               "data": [lj.json() for lj in selectedLJ],
+               "data": [lj.jsonWithCourseAndRole() for lj in selectedLJ],
                "error": False
            }
        )
