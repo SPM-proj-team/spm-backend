@@ -40,7 +40,15 @@ class Job_Role(db.Model):
             "Department":self.Department,
             
         }
-    def jsonWithSkill(self):
+    def jsonWithSkills(self):
+        return {
+            "Job_ID": self.Job_ID,
+            "Job_Role": self.Job_Role,
+            "Job_Title":self.Job_Title,
+            "Department":self.Department,
+            "Skills": [skill.json() for skill in self.Skills]
+        }
+    def jsonWithSkillsCourses(self):
         return {
             "Job_ID": self.Job_ID,
             "Job_Role": self.Job_Role,
@@ -64,7 +72,7 @@ def getRole():
            {
                "code": 200,
                "error": False,
-               "data": [role.jsonWithSkill() for role in roleList]
+               "data": [role.jsonWithSkills() for role in roleList]
            }
        )
     return jsonify(
@@ -84,7 +92,7 @@ def getRoleByID(id : int):
            {
                "code": 200,
                "error": False,
-               "data": [role.jsonWithSkill() for role in roleList]
+               "data": [role.jsonWithSkillsCourses() for role in roleList]
            }
        )
     return jsonify(
