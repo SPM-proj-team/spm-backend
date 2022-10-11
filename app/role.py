@@ -1,5 +1,7 @@
 from crypt import methods
 import json
+
+from app.learning_journey import LearningJourney
 from app.skill import Skill
 from app import app,db
 from flask_sqlalchemy import SQLAlchemy
@@ -152,7 +154,7 @@ def updateRole():
             return jsonify(
                 {
                     "code": 406,
-                    "error": "Job role not found.",
+                    "error": "An error occurred while updating job role: Job role not found.",
                     "data": data
                 }
             ), 406
@@ -195,15 +197,27 @@ def updateRole():
 @app.route("/roles/<int:id>", methods=["DELETE"])
 def deleteRole(id : int):
     try:
-        # from learning_journey import LearningJourney
         jobRole = Job_Role.query.filter_by(Job_ID = id).first()
-        # learningJourneys = LearningJourney.query.filter_by(Job_Role_ID = id).all()
         if not jobRole:
             return jsonify(
                 {
                     "code": 406,
-                    "error": "Job role not found.",
+                    "error": "An error occurred while deleting job role: Job role not found.",
                     "data": {"id": id}
+                }
+            ), 406
+
+        # Check if associated learning joruneys, prevent deletion if associated LJs exists 
+        learningJourneys = LearningJourney.query.filter_by(Job_Role_ID = id).all()
+        if len(learningJourneys) > 0:
+            return jsonify(
+                {
+                    "code": 406,
+                    "error": f"An error occurred while deleting job role: Job role id {id} stll have learning journeys associated with it.",
+                    "data": {
+                        "id": id,
+                        "associated_learning_journeys": [learningJourney.jsonWithCourseAndRole() for learningJourney in learningJourneys]
+                    }
                 }
             ), 406
 
