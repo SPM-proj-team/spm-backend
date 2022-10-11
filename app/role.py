@@ -103,18 +103,15 @@ def createRole():
                     "error": "An error occurred while creating job role: Duplicate entry job role already exists.",
                     "data": roleExists.jsonWithSkill()
                 }
-            )
-        jobRoleData = {
-            "Job_Role": data["Job_Role"],
-            "Job_Title": data["Job_Title"],
-            "Department": data["Department"]
-        }
+            ), 409
+        
+        skills = db.session.query(Skill).filter(Skill.Skill_ID.in_(data["Skills"])).all()
+        del data['Skills']
 
-        jobRole = Job_Role(**jobRoleData)
+        jobRole = Job_Role(**data)
         db.session.add(jobRole)
         db.session.commit()
 
-        skills = db.session.query(Skill).filter(Skill.Skill_ID.in_(data["Skills"])).all()
         jobRole.Skills = [skill for skill in skills]
         db.session.commit()
         
@@ -159,6 +156,16 @@ def updateRole():
                     "data": data
                 }
             ), 406
+        
+        roleExists = Job_Role.query.filter_by(Job_Role=data["Job_Role"]).first()
+        if roleExists:
+            return jsonify(
+                {
+                    "code": 409,
+                    "error": "An error occurred while updating job role: Duplicate entry job role already exists.",
+                    "data": roleExists.jsonWithSkill()
+                }
+            ), 409
 
         skills = db.session.query(Skill).filter(Skill.Skill_ID.in_(data["Skills"])).all()
         
