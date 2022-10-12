@@ -111,7 +111,7 @@ def createRole():
                 {
                     "code": 409,
                     "error": "An error occurred while creating job role: Duplicate entry job role already exists.",
-                    "data": roleExists.jsonWithSkill()
+                    "data": roleExists.jsonWithSkillsCourses()
                 }
             ), 409
         
@@ -132,7 +132,7 @@ def createRole():
             {
                 "code": 200,
                 "error": False,
-                "data": jobRole.jsonWithSkill()
+                "data": jobRole.jsonWithSkillsCourses()
             }
         ), 200
     except Exception as e:
@@ -176,7 +176,7 @@ def updateRole():
                 {
                     "code": 409,
                     "error": "An error occurred while updating job role: Duplicate entry job role already exists.",
-                    "data": roleExists.jsonWithSkill()
+                    "data": roleExists.jsonWithSkillsCourses()
                 }
             ), 409
 
@@ -192,7 +192,7 @@ def updateRole():
             {
                 "code": 200,
                 "error": False,
-                "data": jobRole.jsonWithSkill()
+                "data": jobRole.jsonWithSkillsCourses()
             }
         ), 200
     except Exception as e:
@@ -242,7 +242,7 @@ def deleteRole(id : int):
             {
                 "code": 200,
                 "error": False,
-                "data": jobRole.jsonWithSkill()
+                "data": jobRole.jsonWithSkillsCourses()
             }
         ), 200
     except Exception as e:
