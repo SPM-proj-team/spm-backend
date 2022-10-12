@@ -86,13 +86,14 @@ CREATE TABLE Job_Role (
     Job_Role varchar(20) NOT NULL,
     Job_Title varchar(20) NOT NULL,
     Department varchar(20) NOT NUll,
+    Description varchar(256),
     PRIMARY KEY (Job_ID)
 );
 -- population of data
-INSERT INTO `Job_Role` (`Job_Role`, `Job_Title`, `Department`) VALUES 
-('CEO','The big boss','C-suite'),
-('Operations manager','Manager', 'operations'),
-('Operations Slave','Staff','HR');
+INSERT INTO `Job_Role` (`Job_Role`, `Job_Title`, `Department`, `Description`) VALUES 
+('CEO','The big boss','C-suite', 'lorem ipsum'),
+('Operations manager','Manager', 'operations', 'lorem ipsum'),
+('Operations Slave','Staff','HR', 'lorem ipsum');
 
 --
 -- Table structure for table `Learning_Journey`

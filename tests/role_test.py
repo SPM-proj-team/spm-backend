@@ -46,10 +46,10 @@ def test_create_role():
     with app.test_client() as test_client:
         response = test_client.post('/roles',
                             data = json.dumps({
-                                "Job_ID": 4,
                                 "Job_Role": "Sales Manager",
                                 "Job_Title": "Manager",
                                 "Department": "Sales",
+                                "Description": "Lorem",
                                 "Skills": ["S001", "S002"]
                             }),
                             headers = {
@@ -67,6 +67,7 @@ def test_create_role():
         assert data['data'][0]['Job_Role'] == "Sales Manager"
         assert data["data"][0]["Job_Title"] == "Manager"
         assert data["data"][0]["Department"] == "Sales"
+        assert data["data"][0]["Description"] == "Lorem"
         assert len(data["data"][0]["Skills"]) == 2
         
 
@@ -117,6 +118,7 @@ def test_update_role():
                                 "Job_Role": "HR Staff",
                                 "Job_Title": "Staff",
                                 "Department": "HR",
+                                "Description": "Ipsum",
                                 "Skills": ["S003"]
                             }),
                             headers = {
@@ -131,6 +133,7 @@ def test_update_role():
         assert data["data"][0]["Job_Role"] == "HR Staff"
         assert data["data"][0]["Job_Title"] == "Staff"
         assert data["data"][0]["Department"] == "HR"
+        assert data["data"][0]["Description"] == "Ipsum"
         assert len(data["data"][0]["Skills"]) == 1
 
 def test_update_role_not_found():
@@ -141,6 +144,7 @@ def test_update_role_not_found():
                                 "Job_Role": "Sales Manager",
                                 "Job_Title": "Manager",
                                 "Department": "Sales",
+                                "Description": "Ipsum",
                                 "Skills": ["S001", "S002"]
                             }),
                             headers = {
@@ -154,10 +158,10 @@ def test_duplicate_update_role():
     with app.test_client() as test_client:
         testDuplicateRole = test_client.post('/roles',
             data = json.dumps({
-                "Job_ID": 5,
                 "Job_Role": "Sales Manager",
                 "Job_Title": "Manager",
                 "Department": "Sales",
+                "Description": "Ipsum",
                 "Skills": ["S001", "S002"]
             }),
             headers = {
@@ -176,6 +180,7 @@ def test_duplicate_update_role():
                 "Job_Role": "HR Staff",
                 "Job_Title": "Staff",
                 "Department": "HR",
+                "Description": "Ipsum",
                 "Skills": ["S003"]
             }),
             headers = {
