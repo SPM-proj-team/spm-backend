@@ -58,6 +58,27 @@ def testSkill():
 #         }
 #     ), 200
 
+@app.route("/allskills")
+def getAllSkills():
+    skillList = Skill.query.all()
+    if len(skillList):
+        return jsonify(
+           {
+               "code": 200,
+               "data": [skill.json() for skill in skillList],
+               "error" : False
+           }
+       )
+    return jsonify(
+        {
+            "code": 200,
+            "data": [],
+            "message": "There are no skills.",
+            "error" : False
+        }
+    ), 200
+        
+
 @app.route("/skills")
 def getSkill():
     skillList = Skill.query.all()
