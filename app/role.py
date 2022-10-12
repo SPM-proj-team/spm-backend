@@ -20,6 +20,7 @@ class Job_Role(db.Model):
     Job_Role = db.Column(db.String)
     Job_Title = db.Column(db.String)
     Department = db.Column(db.String)
+    Description = db.Column(db.String)
     Skills = db.relationship('Skill', secondary=Role_has_Skill)
     Learning_Journeys = db.relationship('LearningJourney', backref='Job_Role')
 
@@ -27,9 +28,9 @@ class Job_Role(db.Model):
         return {
             "Job_ID": self.Job_ID,
             "Job_Role": self.Job_Role,
-            "Job_Title":self.Job_Title,
-            "Department":self.Department,
-            
+            "Job_Title": self.Job_Title,
+            "Department": self.Department,
+            "Description": self.Description
         }
     def jsonWithSkills(self):
         return {
@@ -37,6 +38,7 @@ class Job_Role(db.Model):
             "Job_Role": self.Job_Role,
             "Job_Title":self.Job_Title,
             "Department":self.Department,
+            "Description": self.Description,
             "Skills": [skill.json() for skill in self.Skills]
         }
     def jsonWithSkillsCourses(self):
@@ -45,6 +47,7 @@ class Job_Role(db.Model):
             "Job_Role": self.Job_Role,
             "Job_Title":self.Job_Title,
             "Department":self.Department,
+            "Description": self.Description,
             "Skills": [skill.jsonWithCourse() for skill in self.Skills]
         }
         
@@ -100,6 +103,7 @@ def createRole():
         "Job_Role": "Sales Manager",
         "Job_Title": "Manager",
         "Department": "Sales",
+        "Description": "Lorem ipsum",
         "Skills": ["S001", "S002"]
     }
     """
@@ -118,7 +122,8 @@ def createRole():
         jobRoleData = {
             "Job_Role": data["Job_Role"],
             "Job_Title": data["Job_Title"],
-            "Department": data["Department"]
+            "Department": data["Department"],
+            "Description": data["Description"]
         }
         jobRole = Job_Role(**jobRoleData)
         db.session.add(jobRole)
@@ -154,6 +159,7 @@ def updateRole():
         "Job_Role": "HR Staff",
         "Job_Title": "Staff",
         "Department": "HR",
+        "Description": "Lorem ipsum",
         "Skills": ["S003"]
     }
     """
@@ -185,6 +191,7 @@ def updateRole():
         jobRole.Job_Role = data["Job_Role"]
         jobRole.Job_Title = data["Job_Title"]
         jobRole.Department = data["Department"]
+        jobRole.Description = data["Description"]
         jobRole.Skills = [skill for skill in skills]
         db.session.commit()
 
