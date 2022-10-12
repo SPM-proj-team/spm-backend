@@ -107,13 +107,16 @@ def createRole():
                 }
             ), 409
         
-        skills = db.session.query(Skill).filter(Skill.Skill_ID.in_(data["Skills"])).all()
-        del data['Skills']
-
-        jobRole = Job_Role(**data)
+        jobRoleData = {
+            "Job_Role": data["Job_Role"],
+            "Job_Title": data["Job_Title"],
+            "Department": data["Department"]
+        }
+        jobRole = Job_Role(**jobRoleData)
         db.session.add(jobRole)
         db.session.commit()
 
+        skills = db.session.query(Skill).filter(Skill.Skill_ID.in_(data["Skills"])).all()
         jobRole.Skills = [skill for skill in skills]
         db.session.commit()
         
@@ -160,7 +163,7 @@ def updateRole():
             ), 406
         
         roleExists = Job_Role.query.filter_by(Job_Role=data["Job_Role"]).first()
-        if roleExists:
+        if roleExists and roleExists.json()["Job_ID"] != jobID:
             return jsonify(
                 {
                     "code": 409,
