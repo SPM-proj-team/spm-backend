@@ -1,9 +1,8 @@
 from app import app, db
 from flask_sqlalchemy import SQLAlchemy
-from app import role
+
 from flask import jsonify, request
 
-from app.role import Job_Role
 from app.course import Course
 # Learning Journey Association Table
 Learning_Journey_has_Course = db.Table('Learning_Journey_has_Course',
@@ -92,14 +91,10 @@ def updateLearningJourney(Learning_Journey_ID):
     selectedLJ = LearningJourney.query.filter_by(Learning_Journey_ID = Learning_Journey_ID,Staff_ID = Staff_ID).all()
     if len(selectedLJ):
         selectedLJ = selectedLJ[0]
-        # print(selectedLJ.Courses)
         updatedCoursesID = []
         for course in LJ["Courses"]:
             updatedCoursesID.append(course["Course_ID"])
         courses = Course.query.filter(Course.Course_ID.in_(updatedCoursesID))
-        print(courses)
-
-
         selectedLJ.Description = LJ["Description"]
         selectedLJ.Learning_Journey_Name = LJ["Learning_Journey_Name"]
         selectedLJ.Role = LJ["Role"]
