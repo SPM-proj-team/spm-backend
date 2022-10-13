@@ -87,22 +87,23 @@ def getCourses_by_one_LearningJourney(Learning_Journey_ID):
 def updateLearningJourney(Learning_Journey_ID):
     Staff_ID = request.json['Staff_ID']
     LJ = request.json['Learning_Journey']
-    print(LJ["Learning_Journey_ID"])
+    # print(LJ["Learning_Journey_ID"])
     Learning_Journey_ID = LJ["Learning_Journey_ID"]
     selectedLJ = LearningJourney.query.filter_by(Learning_Journey_ID = Learning_Journey_ID,Staff_ID = Staff_ID).all()
     if len(selectedLJ):
         selectedLJ = selectedLJ[0]
         # print(selectedLJ.Courses)
-        # updatedCoursesID = []
-        # for course in LJ["Courses"]:
-            # updatedCourses.append(course["Course_ID"])
-        # courses = Course.query.filter_by(Course_ID in updatedCourses)
-        # print(updatedCourses)
-        # for course in updatedCourses:
-            # selectedLJ.Courses.append(course)
+        updatedCoursesID = []
+        for course in LJ["Courses"]:
+            updatedCoursesID.append(course["Course_ID"])
+        courses = Course.query.filter(Course.Course_ID.in_(updatedCoursesID))
+        print(courses)
+
+
         selectedLJ.Description = LJ["Description"]
         selectedLJ.Learning_Journey_Name = LJ["Learning_Journey_Name"]
-        # selectedLJ.Role = LJ["Role"]
+        selectedLJ.Role = LJ["Role"]
+        selectedLJ.Courses = [course for course in courses]
         db.session.commit()
         return jsonify(
            {
