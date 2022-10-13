@@ -1,8 +1,6 @@
 from app import app, db
 from flask_sqlalchemy import SQLAlchemy
-
 from flask import jsonify, request
-
 from app.course import Course
 # Learning Journey Association Table
 Learning_Journey_has_Course = db.Table('Learning_Journey_has_Course',
