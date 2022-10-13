@@ -3,7 +3,6 @@ from flask_sqlalchemy import SQLAlchemy
 from app import role
 from flask import jsonify, request
 
-from app.role import Job_Role
 from app.course import Course
 # Learning Journey Association Table
 Learning_Journey_has_Course = db.Table('Learning_Journey_has_Course',
