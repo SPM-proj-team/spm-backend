@@ -59,7 +59,7 @@ def getLearning_Journeys_byStaffID():
         }
     ), 200
 
-@app.route("/learning_journey/<int:Learning_Journey_ID>")
+@app.route("/learning_journey/<int:Learning_Journey_ID>", methods=["POST"])
 def getCourses_by_one_LearningJourney(Learning_Journey_ID):
     Staff_ID = request.json['Staff_ID']
     selectedLJ = LearningJourney.query.filter_by(Learning_Journey_ID = Learning_Journey_ID,Staff_ID = Staff_ID).all()
