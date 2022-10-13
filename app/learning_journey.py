@@ -1,16 +1,15 @@
 from app import app, db
 from flask_sqlalchemy import SQLAlchemy
-from app import role
 from flask import jsonify, request
-
+from app.course import Course
 # Learning Journey Association Table
 Learning_Journey_has_Course = db.Table('Learning_Journey_has_Course',
                                 db.Column('Course_ID', db.String, db.ForeignKey('Course.Course_ID')),
                                 db.Column('Learning_Journey_ID', db.Integer, db.ForeignKey('Learning_Journey.Learning_Journey_ID'))
                                 )
-# 
+#
 # Learning Journey Class 
-# 
+
 class LearningJourney(db.Model):
     __tablename__ = 'Learning_Journey'
     Learning_Journey_ID = db.Column(db.Integer, primary_key=True)
@@ -80,3 +79,40 @@ def getCourses_by_one_LearningJourney(Learning_Journey_ID):
             "error": False
         }
     ), 200
+
+@app.route("/learning_journey/<int:Learning_Journey_ID>", methods=["PUT"])
+def updateLearningJourney(Learning_Journey_ID):
+    Staff_ID = request.json['Staff_ID']
+    LJ = request.json['Learning_Journey']
+    # print(LJ["Learning_Journey_ID"])
+    Learning_Journey_ID = LJ["Learning_Journey_ID"]
+    selectedLJ = LearningJourney.query.filter_by(Learning_Journey_ID = Learning_Journey_ID,Staff_ID = Staff_ID).all()
+    if len(selectedLJ):
+        selectedLJ = selectedLJ[0]
+        updatedCoursesID = []
+        for course in LJ["Courses"]:
+            updatedCoursesID.append(course["Course_ID"])
+        courses = Course.query.filter(Course.Course_ID.in_(updatedCoursesID))
+        selectedLJ.Description = LJ["Description"]
+        selectedLJ.Learning_Journey_Name = LJ["Learning_Journey_Name"]
+        selectedLJ.Role = LJ["Role"]
+        selectedLJ.Courses = [course for course in courses]
+        db.session.commit()
+        return jsonify(
+           {
+               "code": 200,
+               "data": [selectedLJ.jsonWithCourseAndRole()],
+               "error": False
+           }
+       )
+    return jsonify(
+        {
+            "code": 200,
+            "data": [],
+            "message": "There are no Learning Journeys.",
+            "error": False
+        }
+    ), 200
+
+
+
