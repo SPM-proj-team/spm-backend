@@ -114,5 +114,26 @@ def updateLearningJourney(Learning_Journey_ID):
         }
     ), 200
 
-
-
+@app.route("/learning_journey/<int:Learning_Journey_ID>", methods=["DELETE"])
+def deleteLearningJourney(Learning_Journey_ID):
+    Staff_ID = request.json['Staff_ID']
+    # print(LJ["Learning_Journey_ID"])
+    selectedLJ = LearningJourney.query.filter_by(Learning_Journey_ID = Learning_Journey_ID,Staff_ID = Staff_ID).all()
+    if len(selectedLJ):
+        # db.session.delete(selectedLJ)
+        # db.session.commit()
+        return jsonify(
+           {
+               "code": 200,
+               "message": "Learning Journey ID: " + str(Learning_Journey_ID) +" has been deleted",
+               "error": False
+           }
+       )
+    return jsonify(
+        {
+            "code": 400,
+            "data": [],
+            "message": "There is no Learning Journeys with ID: " + str(Learning_Journey_ID),
+            "error": True
+        }
+    ), 200
