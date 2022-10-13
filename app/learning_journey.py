@@ -2,6 +2,7 @@ from app import app, db
 from flask_sqlalchemy import SQLAlchemy
 from app import role
 from flask import jsonify, request
+
 from app.role import Job_Role
 from app.course import Course
 # Learning Journey Association Table
@@ -64,7 +65,6 @@ def getLearning_Journeys_byStaffID():
 @app.route("/learning_journey/<int:Learning_Journey_ID>")
 def getCourses_by_one_LearningJourney(Learning_Journey_ID):
     Staff_ID = request.json['Staff_ID']
-    print(Staff_ID)
     selectedLJ = LearningJourney.query.filter_by(Learning_Journey_ID = Learning_Journey_ID,Staff_ID = Staff_ID).all()
     if len(selectedLJ):
         return jsonify(
