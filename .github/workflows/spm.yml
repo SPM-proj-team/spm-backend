@@ -15,7 +15,7 @@ jobs:
           MYSQL_ROOT_PASSWORD: password
           MYSQL_DATABASE: test
         ports:
-        - '8888:3306'
+        - '3306:3306'
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=10
     steps:
     - uses: actions/checkout@v3
@@ -29,20 +29,39 @@ jobs:
         pip install flake8 pytest
         pip install -r requirements.txt
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Clone frontend repo 
+      uses: actions/checkout@v3
+      with:
+        repository: SPM-proj-team/spm-frontend
+        ref: sprint-2
+        token: ${{ secrets.ACCESS_TOKEN }}
+        path: './spm-frontend'
+  setup:
+    needs: build
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: test
+        ports:
+        - '3306:3306'
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=10
+    steps:
     - name: Create env file
       run: |
         touch .env
         echo DB_HOSTNAME=${{ secrets.DB_HOSTNAME }} >> .env
-        echo DB_PORT=8888 >> .env
+        echo DB_PORT=3306 >> .env
         echo DB_USERNAME=${{ secrets.DB_USERNAME }} >> .env
         echo DB_PASSWORD=${{ secrets.DB_PASSWORD }} >> .env
         echo DB_NAME=${{ secrets.DB_NAME }} >> .env
-
     - name: Setup MySQL database
       run: |
-        mysql -h ${{ secrets.DB_HOSTNAME }} --port 8888 -e "DROP SCHEMA IF EXISTS ${{ secrets.DB_NAME }};" -u${{ secrets.DB_USERNAME }} -p${{ secrets.DB_PASSWORD }}
-        mysql -h ${{ secrets.DB_HOSTNAME }} --port 8888 -u${{ secrets.DB_USERNAME }} -p${{ secrets.DB_PASSWORD }} < tests/sql/test_spm.sql
-        mysql -h ${{ secrets.DB_HOSTNAME }} --port 8888 -e "SHOW schemas;" -u${{ secrets.DB_USERNAME }} -p${{ secrets.DB_PASSWORD }}
+        mysql -h ${{ secrets.DB_HOSTNAME }} --port 3306 -e "DROP SCHEMA IF EXISTS ${{ secrets.DB_NAME }};" -u${{ secrets.DB_USERNAME }} -p${{ secrets.DB_PASSWORD }}
+        mysql -h ${{ secrets.DB_HOSTNAME }} --port 3306 -u${{ secrets.DB_USERNAME }} -p${{ secrets.DB_PASSWORD }} < tests/sql/test_spm.sql
+        mysql -h ${{ secrets.DB_HOSTNAME }} --port 3306 -e "SHOW schemas;" -u${{ secrets.DB_USERNAME }} -p${{ secrets.DB_PASSWORD }}
 #     - name: Lint with flake8
 #       run: |
 #         # stop the build if there are Python syntax errors or undefined names
@@ -53,3 +72,22 @@ jobs:
       run: |
         export PYTHONPATH='.'
         pytest
+    
+    - name: Install dependencies and run frontend in background 
+      run: |
+        cd ./spm-frontend &&
+        npm install &&
+        npm run serve &
+        sleep 20 &&
+        cd ../
+    - name: Run backend in background
+      run: |
+        ( python3 run.py > /dev/null 2> /dev/null & ) &
+        sleep 5 &&
+        curl -v http://localhost:5000/roles
+        curl -v http://localhost:8080
+        lsof -i :5000
+    - name: Clean running services 
+      run: |
+        pkill -f node
+        sudo kill -9 `lsof -t -i :5000`
