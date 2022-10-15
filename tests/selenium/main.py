@@ -1,21 +1,13 @@
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.core.utils import ChromeType
 
-import requests
-import json
-import time
 import role
 import learning_journey
 import helper_function
 import traceback
-import os
 
 backend_url = "http://localhost:5000/"
 frontend_url = "http://localhost:8080/"

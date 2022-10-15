@@ -35,14 +35,14 @@ def updateRoleTest(driver,backend_url,frontend_url):
     )
     RoleSearchBar.send_keys("slave")
     jobRole = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, "//td[text()='Operation Slave']"))
+        EC.presence_of_element_located((By.XPATH, "//td[text()='Operations Slave']"))
     )
     jobRole.click()
     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
     description = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//textarea[@id='description']"))
     )
-    description.send_keys("Please promote me. Slavery is no go. ")
+    description.send_keys("Please promote me. Slavery is no go.")
     # jobRoleInputText
     
     addSkillBtn = WebDriverWait(driver, 10).until(

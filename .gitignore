@@ -3,3 +3,5 @@ tests/__pycache__/**
 tests/selenium/__pycache__/**
 .pytest_cache/**
 .env
+geckodriver.log
+tests/selenium/chrome_driver/**
