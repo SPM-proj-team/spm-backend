@@ -2,38 +2,69 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
+from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.core.utils import ChromeType
+
+import requests
+import json
 import time
+import role
+import learning_journey
+import helper_function
+import traceback
+import os
+
+backend_url = "http://localhost:5000/"
+frontend_url = "http://localhost:8080/"
 # Start selenium
 def startDriver():
-    # intiatise driver (take note that different os require different drivers to be downloaded)
-    driver = webdriver.Chrome('./chrome_driver/chromedriver')
+    chrome_service = Service(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install())
+    chrome_options = Options()
+    options = [
+        "--headless",
+        "--disable-gpu",
+        "--window-size=1920,1200",
+        "--ignore-certificate-errors",
+        "--disable-extensions",
+        "--no-sandbox",
+        "--disable-dev-shm-usage"
+    ]
+    for option in options:
+        chrome_options.add_argument(option)
 
-    # demo for login 
+    driver = webdriver.Chrome(service=chrome_service, options=chrome_options)
 
     #  go in url
-    driver.get("https://www.browserstack.com/users/sign_in")
-    # enter email and password, take note that sometimes depending on client render or server render elements might not load as 
-    # fast then will cause error, that's why you can WebDriverWait and EC 
-    emailuser = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.ID, "user_email_login"))
-    )
-    emailuser.send_keys("test@test.com")
-
-    password = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.ID, "user_password"))
-    )
-    password.send_keys("password")
-    # this is the standard find element with out EC and WebDriverWait
-    login = driver.find_element(By.ID,"user_submit")
-    login.click()
-
-
-    #  for you to take a look before the driver closes
-    time.sleep(5)
+    try:
+        driver.get(frontend_url)
+        helper_function.testFormatSingle("Running of home page", True)
+    except Exception as e:
+        helper_function.testFormatSingle("Running of home page", False)
+        print(e)
+        traceback.print_exc()
+        return False
+    
+    ## Test get learning journeys for staff
+    try:
+        learning_journey.checkLearningJourney(driver,backend_url,frontend_url)
+    except Exception as e:
+        print(e)
+        traceback.print_exc()
+        return False
+   
+    # Test update and deletion of job roles
+    try:
+        role.updateRoleTest(driver,backend_url,frontend_url)
+    except Exception as e:
+        print(e)
+        traceback.print_exc()
+        return False
     driver.quit()
+    return True
+    
 
-
-
-# this is for sample 
 startDriver()
+
