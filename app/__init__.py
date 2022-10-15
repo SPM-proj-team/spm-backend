@@ -10,22 +10,19 @@ load_dotenv()
 user = environ.get('user') or "placeholderuser" 
 password = environ.get('password') or "placeholderpassword" 
 
-AWS_DATABASE_HOST = environ.get('AWS_DATABASE_HOST') 
-AWS_DATABASE_USER = environ.get('AWS_DATABASE_USER') 
-AWS_DATABASE_PASSWORD = environ.get('AWS_DATABASE_PASSWORD') 
-AWS_DATABASE = environ.get('AWS_DATABASE') 
+DB_HOSTNAME = environ.get('DB_HOSTNAME') 
+DB_USERNAME = environ.get('DB_USERNAME') 
+DB_PASSWORD = environ.get('DB_PASSWORD') 
+DB_NAME = environ.get('DB_NAME') 
 
 app=Flask(__name__)
 
 CORS(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+mysqlconnector://"+AWS_DATABASE_USER+":"+AWS_DATABASE_PASSWORD+"@"+AWS_DATABASE_HOST+":3306/"+AWS_DATABASE
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+mysqlconnector://"+DB_USERNAME+":"+DB_PASSWORD+"@"+DB_HOSTNAME+":3306/"+DB_NAME
 # print
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_recycle': 299}
 db = SQLAlchemy(app)
-
-
-
 
 from .role import Job_Role
 from .skill import Skill
