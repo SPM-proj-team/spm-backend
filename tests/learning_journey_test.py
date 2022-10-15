@@ -172,30 +172,91 @@ def test_get_courses_by_one_learning_journey_no_learning_journey():
         message = response.get_json()['message']
         assert message == "There are no Learning Journeys."
 
-# def test_get_courses_from_learning_journey():
-#     with app.test_client() as test_client:
-#         retrieve_courses = test_client.get(f"/learning_journey/{learning_journey['id']}")
 
-#         assert retrieve_courses.get_json()["data"]["courses"] == []
+def test_update_learning_journey():
+    with app.test_client() as test_client:
+        response = test_client.put('/learning_journey/1',
+                            data = json.dumps({
+                                "Staff_ID": 1,
+                                "Learning_Journey": {
+                                    "Learning_Journey_ID": 1,
+                                    "Courses": [
+                                        {
+                                            "Course_Category": "Course_Category_1",
+                                            "Course_Desc": "Enterprise Business System Description",
+                                            "Course_ID": "BAP101",
+                                            "Course_Name": "Enterprise Business System",
+                                            "Course_Status": "Open",
+                                            "Course_Type": "Type_1"
+                                        },
+                                        {
+                                            "Course_Category": "Course_Category_1",
+                                            "Course_Desc": "Equip student with knowledge about agile approach regarding software project development ",
+                                            "Course_ID": "IS212",
+                                            "Course_Name": "Software Project Management",
+                                            "Course_Status": "Open",
+                                            "Course_Type": "Type_1"
+                                        }
+                                    ],
+                                    "Description": "test",
+                                    "Learning_Journey_Name": "Learning Journey for Full Stack Developer",
+                                    "Role": {
+                                        "Department": "C-suite",
+                                        "Description": "lorem ipsum",
+                                        "Job_ID": 1,
+                                        "Job_Role": "CEO",
+                                        "Job_Title": "The big boss"
+                                    }
+                                }
+                            }),
+                            headers = {
+                                "Content-Type": "application/json"
+                            }
+                        )
+        assert response.status_code == 200
+        assert response.get_json()['error'] == False
+        data = response.get_json()['data'][0]
+        assert data["Description"] == "test"
+        assert data["Learning_Journey_Name"] == "Learning Journey for Full Stack Developer"
 
 
-# def test_update_learning_journey(course):
-#     learning_journey_name = "Journey 2"
-#     with app.test_client() as test_client:
-#         response = test_client.put('/learning_journey',
-#                             data = json.dumps({
-#                                 "id": learning_journey['id'],
-#                                 "learning_journey_name": learning_journey_name,
-#                             }),
-#                             headers = {
-#                                 "Content-Type": "application/json"
-#                             }
-#                         )
-#         assert response.status_code == 200
-
-#         retrieve_learning_journey = test_client.get(f"/learning_journey/{learning_journey['id']}")
-#         assert retrieve_learning_journey.get_json()['data']['name'] == learning_journey_name
-
+def test_update_courses_in_learning_journey():
+    with app.test_client() as test_client:
+        response = test_client.put('/learning_journey/1',
+                            data = json.dumps({
+                                "Staff_ID": 1,
+                                "Learning_Journey": {
+                                    "Learning_Journey_ID": 1,
+                                    "Courses": [
+                                        {
+                                            "Course_Category": "Course_Category_1",
+                                            "Course_Desc": "Sales Management System Description",
+                                            "Course_ID": "BAP102",
+                                            "Course_Name": "Sales Management System",
+                                            "Course_Status": "Open",
+                                            "Course_Type": "Type_1"
+                                        },
+                                    ],
+                                    "Description": "test",
+                                    "Learning_Journey_Name": "Learning Journey for Full Stack Developer",
+                                    "Role": {
+                                        "Department": "C-suite",
+                                        "Description": "lorem ipsum",
+                                        "Job_ID": 1,
+                                        "Job_Role": "CEO",
+                                        "Job_Title": "The big boss"
+                                    }
+                                }
+                            }),
+                            headers = {
+                                "Content-Type": "application/json"
+                            }
+                        )
+        assert response.status_code == 200
+        assert response.get_json()['error'] == False
+        data = response.get_json()['data'][0]
+        assert len(data["Courses"]) == 1
+        assert data["Courses"][0]["Course_ID"] == "BAP102"
 
 # def test_duplicate_update_learning_journey(course):
 #     learning_journey_name = "Journey 2"
@@ -224,12 +285,44 @@ def test_get_courses_by_one_learning_journey_no_learning_journey():
 #         global learning_journey2
 #         learning_journey2 = testDuplicateLearningJourney.get_json()['data']
 
-
-# def test_delete_learning_journey():
+# def test_update_courses_in_learning_journey_no_courses():
 #     with app.test_client() as test_client:
-#         response = test_client.delete(f"/learning_journey/{learning_journey['id']}")
-#         response2 = test_client.delete(f"/learning_journey/{learning_journey2['id']}")
-#         assert response.status_code == 200
-#         assert response2.status_code == 200
-#         tearDown()
+#         response = test_client.put('/learning_journey/1',
+#                             data = json.dumps({
+#                                 "Staff_ID": 1,
+#                                 "Learning_Journey": {
+#                                     "Learning_Journey_ID": 1,
+#                                     "Courses": [],
+#                                     "Description": "test",
+#                                     "Learning_Journey_Name": "Learning Journey for Full Stack Developer",
+#                                     "Role": {
+#                                         "Department": "C-suite",
+#                                         "Description": "lorem ipsum",
+#                                         "Job_ID": 1,
+#                                         "Job_Role": "CEO",
+#                                         "Job_Title": "The big boss"
+#                                     }
+#                                 }
+#                             }),
+#                             headers = {
+#                                 "Content-Type": "application/json"
+#                             }
+#                         )
+#         assert response.status_code == 408
+#         assert response.get_json()['error'] == "Error message"
+
+
+def test_delete_learning_journey():
+    with app.test_client() as test_client:
+        response = test_client.delete(f"/learning_journey/1",
+            data = json.dumps({
+                "Staff_ID": 1
+            }),
+            headers = {
+                "Content-Type": "application/json"
+            }
+        )
+        assert response.status_code == 200
+        assert response.get_json()['error'] == False
+        assert response.get_json()['message'] == "Learning Journey ID: 1 has been deleted"
 
