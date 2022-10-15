@@ -5,3 +5,4 @@ tests/selenium/__pycache__/**
 .env
 geckodriver.log
 tests/selenium/chrome_driver/**
+.DS_Store

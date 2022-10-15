@@ -43,6 +43,10 @@ jobs:
         echo DB_USERNAME=${{ secrets.DB_USERNAME }} >> .env
         echo DB_PASSWORD=${{ secrets.DB_PASSWORD }} >> .env
         echo DB_NAME=${{ secrets.DB_NAME }} >> .env
+        echo AWS_DATABASE_HOST=${{ secrets.AWS_DATABASE_HOST }} >> .env
+        echo AWS_DATABASE_USER=${{ secrets.AWS_DATABASE_USER }} >> .env
+        echo AWS_DATABASE_PASSWORD=${{ secrets.AWS_DATABASE_PASSWORD }} >> .env
+        echo AWS_DATABASE=${{ secrets.AWS_DATABASE }} >> .env
 
     - name: Setup MySQL database
       run: |

@@ -141,7 +141,7 @@ def initialise_db():
 #         assert response.status_code == 400
 
 
-def test_get_all_learning_journeys():
+def test_get_learning_journeys_by_staff_id():
     with app.test_client() as test_client:
         response = test_client.post('/learning_journey',
                                    data = json.dumps(dict(Staff_ID=1)),
@@ -151,7 +151,7 @@ def test_get_all_learning_journeys():
         assert len(all_learning_journeys) > 0
 
 
-def test_get_single_learning_journey():
+def test_get_courses_by_one_learning_journey():
     with app.test_client() as test_client:
         response = test_client.get(f"/learning_journey/1",
                                    data = json.dumps(dict(Staff_ID=1)),
@@ -161,7 +161,7 @@ def test_get_single_learning_journey():
         assert len(learning_journey) > 0
 
 
-def test_get_single_learning_journey_no_learning_journey():
+def test_get_courses_by_one_learning_journey_no_learning_journey():
     with app.test_client() as test_client:
         response = test_client.get(f"/learning_journey/1",
                                    data = json.dumps(dict(Staff_ID=2)),

@@ -86,13 +86,14 @@ CREATE TABLE Job_Role (
     Job_Role varchar(20) NOT NULL,
     Job_Title varchar(20) NOT NULL,
     Department varchar(20) NOT NUll,
+    Description varchar(256),
     PRIMARY KEY (Job_ID)
 );
 -- population of data
-INSERT INTO `Job_Role` (`Job_Role`, `Job_Title`, `Department`) VALUES 
-('CEO','The big boss','C-suite'),
-('Operations manager','Manager', 'operations'),
-('Operations Slave','Staff','HR');
+INSERT INTO `Job_Role` (`Job_Role`, `Job_Title`, `Department`, `Description`) VALUES 
+('CEO','The big boss','C-suite', 'lorem ipsum'),
+('Operations manager','Manager', 'operations', 'lorem ipsum'),
+('Operations Slave','Staff','HR', 'lorem ipsum');
 
 --
 -- Table structure for table `Learning_Journey`
@@ -104,11 +105,11 @@ CREATE TABLE IF NOT EXISTS `Learning_Journey` (
   `Learning_Journey_Name` varchar(45) NOT NULL,
   `Staff_ID` int NOT NULL,
   `Description` varchar(256),
-  `Role_Job_ID` int NOT NULL,
+  `Job_Role_ID` int NOT NULL,
   PRIMARY KEY (`Learning_Journey_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `Learning_Journey` (`Learning_Journey_Name`, `Staff_ID`, `Description`, `Role_Job_ID`) VALUES
+INSERT INTO `Learning_Journey` (`Learning_Journey_Name`, `Staff_ID`, `Description`, `Job_Role_ID`) VALUES
 ('Learning Journey for Full Stack Developer Role', 1, 'lorem ipsum', 1),
 ('Learning Journey for Dummies', 1, 'lorem ipsum for dummies', 2),
 ('Advanced Learning Journey', 2, 'lorem ipsum for dummies', 3);
