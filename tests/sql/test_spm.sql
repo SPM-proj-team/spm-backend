@@ -74,7 +74,8 @@ CREATE TABLE IF NOT EXISTS `Skill` (
 INSERT INTO `Skill` (`Skill_ID`, `name`) VALUES
 ('S001', 'Critical Thinking'),
 ('S002', 'People Management'),
-('S003', 'Business Applications');
+('S003', 'Business Applications'),
+('S004', 'Adobe Photoshop');
 COMMIT;
 -- --------------------------------------------------------
 --
@@ -91,9 +92,9 @@ CREATE TABLE Job_Role (
 );
 -- population of data
 INSERT INTO `Job_Role` (`Job_Role`, `Job_Title`, `Department`, `Description`) VALUES 
-('CEO','The big boss','C-suite', 'lorem ipsum'),
-('Operations manager','Manager', 'operations', 'lorem ipsum'),
-('Operations Slave','Staff','HR', 'lorem ipsum');
+('Operation Slave','Staff','HR', 'lorem ipsum'),
+('Operation manager','Manager', 'operations', 'lorem ipsum'),
+('CEO','The big boss','C-suite', 'lorem ipsum');
 
 --
 -- Table structure for table `Learning_Journey`
