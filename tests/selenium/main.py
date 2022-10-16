@@ -10,7 +10,7 @@ import helper_function
 import traceback
 
 backend_url = "http://localhost:5000/"
-frontend_url = "http://localhost:8080/"
+frontend_url = "http://localhost:8081/"
 # Start selenium
 def startDriver():
     chrome_service = Service(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install())
@@ -50,6 +50,19 @@ def startDriver():
     # Test update and deletion of job roles
     try:
         role.updateRoleTest(driver,backend_url,frontend_url)
+    except Exception as e:
+        print(e)
+        traceback.print_exc()
+        return False
+    try:
+        role.createRoleTest(driver,backend_url,frontend_url)
+    except Exception as e:
+        print(e)
+        traceback.print_exc()
+        return False
+
+    try:
+        role.deleteRoleTest(driver,backend_url,frontend_url)
     except Exception as e:
         print(e)
         traceback.print_exc()
