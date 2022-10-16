@@ -10,7 +10,7 @@ import helper_function
 import traceback
 
 backend_url = "http://localhost:5000/"
-frontend_url = "http://localhost:8081/"
+frontend_url = "http://localhost:8080/"
 # Start selenium
 def startDriver():
     chrome_service = Service(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install())
