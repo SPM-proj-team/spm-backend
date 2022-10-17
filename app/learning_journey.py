@@ -19,11 +19,13 @@ class LearningJourney(db.Model):
     Courses = db.relationship('Course', secondary= Learning_Journey_has_Course)
     Job_Role_ID = db.Column(db.Integer, db.ForeignKey('Job_Role.Job_ID'))
     
-
-    def __init__(self, Learning_Journey_Name, Staff_ID, Description):
-        self.Learning_Journey_Name = Learning_Journey_Name
-        self.Staff_ID = Staff_ID
-        self.Description = Description
+    def json(self):
+        return {
+            "Learning_Journey_ID": self.Learning_Journey_ID,
+            "Learning_Journey_Name": self.Learning_Journey_Name,
+            "Staff_ID": self.Staff_ID,
+            "Description": self.Description
+        }
 
     def jsonWithCourseAndRole(self):
         return {
@@ -50,7 +52,7 @@ def getLearning_Journeys_byStaffID():
                "data": [lj.jsonWithCourseAndRole() for lj in learningJourneyList],
                "error": False
            }
-       )
+       ), 200
     return jsonify(
         {
             "code": 200,
@@ -70,7 +72,7 @@ def getCourses_by_one_LearningJourney(Learning_Journey_ID):
                "data": [lj.jsonWithCourseAndRole() for lj in selectedLJ],
                "error": False
            }
-       )
+       ), 200
     return jsonify(
         {
             "code": 200,
@@ -100,7 +102,7 @@ def updateLearningJourney(Learning_Journey_ID):
                "error": True,
                "message": "There should at least be 1 course in the Learning Journey"
            }
-       )
+       ), 200
         courses = Course.query.filter(Course.Course_ID.in_(updatedCoursesID))
         selectedLJ.Description = LJ["Description"]
         selectedLJ.Learning_Journey_Name = LJ["Learning_Journey_Name"]
@@ -113,7 +115,7 @@ def updateLearningJourney(Learning_Journey_ID):
                "data": [selectedLJ.jsonWithCourseAndRole()],
                "error": False
            }
-       )
+       ), 200
     return jsonify(
         {
             "code": 200,
@@ -137,7 +139,7 @@ def deleteLearningJourney(Learning_Journey_ID):
                "message": "Learning Journey ID: " + str(Learning_Journey_ID) +" has been deleted",
                "error": False
            }
-       )
+       ), 200
     return jsonify(
         {
             "code": 400,

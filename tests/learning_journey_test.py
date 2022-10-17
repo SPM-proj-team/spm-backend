@@ -258,58 +258,34 @@ def test_update_courses_in_learning_journey():
         assert len(data["Courses"]) == 1
         assert data["Courses"][0]["Course_ID"] == "BAP102"
 
-# def test_duplicate_update_learning_journey(course):
-#     learning_journey_name = "Journey 2"
-#     with app.test_client() as test_client:
-#         testDuplicateLearningJourney = test_client.post('/learning_journey',
-#             data = json.dumps({
-#                 "learning_journey_name": "Journey 3",
-#                 # "username": 1,
-#                 "course_id": course.id,
-#             }),
-#             headers = {
-#                 "Content-Type": "application/json"
-#             }
-#         )
-                        
-#         response = test_client.put('/skill',
-#                             data = json.dumps({
-#                                 "id": testDuplicateLearningJourney['id'],
-#                                 "name": learning_journey_name,
-#                             }),
-#                             headers = {
-#                                 "Content-Type": "application/json"
-#                             }
-#                         )
-#         assert response.status_code == 400
-#         global learning_journey2
-#         learning_journey2 = testDuplicateLearningJourney.get_json()['data']
 
-# def test_update_courses_in_learning_journey_no_courses():
-#     with app.test_client() as test_client:
-#         response = test_client.put('/learning_journey/1',
-#                             data = json.dumps({
-#                                 "Staff_ID": 1,
-#                                 "Learning_Journey": {
-#                                     "Learning_Journey_ID": 1,
-#                                     "Courses": [],
-#                                     "Description": "test",
-#                                     "Learning_Journey_Name": "Learning Journey for Full Stack Developer",
-#                                     "Role": {
-#                                         "Department": "C-suite",
-#                                         "Description": "lorem ipsum",
-#                                         "Job_ID": 1,
-#                                         "Job_Role": "CEO",
-#                                         "Job_Title": "The big boss"
-#                                     }
-#                                 }
-#                             }),
-#                             headers = {
-#                                 "Content-Type": "application/json"
-#                             }
-#                         )
-#         assert response.status_code == 408
-#         assert response.get_json()['error'] == "Error message"
+def test_update_courses_in_learning_journey_no_courses():
+    with app.test_client() as test_client:
+        response = test_client.put('/learning_journey/1',
+                            data = json.dumps({
+                                "Staff_ID": 1,
+                                "Learning_Journey": {
+                                    "Learning_Journey_ID": 1,
+                                    "Courses": [],
+                                    "Description": "test",
+                                    "Learning_Journey_Name": "Learning Journey for Full Stack Developer",
+                                    "Role": {
+                                        "Department": "C-suite",
+                                        "Description": "lorem ipsum",
+                                        "Job_ID": 1,
+                                        "Job_Role": "CEO",
+                                        "Job_Title": "The big boss"
+                                    }
+                                }
+                            }),
+                            headers = {
+                                "Content-Type": "application/json"
+                            }
+                        )
+        assert response.status_code == 200
+        assert response.get_json()['code'] == 404
+        assert response.get_json()['error'] == True 
+        assert response.get_json()['message'] == "There should at least be 1 course in the Learning Journey"
 
 
 def test_delete_learning_journey():
@@ -326,3 +302,18 @@ def test_delete_learning_journey():
         assert response.get_json()['error'] == False
         assert response.get_json()['message'] == "Learning Journey ID: 1 has been deleted"
 
+
+def test_delete_learning_journey_not_found():
+    with app.test_client() as test_client:
+        response = test_client.delete(f"/learning_journey/0",
+            data = json.dumps({
+                "Staff_ID": 1
+            }),
+            headers = {
+                "Content-Type": "application/json"
+            }
+        )
+        assert response.status_code == 200
+        assert response.get_json()['code'] == 400
+        assert response.get_json()['error'] == True 
+        assert response.get_json()['message'] == "There is no Learning Journeys with ID: 0"

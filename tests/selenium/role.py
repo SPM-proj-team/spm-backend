@@ -112,6 +112,7 @@ def createRoleTest(driver,backend_url,frontend_url):
         EC.presence_of_element_located((By.XPATH, "//select[@id='department']/option[text()='Executive Management']"))
     )
     department.click()
+    time.sleep(2)
     description = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//textarea[@id='description']"))
     )
@@ -120,8 +121,8 @@ def createRoleTest(driver,backend_url,frontend_url):
     addSkillBtn = WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable((By.XPATH, "//button[text()='+ Add Skills']"))
     )
-    time.sleep(2)
     addSkillBtn.click()
+    time.sleep(2)
     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
     time.sleep(2)
     skillSearch = WebDriverWait(driver, 10).until(
@@ -134,12 +135,15 @@ def createRoleTest(driver,backend_url,frontend_url):
         EC.presence_of_element_located((By.XPATH, "//button[text()=' + Add ']"))
     )
     addSkill.click()
+    time.sleep(2)
     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
     time.sleep(2)
     create = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//button[@id='create-btn']"))
     )
     create.click()
+    time.sleep(2)
+
     RoleRequest = requests.get(backend_url+"roles")
     RoleCount = len(json.loads(RoleRequest.text)["data"])
     helper_function.testFormatCount("Updated No. Of Roles", RoleCount, prevRoleCount+1)
@@ -150,6 +154,7 @@ def deleteRoleTest(driver,backend_url,frontend_url):
         EC.presence_of_element_located((By.XPATH, "//a[@href='/Admin']"))
     )
     adminBtn.click()
+    time.sleep(2)
 
     # test update and delete role
     createUpdateRoleBtn = WebDriverWait(driver, 10).until(
@@ -178,6 +183,7 @@ def deleteRoleTest(driver,backend_url,frontend_url):
         EC.element_to_be_clickable((By.XPATH, "//button[@id='delete-btn']"))
     )
     delete.click()
+    time.sleep(2)
     delConfrim = WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable((By.XPATH, "//button[text()='Delete']"))
     )

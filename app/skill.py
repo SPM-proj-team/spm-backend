@@ -14,10 +14,6 @@ class Skill(db.Model):
     Name = db.Column(db.String)
     Courses = db.relationship('Course', secondary=Course_has_Skill, backref='Skills')
 
-    def __init__(self, Skill_ID, Name):
-        self.Skill_ID = Skill_ID
-        self.Name = Name
-
     def json(self):
         return {
             "Skill_ID": self.Skill_ID,
@@ -68,7 +64,7 @@ def getAllSkills():
                "data": [skill.json() for skill in skillList],
                "error" : False
            }
-       )
+       ), 200
     return jsonify(
         {
             "code": 200,
@@ -89,7 +85,7 @@ def getSkill():
                "data": [skill.jsonWithCourse() for skill in skillList],
                "error" : False
            }
-       )
+       ), 200
     return jsonify(
         {
             "code": 200,

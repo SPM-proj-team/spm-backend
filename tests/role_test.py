@@ -86,8 +86,10 @@ def test_duplicate_create_role():
                                 "Content-Type": "application/json"
                             }
                         )
-        assert response.status_code == 409
-        assert response.get_json()['error'] == "An error occurred while creating job role: Duplicate entry job role already exists."
+        assert response.status_code == 200
+        assert response.get_json()['code'] == 409
+        assert response.get_json()['error'] == True
+        assert response.get_json()['message'] == "An error occurred while creating job role: Duplicate entry job role already exists."
 
 
 def test_get_all_roles():
@@ -151,8 +153,10 @@ def test_update_role_not_found():
                                 "Content-Type": "application/json"
                             }
                         )
-        assert response.status_code == 406
-        assert response.get_json()['error'] == "An error occurred while updating job role: Job role not found."
+        assert response.status_code == 200
+        assert response.get_json()['code'] == 406
+        assert response.get_json()['error'] == True
+        assert response.get_json()['message'] == "An error occurred while updating job role: Job role not found."
         
 def test_duplicate_update_role():
     with app.test_client() as test_client:
@@ -187,35 +191,19 @@ def test_duplicate_update_role():
                 "Content-Type": "application/json"
             }
         )
-        assert response.status_code == 409
-        assert response.get_json()['error'] == "An error occurred while updating job role: Duplicate entry job role already exists."
+        assert response.status_code == 200
+        assert response.get_json()['code'] == 409
+        assert response.get_json()['error'] == True
+        assert response.get_json()['message'] == "An error occurred while updating job role: Duplicate entry job role already exists."
 
-# def test_delete_role_associated_learning_journey():
-#     with app.test_client() as test_client:
-#         testAssoicatedLJ = test_client.post('/learning_journey/create',
-#             data = json.dumps({
-#                 # "Learning_Journey_ID": 4,
-#                 "Learning_Journey_Name": "testLJ",
-#                 "Staff_ID": 1,
-#                 "Description": "lorem ipsum",
-#                 "Job_Role_ID": jobRole['Job_ID']
-#             }),
-#             headers = {
-#                 "Content-Type": "application/json"
-#             }
-#         )
-#         assert testAssoicatedLJ.status_code == 200
-#         assert testAssoicatedLJ.get_json()['error'] == False
-#         global learningJourney
-#         learningJourney = testAssoicatedLJ.get_json()['data']
+def test_delete_role_associated_learning_journey():
+    with app.test_client() as test_client:
+        response = test_client.delete(f"/roles/1")
+        assert response.get_json()['code'] == 406
+        assert response.get_json()['error'] == True
+        assert response.get_json()['message'] == "An error occurred while deleting job role: Job role id 1 stll have learning journeys associated with it."
+        assert len(response.get_json()['data']['associated_learning_journeys']) > 0
 
-#         response = test_client.delete(f"/roles/{jobRole['Job_ID']}")
-#         assert response.status_code == 406
-#         assert response.get_json()['error'] == "An error occurred while deleting job role: Job role id 4 stll have learning journeys associated with it."
-
-#         deleteTestAssoicatedLJ = test_client.delete(f"/learning_journey/{learningJourney['Learning_Journey_ID']}")
-#         assert deleteTestAssoicatedLJ.status_code == 200
-#         assert deleteTestAssoicatedLJ.get_json()['error'] == False
 
 def test_delete_role():
     with app.test_client() as test_client:
@@ -229,5 +217,7 @@ def test_delete_role():
 def test_delete_role_not_found():
     with app.test_client() as test_client:
         response = test_client.delete(f"/roles/{jobRole['Job_ID']}")
-        assert response.status_code == 406
-        assert response.get_json()['error'] == "An error occurred while deleting job role: Job role not found."
+        assert response.status_code == 200
+        assert response.get_json()['code'] == 406
+        assert response.get_json()['error'] == True
+        assert response.get_json()['message'] == "An error occurred while deleting job role: Job role not found."

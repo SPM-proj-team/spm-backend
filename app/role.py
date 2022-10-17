@@ -16,7 +16,7 @@ Role_has_Skill = db.Table('Role_has_Skill',
 
 class Job_Role(db.Model):
     __tablename__ = 'Job_Role'
-    Job_ID = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    Job_ID = db.Column(db.Integer, primary_key=True)
     Job_Role = db.Column(db.String)
     Job_Title = db.Column(db.String)
     Department = db.Column(db.String)
@@ -114,10 +114,11 @@ def createRole():
             return jsonify(
                 {
                     "code": 409,
-                    "error": "An error occurred while creating job role: Duplicate entry job role already exists.",
+                    "error": True,
+                    "message": "An error occurred while creating job role: Duplicate entry job role already exists.",
                     "data": roleExists.jsonWithSkillsCourses()
                 }
-            ), 409
+            ), 200
         
         jobRoleData = {
             "Job_Role": data["Job_Role"],
@@ -148,7 +149,7 @@ def createRole():
                 "error": f"An error occurred while creating job role: {e}",
                 "data": data
             }
-        ), 406
+        ), 200
 
 @app.route("/roles", methods=["PUT"])
 def updateRole():
@@ -171,20 +172,22 @@ def updateRole():
             return jsonify(
                 {
                     "code": 406,
-                    "error": "An error occurred while updating job role: Job role not found.",
+                    "error": True,
+                    "message": "An error occurred while updating job role: Job role not found.",
                     "data": data
                 }
-            ), 406
+            ), 200
         
         roleExists = Job_Role.query.filter_by(Job_Role=data["Job_Role"]).first()
         if roleExists and roleExists.json()["Job_ID"] != jobID:
             return jsonify(
                 {
                     "code": 409,
-                    "error": "An error occurred while updating job role: Duplicate entry job role already exists.",
+                    "error": True,
+                    "message": "An error occurred while updating job role: Duplicate entry job role already exists.",
                     "data": roleExists.jsonWithSkillsCourses()
                 }
-            ), 409
+            ), 200
 
         skills = db.session.query(Skill).filter(Skill.Skill_ID.in_(data["Skills"])).all()
         
@@ -210,7 +213,7 @@ def updateRole():
                 "error": f"An error occurred while updating job role: {e}",
                 "data": data
             }
-        ), 406
+        ), 200
 
 @app.route("/roles/<int:id>", methods=["DELETE"])
 def deleteRole(id : int):
@@ -220,10 +223,11 @@ def deleteRole(id : int):
             return jsonify(
                 {
                     "code": 406,
-                    "error": "An error occurred while deleting job role: Job role not found.",
+                    "error": True,
+                    "message": "An error occurred while deleting job role: Job role not found.",
                     "data": {"id": id}
                 }
-            ), 406
+            ), 200
 
         # Check if associated learning joruneys, prevent deletion if associated LJs exists 
         learningJourneys = LearningJourney.query.filter_by(Job_Role_ID = id).all()
@@ -231,13 +235,14 @@ def deleteRole(id : int):
             return jsonify(
                 {
                     "code": 406,
-                    "error": f"An error occurred while deleting job role: Job role id {id} stll have learning journeys associated with it.",
+                    "error": True,
+                    "message": f"An error occurred while deleting job role: Job role id {id} stll have learning journeys associated with it.",
                     "data": {
                         "id": id,
                         "associated_learning_journeys": [learningJourney.jsonWithCourseAndRole() for learningJourney in learningJourneys]
                     }
                 }
-            ), 406
+            ), 200
 
         jobRole.Skills = []
         db.session.commit()
@@ -259,4 +264,4 @@ def deleteRole(id : int):
                 "code": 406,
                 "error": f"An error occurred while deleting job role: {e}"
             }
-        ), 406
+        ), 200
