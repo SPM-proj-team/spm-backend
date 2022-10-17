@@ -93,7 +93,8 @@ CREATE TABLE Job_Role (
 -- population of data
 INSERT INTO `Job_Role` (`Job_Role`, `Job_Title`, `Department`, `Description`) VALUES 
 ('Operation Slave','Staff','HR', 'lorem ipsum'),
-('Operation manager','Manager', 'operations', 'lorem ipsum'),
+('Operation Manager','Manager', 'operations', 'lorem ipsum'),
+('Operation Planning','Staff','HR and Admin', 'lorem ipsum'),
 ('CEO','The big boss','C-suite', 'lorem ipsum');
 
 --
