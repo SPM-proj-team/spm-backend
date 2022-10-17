@@ -69,6 +69,7 @@ def updateRoleTest(driver,backend_url,frontend_url):
         EC.presence_of_element_located((By.XPATH, "//button[text()='Update']"))
     )
     save.click()
+    time.sleep(5)
     slaveRoleRequest = requests.get(backend_url+"/roles/1")
     slaveRoleSST = json.loads(slaveRoleRequest.text)["data"][0]
     slaveSkillCount = len(slaveRoleSST["Skills"])
