@@ -3,7 +3,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.core.utils import ChromeType
-
+import requests, json
 import role
 import learning_journey
 import helper_function
@@ -42,11 +42,11 @@ def startDriver():
     ## Test get learning journeys for staff
     try:
         learning_journey.checkLearningJourney(driver,backend_url,frontend_url)
+        # pass
     except Exception as e:
         print(e)
         traceback.print_exc()
         return False
-   
     # Test update and deletion of job roles
     try:
         role.updateRoleTest(driver,backend_url,frontend_url)
@@ -67,9 +67,18 @@ def startDriver():
         print(e)
         traceback.print_exc()
         return False
+
+    try:
+        role.SearchRoleTest(driver,backend_url,frontend_url)
+    except Exception as e:
+        print(e)
+        traceback.print_exc()
+        return False
     driver.quit()
     return True
     
 
 startDriver()
-
+# RoleRequest = requests.get(backend_url+"roles")
+# RoleCount = len(json.loads(RoleRequest.text)["data"])
+# print(RoleCount)

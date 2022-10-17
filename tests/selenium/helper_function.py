@@ -1,3 +1,6 @@
+from encodings import CodecRegistryError
+
+
 def testFormatCount(name, count, correctCount):
     print("="*8)
     print(name + " Counts")
@@ -5,7 +8,7 @@ def testFormatCount(name, count, correctCount):
     print("Test status: " + str(count == correctCount))
     print("="*8)
     if(count != correctCount):
-        raise Exception(name +": Incorrect Count")
+        raise Exception(name +": Incorrect Count --- \nActual: "+str(count) +" \nCorrect: " + str(correctCount))
 
 def testFormatSingle(name, status):
     print("="*8)

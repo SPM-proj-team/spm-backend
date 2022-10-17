@@ -55,7 +55,7 @@ def updateRoleTest(driver,backend_url,frontend_url):
     skillSearch = WebDriverWait(driver, 10).until(
         EC.presence_of_all_elements_located((By.XPATH, "//input[@id='jobRoleInputText']"))
     )
-    # print(len(skillSearch))
+    
     skillSearch[1].send_keys("adobe")
     
     addSkill = WebDriverWait(driver, 10).until(
@@ -82,7 +82,7 @@ def updateRoleTest(driver,backend_url,frontend_url):
 def createRoleTest(driver,backend_url,frontend_url):
     prevRoleRequest = requests.get(backend_url+"roles")
     prevRoleCount = len(json.loads(prevRoleRequest.text)["data"])
-    # print(prevRoleCount)
+    
 
     driver.get(frontend_url)
     #  go to admin page
@@ -143,7 +143,6 @@ def createRoleTest(driver,backend_url,frontend_url):
     )
     create.click()
     time.sleep(2)
-
     RoleRequest = requests.get(backend_url+"roles")
     RoleCount = len(json.loads(RoleRequest.text)["data"])
     helper_function.testFormatCount("Updated No. Of Roles", RoleCount, prevRoleCount+1)
@@ -168,7 +167,7 @@ def deleteRoleTest(driver,backend_url,frontend_url):
 
     prevRoleRequest = requests.get(backend_url+"roles")
     prevRoleCount = len(json.loads(prevRoleRequest.text)["data"])
-    print(prevRoleCount)
+
     RoleSearchBar = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//input[@id='jobRoleInputText']"))
     )
@@ -191,5 +190,20 @@ def deleteRoleTest(driver,backend_url,frontend_url):
     time.sleep(2)
     RoleRequest = requests.get(backend_url+"roles")
     RoleCount = len(json.loads(RoleRequest.text)["data"])
-    print(RoleCount)
+  
     helper_function.testFormatCount("Delete No. Of Roles", RoleCount, prevRoleCount-1)
+
+def SearchRoleTest(driver,backend_url,frontend_url):
+    driver.get(frontend_url)
+    viewRoleBtn = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, "//a[@href='/JobRoles']"))
+    )
+    viewRoleBtn.click()
+    searchBarRole = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, "//input[@id='floatingInput']"))
+    )
+    searchBarRole.send_keys("operation")
+    result = WebDriverWait(driver, 10).until(
+        EC.presence_of_all_elements_located((By.XPATH, "//div[contains(@class, 'card-body w-100 text-start')]"))
+    )
+    helper_function.testFormatCount("Search result Count",len(result),3)
