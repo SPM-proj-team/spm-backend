@@ -92,6 +92,15 @@ def updateLearningJourney(Learning_Journey_ID):
         updatedCoursesID = []
         for course in LJ["Courses"]:
             updatedCoursesID.append(course["Course_ID"])
+        if len(updatedCoursesID) == 0:
+            return jsonify(
+           {
+               "code": 404,
+               "data": [],
+               "error": True,
+               "message": "There should at least be 1 course in the Learning Journey"
+           }
+       )
         courses = Course.query.filter(Course.Course_ID.in_(updatedCoursesID))
         selectedLJ.Description = LJ["Description"]
         selectedLJ.Learning_Journey_Name = LJ["Learning_Journey_Name"]
