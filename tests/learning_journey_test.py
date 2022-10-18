@@ -182,20 +182,20 @@ def test_update_learning_journey():
                                     "Learning_Journey_ID": 1,
                                     "Courses": [
                                         {
-                                            "Course_Category": "Course_Category_1",
-                                            "Course_Desc": "Enterprise Business System Description",
-                                            "Course_ID": "BAP101",
-                                            "Course_Name": "Enterprise Business System",
-                                            "Course_Status": "Open",
-                                            "Course_Type": "Type_1"
+                                            "Course_Category": "Core",
+                                            "Course_Desc": "This foundation module aims to introduce students to the fundamental concepts and underlying principles of systems thinking",
+                                            "Course_ID": "COR001",
+                                            "Course_Name": "Systems Thinking and Design",
+                                            "Course_Status": "Active",
+                                            "Course_Type": "Internal"
                                         },
                                         {
-                                            "Course_Category": "Course_Category_1",
-                                            "Course_Desc": "Equip student with knowledge about agile approach regarding software project development ",
-                                            "Course_ID": "IS212",
-                                            "Course_Name": "Software Project Management",
-                                            "Course_Status": "Open",
-                                            "Course_Type": "Type_1"
+                                            "Course_Category": "Core",
+                                            "Course_Desc": "Apply Lean Six Sigma methodology and statistical tools such as Minitab to be used in process analytics",
+                                            "Course_ID": "COR002",
+                                            "Course_Name": "Lean Six Sigma Green Belt Certification",
+                                            "Course_Status": "Active",
+                                            "Course_Type": "Internal"
                                         }
                                     ],
                                     "Description": "test",
@@ -229,13 +229,13 @@ def test_update_courses_in_learning_journey():
                                     "Learning_Journey_ID": 1,
                                     "Courses": [
                                         {
-                                            "Course_Category": "Course_Category_1",
-                                            "Course_Desc": "Sales Management System Description",
-                                            "Course_ID": "BAP102",
-                                            "Course_Name": "Sales Management System",
-                                            "Course_Status": "Open",
-                                            "Course_Type": "Type_1"
-                                        },
+                                            "Course_Category": "Core",
+                                            "Course_Desc": "Apply Lean Six Sigma methodology and statistical tools such as Minitab to be used in process analytics",
+                                            "Course_ID": "COR002",
+                                            "Course_Name": "Lean Six Sigma Green Belt Certification",
+                                            "Course_Status": "Active",
+                                            "Course_Type": "Internal"
+                                        }
                                     ],
                                     "Description": "test",
                                     "Learning_Journey_Name": "Learning Journey for Full Stack Developer",
@@ -256,7 +256,7 @@ def test_update_courses_in_learning_journey():
         assert response.get_json()['error'] == False
         data = response.get_json()['data'][0]
         assert len(data["Courses"]) == 1
-        assert data["Courses"][0]["Course_ID"] == "BAP102"
+        assert data["Courses"][0]["Course_ID"] == "COR002"
 
 
 def test_update_courses_in_learning_journey_no_courses():
