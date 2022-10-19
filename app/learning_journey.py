@@ -1,3 +1,4 @@
+import json
 from app import app, db
 from flask_sqlalchemy import SQLAlchemy
 from flask import jsonify, request
@@ -82,6 +83,49 @@ def getCourses_by_one_LearningJourney(Learning_Journey_ID):
         }
     ), 200
 
+@app.route("/learning_journey/create", methods=["POST"])
+def createLearningJourney():
+    try:
+        courseID = []
+        learningJourney = LearningJourney()
+        data = request.json['Learning_Journey']
+        for course in data['Courses']:
+            courseID.append(course['Course_ID'])
+        if len(courseID) == 0:
+            return jsonify(
+            {
+                "code": 404,
+                "data": [],
+                "error": True,
+                "message": "There should at least be 1 course in the Learning Journey"
+            }
+            ), 200
+        courses = Course.query.filter(Course.Course_ID.in_(courseID))
+        learningJourney.Learning_Journey_Name = data['Learning_Journey_Name']
+        learningJourney.Staff_ID = data['Staff_ID']
+        learningJourney.Description = data['Description']
+        learningJourney.Courses = [course for course in courses]
+        learningJourney.Job_Role_ID = data['Role']['Job_ID']
+        db.session.add(learningJourney)
+        db.session.commit()
+        return jsonify(
+            {
+                "code": 200,
+                "data": [learningJourney.jsonWithCourseAndRole()],
+                "error": False
+            }
+        ), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify(
+            {
+                "code": 406,
+                "error": True,
+                "message": f"An error occurred while creating learning journey: {e}",
+                "data": data
+            }
+        ), 200
+
 @app.route("/learning_journey/<int:Learning_Journey_ID>", methods=["PUT"])
 def updateLearningJourney(Learning_Journey_ID):
     Staff_ID = request.json['Staff_ID']
@@ -102,7 +146,7 @@ def updateLearningJourney(Learning_Journey_ID):
                "error": True,
                "message": "There should at least be 1 course in the Learning Journey"
            }
-       ), 200
+        ), 200
         courses = Course.query.filter(Course.Course_ID.in_(updatedCoursesID))
         selectedLJ.Description = LJ["Description"]
         selectedLJ.Learning_Journey_Name = LJ["Learning_Journey_Name"]
@@ -115,7 +159,7 @@ def updateLearningJourney(Learning_Journey_ID):
                "data": [selectedLJ.jsonWithCourseAndRole()],
                "error": False
            }
-       ), 200
+        ), 200
     return jsonify(
         {
             "code": 200,
@@ -139,7 +183,7 @@ def deleteLearningJourney(Learning_Journey_ID):
                "message": "Learning Journey ID: " + str(Learning_Journey_ID) +" has been deleted",
                "error": False
            }
-       ), 200
+        ), 200
     return jsonify(
         {
             "code": 400,

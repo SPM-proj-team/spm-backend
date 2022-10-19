@@ -146,7 +146,8 @@ def createRole():
         return jsonify(
             {
                 "code": 406,
-                "error": f"An error occurred while creating job role: {e}",
+                "error": True,
+                "message": f"An error occurred while creating job role: {e}",
                 "data": data
             }
         ), 200
@@ -210,7 +211,8 @@ def updateRole():
         return jsonify(
             {
                 "code": 406,
-                "error": f"An error occurred while updating job role: {e}",
+                "error": True,
+                "message": f"An error occurred while updating job role: {e}",
                 "data": data
             }
         ), 200
@@ -262,6 +264,8 @@ def deleteRole(id : int):
         return jsonify(
             {
                 "code": 406,
-                "error": f"An error occurred while deleting job role: {e}"
+                "error": True,
+                "message": f"An error occurred while deleting job role: {e}",
+                "data": {"id": id}
             }
         ), 200
