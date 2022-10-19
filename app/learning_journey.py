@@ -141,16 +141,6 @@ def updateLearningJourney(Learning_Journey_ID):
     Staff_ID = request.json['Staff_ID']
     LJ = request.json['Learning_Journey']
     Learning_Journey_ID = LJ["Learning_Journey_ID"]
-    learningJourneyExists = LearningJourney.query.filter_by(Learning_Journey_Name = LJ['Learning_Journey_Name'],Staff_ID = Staff_ID).first()
-    if learningJourneyExists and learningJourneyExists.json()['Learning_Journey_ID'] != Learning_Journey_ID:
-        return jsonify(
-            {
-                "code": 409,
-                "error": True,
-                "message": f"An error occurred while updating learning journey: Duplicate learning journey name already exists for staff id {Staff_ID}.",
-                "data": learningJourneyExists.jsonWithCourseAndRole()
-            }
-        ), 200
     selectedLJ = LearningJourney.query.filter_by(Learning_Journey_ID = Learning_Journey_ID,Staff_ID = Staff_ID).all()
     if len(selectedLJ):
         selectedLJ = selectedLJ[0]
@@ -165,12 +155,13 @@ def updateLearningJourney(Learning_Journey_ID):
                "error": True,
                "message": "There should at least be 1 course in the Learning Journey"
            }
-        ), 200
+        ), 404
         courses = Course.query.filter(Course.Course_ID.in_(updatedCoursesID))
         selectedLJ.Description = LJ["Description"]
         selectedLJ.Learning_Journey_Name = LJ["Learning_Journey_Name"]
         selectedLJ.Role = LJ["Role"]
         selectedLJ.Courses = [course for course in courses]
+        print(courses)
         db.session.commit()
         return jsonify(
            {
@@ -183,7 +174,7 @@ def updateLearningJourney(Learning_Journey_ID):
         {
             "code": 200,
             "data": [],
-            "message": "There are no Learning Journeys.",
+            "message": "There are no Learning Journeys with the ID " + str(Learning_Journey_ID),
             "error": False
         }
     ), 200
@@ -201,7 +192,7 @@ def deleteLearningJourney(Learning_Journey_ID):
                     "message": "There is no Learning Journeys with ID: " + str(Learning_Journey_ID),
                     "error": True
                 }
-            ), 200
+            ), 406
 
         LJ.Courses = []
         db.session.commit()
@@ -224,4 +215,4 @@ def deleteLearningJourney(Learning_Journey_ID):
                 "message": f"An error occurred while deleting learning journey: {e}",
                 "data": {"id": id}
             }
-        ), 200
+        ), 406
