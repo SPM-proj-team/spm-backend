@@ -41,6 +41,16 @@ def initialise_db():
     db = SQLAlchemy(app)
     return db
 
+
+@pytest.fixture(autouse=True)
+def setUp():
+    db.create_all()
+
+def tearDown(): 
+    db.session.remove()
+    db.drop_all()
+
+
 # Test cases
 def test_create_role():
     with app.test_client() as test_client:
@@ -71,7 +81,6 @@ def test_create_role():
         assert len(data["data"][0]["Skills"]) == 2
         
 
-# @pytest.mark.run(order=2)
 def test_duplicate_create_role():
     with app.test_client() as test_client:
         response = test_client.post('/roles',
@@ -106,11 +115,13 @@ def test_get_single_role():
         assert response.status_code == 200
         assert len(response.get_json()['data']) > 0
 
+
 def test_get_single_role_not_found():
     with app.test_client() as test_client:
         response = test_client.get(f"/roles/9999")
         assert response.status_code == 200
         assert len(response.get_json()['data']) == 0
+
 
 def test_update_role():
     with app.test_client() as test_client:
@@ -138,6 +149,7 @@ def test_update_role():
         assert data["data"][0]["Description"] == "Ipsum"
         assert len(data["data"][0]["Skills"]) == 1
 
+
 def test_update_role_not_found():
     with app.test_client() as test_client:
         response = test_client.put('/roles',
@@ -158,6 +170,7 @@ def test_update_role_not_found():
         assert response.get_json()['error'] == True
         assert response.get_json()['message'] == "An error occurred while updating job role: Job role not found."
         
+
 def test_duplicate_update_role():
     with app.test_client() as test_client:
         testDuplicateRole = test_client.post('/roles',
@@ -196,6 +209,7 @@ def test_duplicate_update_role():
         assert response.get_json()['error'] == True
         assert response.get_json()['message'] == "An error occurred while updating job role: Duplicate entry job role already exists."
 
+
 def test_delete_role_associated_learning_journey():
     with app.test_client() as test_client:
         response = test_client.delete(f"/roles/1")
@@ -214,6 +228,7 @@ def test_delete_role():
         assert response2.status_code == 200
         assert response2.get_json()['error'] == False
 
+
 def test_delete_role_not_found():
     with app.test_client() as test_client:
         response = test_client.delete(f"/roles/{jobRole['Job_ID']}")
@@ -221,3 +236,4 @@ def test_delete_role_not_found():
         assert response.get_json()['code'] == 406
         assert response.get_json()['error'] == True
         assert response.get_json()['message'] == "An error occurred while deleting job role: Job role not found."
+        tearDown()

@@ -12,7 +12,6 @@ import os
 from app import app
 from dotenv import load_dotenv
 import pytest
-from flask import json
 from flask_sqlalchemy import SQLAlchemy
 
 pytestmark = [pytest.mark.skill]
@@ -42,27 +41,13 @@ def initialise_db():
     return db
 
 
-# Set up test data in database
-# @pytest.fixture(autouse=True)
-# def role(initialise_db):
-#     print('role')
-#     from app import role
-#     test_role = role.Role(
-#         Job_Role = "Manager",
-#         Job_Title = "Analytics Manager",
-#         Skills = [],
-#     )
-#     db.session.add(test_role)
-#     db.session.commit()
-#     return test_role
+@pytest.fixture(autouse=True)
+def setUp():
+    db.create_all()
 
-
-# def tearDown(): 
-#     print('\n Tearing Down')
-#     from app import role
-#     db.session.query(role.Role).delete()
-#     db.session.commit()
-#     print('\n Tearing Down Complete')
+def tearDown(): 
+    db.session.remove()
+    db.drop_all()
 
 
 # Test cases

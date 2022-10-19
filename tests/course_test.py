@@ -12,7 +12,6 @@ import os
 
 from app import app
 from dotenv import load_dotenv
-from datetime import datetime, timedelta
 import pytest
 from flask import json
 from flask_sqlalchemy import SQLAlchemy
@@ -45,53 +44,13 @@ def initialise_db():
     return db
 
 
-# Set up test data in database
-# @pytest.fixture(autouse=True)
-# def role(initialise_db):
-#     print('role')
-#     from app import role
-#     test_role = role.Role(
-#         name = "Analytics Manager",
-#         skills = []
-#     )
-#     db.session.add(test_role)
-#     db.session.commit()
-#     return test_role
+@pytest.fixture(autouse=True)
+def setUp():
+    db.create_all()
 
-# @pytest.fixture(autouse=True)
-# def skill(role):
-#     from app import skill
-#     role_id = role.id
-#     test_skill = skill.Skill(
-#         role_id = role_id,
-#         name = "Business Application",
-#     )
-#     db.session.add(test_skill)
-#     db.session.commit()
-#     return test_skill
-
-# @pytest.fixture(autouse=True)
-# def course(skill):
-#     from app import course
-#     skill_id = skill.id
-#     test_course = course.Course(
-#         name = "Business Application",
-#         duration = 4,
-#         # prereq_course_id = 1,
-#         skills = [skill_id],
-#     )
-#     db.session.add(test_course)
-#     db.session.commit()
-#     return test_course
-
-# def tearDown(): 
-#     print('\n Tearing Down')
-#     from app import role, skill, course
-#     db.session.query(course.Course).delete()
-#     db.session.query(skill.Skill).delete()
-#     db.session.query(role.Role).delete()
-#     db.session.commit()
-#     print('\n Tearing Down Complete')
+def tearDown(): 
+    db.session.remove()
+    db.drop_all()
 
 
 # Test cases        

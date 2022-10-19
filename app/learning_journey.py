@@ -89,6 +89,16 @@ def createLearningJourney():
         courseID = []
         learningJourney = LearningJourney()
         data = request.json['Learning_Journey']
+        learningJourneyExists = LearningJourney.query.filter_by(Learning_Journey_Name = data['Learning_Journey_Name'],Staff_ID = data['Staff_ID']).first()
+        if learningJourneyExists:
+            return jsonify(
+                {
+                    "code": 409,
+                    "error": True,
+                    "message": f"An error occurred while creating learning journey: Duplicate learning journey name already exists for staff id {data['Staff_ID']}.",
+                    "data": learningJourneyExists.jsonWithCourseAndRole()
+                }
+            ), 200
         for course in data['Courses']:
             courseID.append(course['Course_ID'])
         if len(courseID) == 0:
@@ -130,8 +140,17 @@ def createLearningJourney():
 def updateLearningJourney(Learning_Journey_ID):
     Staff_ID = request.json['Staff_ID']
     LJ = request.json['Learning_Journey']
-    # print(LJ["Learning_Journey_ID"])
     Learning_Journey_ID = LJ["Learning_Journey_ID"]
+    learningJourneyExists = LearningJourney.query.filter_by(Learning_Journey_Name = LJ['Learning_Journey_Name'],Staff_ID = Staff_ID).first()
+    if learningJourneyExists and learningJourneyExists.json()['Learning_Journey_ID'] != Learning_Journey_ID:
+        return jsonify(
+            {
+                "code": 409,
+                "error": True,
+                "message": f"An error occurred while updating learning journey: Duplicate learning journey name already exists for staff id {Staff_ID}.",
+                "data": learningJourneyExists.jsonWithCourseAndRole()
+            }
+        ), 200
     selectedLJ = LearningJourney.query.filter_by(Learning_Journey_ID = Learning_Journey_ID,Staff_ID = Staff_ID).all()
     if len(selectedLJ):
         selectedLJ = selectedLJ[0]
@@ -171,24 +190,38 @@ def updateLearningJourney(Learning_Journey_ID):
 
 @app.route("/learning_journey/<int:Learning_Journey_ID>", methods=["DELETE"])
 def deleteLearningJourney(Learning_Journey_ID):
-    Staff_ID = request.json['Staff_ID']
-    # print(LJ["Learning_Journey_ID"])
-    selectedLJ = LearningJourney.query.filter_by(Learning_Journey_ID = Learning_Journey_ID,Staff_ID = Staff_ID).all()
-    if len(selectedLJ):
-        # db.session.delete(selectedLJ)
-        # db.session.commit()
+    try:
+        Staff_ID = request.json['Staff_ID']
+        LJ = LearningJourney.query.filter_by(Learning_Journey_ID = Learning_Journey_ID,Staff_ID = Staff_ID).first()
+        if not LJ:
+            return jsonify(
+                {
+                    "code": 406,
+                    "data": [],
+                    "message": "There is no Learning Journeys with ID: " + str(Learning_Journey_ID),
+                    "error": True
+                }
+            ), 200
+
+        LJ.Courses = []
+        db.session.commit()
+
+        db.session.delete(LJ)
+        db.session.commit()
         return jsonify(
-           {
-               "code": 200,
-               "message": "Learning Journey ID: " + str(Learning_Journey_ID) +" has been deleted",
-               "error": False
-           }
+            {
+                "code": 200,
+                "message": "Learning Journey ID: " + str(Learning_Journey_ID) +" has been deleted",
+                "error": False
+            }
         ), 200
-    return jsonify(
-        {
-            "code": 400,
-            "data": [],
-            "message": "There is no Learning Journeys with ID: " + str(Learning_Journey_ID),
-            "error": True
-        }
-    ), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify(
+            {
+                "code": 406,
+                "error": True,
+                "message": f"An error occurred while deleting learning journey: {e}",
+                "data": {"id": id}
+            }
+        ), 200
