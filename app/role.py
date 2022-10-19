@@ -66,7 +66,7 @@ def getRole():
                "error": False,
                "data": [role.jsonWithSkills() for role in roleList]
            }
-       )
+       ), 200
     return jsonify(
         {
             "code": 200,
@@ -86,7 +86,7 @@ def getRoleByID(id : int):
                "error": False,
                "data": [role.jsonWithSkillsCourses() for role in roleList]
            }
-       )
+       ), 200
     return jsonify(
         {
             "code": 200,
@@ -118,7 +118,7 @@ def createRole():
                     "message": "An error occurred while creating job role: Duplicate entry job role already exists.",
                     "data": roleExists.jsonWithSkillsCourses()
                 }
-            ), 200
+            ), 409
         
         jobRoleData = {
             "Job_Role": data["Job_Role"],
@@ -150,7 +150,7 @@ def createRole():
                 "message": f"An error occurred while creating job role: {e}",
                 "data": data
             }
-        ), 200
+        ), 406
 
 @app.route("/roles", methods=["PUT"])
 def updateRole():
@@ -177,7 +177,7 @@ def updateRole():
                     "message": "An error occurred while updating job role: Job role not found.",
                     "data": data
                 }
-            ), 200
+            ), 406
         
         roleExists = Job_Role.query.filter_by(Job_Role=data["Job_Role"]).first()
         if roleExists and roleExists.json()["Job_ID"] != jobID:
@@ -188,7 +188,7 @@ def updateRole():
                     "message": "An error occurred while updating job role: Duplicate entry job role already exists.",
                     "data": roleExists.jsonWithSkillsCourses()
                 }
-            ), 200
+            ), 409
 
         skills = db.session.query(Skill).filter(Skill.Skill_ID.in_(data["Skills"])).all()
         
@@ -215,7 +215,7 @@ def updateRole():
                 "message": f"An error occurred while updating job role: {e}",
                 "data": data
             }
-        ), 200
+        ), 406
 
 @app.route("/roles/<int:id>", methods=["DELETE"])
 def deleteRole(id : int):
@@ -229,7 +229,7 @@ def deleteRole(id : int):
                     "message": "An error occurred while deleting job role: Job role not found.",
                     "data": {"id": id}
                 }
-            ), 200
+            ), 406
 
         # Check if associated learning joruneys, prevent deletion if associated LJs exists 
         learningJourneys = LearningJourney.query.filter_by(Job_Role_ID = id).all()
@@ -244,7 +244,7 @@ def deleteRole(id : int):
                         "associated_learning_journeys": [learningJourney.jsonWithCourseAndRole() for learningJourney in learningJourneys]
                     }
                 }
-            ), 200
+            ), 406
 
         jobRole.Skills = []
         db.session.commit()
@@ -268,4 +268,4 @@ def deleteRole(id : int):
                 "message": f"An error occurred while deleting job role: {e}",
                 "data": {"id": id}
             }
-        ), 200
+        ), 406

@@ -95,7 +95,7 @@ def test_duplicate_create_role():
                                 "Content-Type": "application/json"
                             }
                         )
-        assert response.status_code == 200
+        assert response.status_code == 409
         assert response.get_json()['code'] == 409
         assert response.get_json()['error'] == True
         assert response.get_json()['message'] == "An error occurred while creating job role: Duplicate entry job role already exists."
@@ -165,7 +165,7 @@ def test_update_role_not_found():
                                 "Content-Type": "application/json"
                             }
                         )
-        assert response.status_code == 200
+        assert response.status_code == 406
         assert response.get_json()['code'] == 406
         assert response.get_json()['error'] == True
         assert response.get_json()['message'] == "An error occurred while updating job role: Job role not found."
@@ -204,7 +204,7 @@ def test_duplicate_update_role():
                 "Content-Type": "application/json"
             }
         )
-        assert response.status_code == 200
+        assert response.status_code == 409
         assert response.get_json()['code'] == 409
         assert response.get_json()['error'] == True
         assert response.get_json()['message'] == "An error occurred while updating job role: Duplicate entry job role already exists."
@@ -232,7 +232,7 @@ def test_delete_role():
 def test_delete_role_not_found():
     with app.test_client() as test_client:
         response = test_client.delete(f"/roles/{jobRole['Job_ID']}")
-        assert response.status_code == 200
+        assert response.status_code == 406
         assert response.get_json()['code'] == 406
         assert response.get_json()['error'] == True
         assert response.get_json()['message'] == "An error occurred while deleting job role: Job role not found."
