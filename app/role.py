@@ -1,10 +1,6 @@
-# from crypt import methods
-import json
-
 from app.learning_journey import LearningJourney
 from app.skill import Skill
 from app import app,db
-from flask_sqlalchemy import SQLAlchemy
 from flask import jsonify, request
 
 # Association Table
@@ -13,7 +9,6 @@ Role_has_Skill = db.Table('Role_has_Skill',
                     db.Column('Skill_ID', db.Integer, db.ForeignKey('Skill.Skill_ID'))
                     )
 
-
 class Job_Role(db.Model):
     __tablename__ = 'Job_Role'
     Job_ID = db.Column(db.Integer, primary_key=True)
@@ -21,7 +16,7 @@ class Job_Role(db.Model):
     Job_Title = db.Column(db.String)
     Department = db.Column(db.String)
     Description = db.Column(db.String)
-    Skills = db.relationship('Skill', secondary=Role_has_Skill)
+    Skills = db.relationship('Skill', secondary=Role_has_Skill, backref='Roles')
     Learning_Journeys = db.relationship('LearningJourney', backref='Job_Role')
 
     def json(self):
@@ -77,7 +72,6 @@ def getRole():
 
 @app.route("/roles/<int:id>")
 def getRoleByID(id : int):
-    
     roleList = Job_Role.query.filter_by(Job_ID = id).all()
     if len(roleList):
         return jsonify(
@@ -115,11 +109,10 @@ def createRole():
                 {
                     "code": 409,
                     "error": True,
-                    "message": "An error occurred while creating job role: Duplicate entry job role already exists.",
+                    "message": "An error occurred while creating job role: Duplicate entry job role already exists",
                     "data": roleExists.jsonWithSkillsCourses()
                 }
             ), 409
-        
         jobRoleData = {
             "Job_Role": data["Job_Role"],
             "Job_Title": data["Job_Title"],
@@ -129,11 +122,9 @@ def createRole():
         jobRole = Job_Role(**jobRoleData)
         db.session.add(jobRole)
         db.session.commit()
-
         skills = db.session.query(Skill).filter(Skill.Skill_ID.in_(data["Skills"])).all()
         jobRole.Skills = [skill for skill in skills]
         db.session.commit()
-        
         return jsonify(
             {
                 "code": 200,
@@ -174,7 +165,7 @@ def updateRole():
                 {
                     "code": 406,
                     "error": True,
-                    "message": "An error occurred while updating job role: Job role not found.",
+                    "message": "An error occurred while updating job role: Job ID not found",
                     "data": data
                 }
             ), 406
@@ -185,20 +176,17 @@ def updateRole():
                 {
                     "code": 409,
                     "error": True,
-                    "message": "An error occurred while updating job role: Duplicate entry job role already exists.",
+                    "message": "An error occurred while updating job role: Duplicate entry job role already exists",
                     "data": roleExists.jsonWithSkillsCourses()
                 }
             ), 409
-
         skills = db.session.query(Skill).filter(Skill.Skill_ID.in_(data["Skills"])).all()
-        
         jobRole.Job_Role = data["Job_Role"]
         jobRole.Job_Title = data["Job_Title"]
         jobRole.Department = data["Department"]
         jobRole.Description = data["Description"]
         jobRole.Skills = [skill for skill in skills]
         db.session.commit()
-
         return jsonify(
             {
                 "code": 200,
@@ -226,37 +214,32 @@ def deleteRole(id : int):
                 {
                     "code": 406,
                     "error": True,
-                    "message": "An error occurred while deleting job role: Job role not found.",
-                    "data": {"id": id}
+                    "message": f"An error occurred while deleting job role: Job role id {id} not found",
+                    "data": []
                 }
             ), 406
-
-        # Check if associated learning joruneys, prevent deletion if associated LJs exists 
         learningJourneys = LearningJourney.query.filter_by(Job_Role_ID = id).all()
         if len(learningJourneys) > 0:
             return jsonify(
                 {
                     "code": 406,
                     "error": True,
-                    "message": f"An error occurred while deleting job role: Job role id {id} stll have learning journeys associated with it.",
+                    "message": f"An error occurred while deleting job role: Job role id {id} stll have learning journeys associated with it",
                     "data": {
                         "id": id,
                         "associated_learning_journeys": [learningJourney.jsonWithCourseAndRole() for learningJourney in learningJourneys]
                     }
                 }
             ), 406
-
         jobRole.Skills = []
         db.session.commit()
-
         db.session.delete(jobRole)
         db.session.commit()
-
         return jsonify(
             {
                 "code": 200,
                 "error": False,
-                "data": jobRole.jsonWithSkillsCourses()
+                "message": f"Job Role ID: {id} has been deleted",
             }
         ), 200
     except Exception as e:

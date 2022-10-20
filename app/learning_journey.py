@@ -1,15 +1,12 @@
-import json
 from app import app, db
-from flask_sqlalchemy import SQLAlchemy
 from flask import jsonify, request
 from app.course import Course
-# Learning Journey Association Table
+
+# Association Table
 Learning_Journey_has_Course = db.Table('Learning_Journey_has_Course',
                                 db.Column('Course_ID', db.String, db.ForeignKey('Course.Course_ID')),
                                 db.Column('Learning_Journey_ID', db.Integer, db.ForeignKey('Learning_Journey.Learning_Journey_ID'))
                                 )
-#
-# Learning Journey Class 
 
 class LearningJourney(db.Model):
     __tablename__ = 'Learning_Journey'
@@ -95,7 +92,7 @@ def createLearningJourney():
                 {
                     "code": 409,
                     "error": True,
-                    "message": f"An error occurred while creating learning journey: Duplicate learning journey name already exists for staff id {data['Staff_ID']}.",
+                    "message": f"An error occurred while creating learning journey: Duplicate learning journey name already exists for staff id {data['Staff_ID']}",
                     "data": learningJourneyExists.jsonWithCourseAndRole()
                 }
             ), 200
@@ -196,7 +193,6 @@ def deleteLearningJourney(Learning_Journey_ID):
 
         LJ.Courses = []
         db.session.commit()
-
         db.session.delete(LJ)
         db.session.commit()
         return jsonify(

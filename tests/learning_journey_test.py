@@ -15,6 +15,7 @@ from dotenv import load_dotenv
 import pytest
 from flask import json
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql import text
 
 pytestmark = [pytest.mark.learning_journey]
 
@@ -40,16 +41,38 @@ def initialise_db():
 
     global db
     db = SQLAlchemy(app)
-    return db
+    global sql_file
+    sql_file = open('tests/sql/test_spm.sql','r')
+    return db, sql_file
 
 
+# Fixture to reset database before each test is run
 @pytest.fixture(autouse=True)
-def setUp():
-    db.create_all()
+def reset():
+    # Before test commands
+    print('\nResetting test database')
+    sql_command = ''
+    for line in sql_file:
+        # Ignore commented lines
+        if not line.startswith('--') and line.strip('\n'):
+            # Append line to the command string
+            sql_command += line.strip('\n')
 
-def tearDown(): 
-    db.session.remove()
-    db.drop_all()
+            # If the command string ends with ';', it is a full statement
+            if sql_command.endswith(';'):
+                # Try to execute statement and commit it
+                try:
+                    db.session.execute(text(sql_command))
+                    db.session.commit()
+                # Assert in case of error
+                except Exception as e:
+                    print(e)
+                
+                # Finally, clear command string
+                finally:
+                    sql_command = ''
+    # This is where the testing happens
+    yield
 
 
 # Test cases
@@ -86,7 +109,6 @@ def test_create_learning_journey():
                         )
         assert response.status_code == 200
         assert response.get_json()['error'] == False
-        global lj
         lj = response.get_json()['data'][0]
 
         get_lj = test_client.post(f"/learning_journey/{lj['Learning_Journey_ID']}",
@@ -132,7 +154,7 @@ def test_create_learning_journey():
 #         assert response.status_code == 200
 #         assert response.get_json()['code'] == 409
 #         assert response.get_json()['error'] == True
-#         assert response.get_json()['message'] == "An error occurred while creating learning journey: Duplicate learning journey name already exists for staff id 1." 
+#         assert response.get_json()['message'] == "An error occurred while creating learning journey: Duplicate learning journey name already exists for staff id 1" 
 
 
 # def test_invalid_special_characters_create_learning_journey(course):
@@ -153,7 +175,7 @@ def test_create_learning_journey():
 def test_get_learning_journeys_by_staff_id():
     with app.test_client() as test_client:
         response = test_client.post('/learning_journey',
-                                   data = json.dumps(dict(Staff_ID=lj['Staff_ID'])),
+                                   data = json.dumps(dict(Staff_ID=1)),
                                    content_type='application/json')
         assert response.status_code == 200
         all_learning_journeys = response.get_json()['data']
@@ -162,8 +184,8 @@ def test_get_learning_journeys_by_staff_id():
 
 def test_get_courses_by_one_learning_journey():
     with app.test_client() as test_client:
-        response = test_client.post(f"/learning_journey/{lj['Learning_Journey_ID']}",
-                                   data = json.dumps(dict(Staff_ID=lj['Staff_ID'])),
+        response = test_client.post(f"/learning_journey/1",
+                                   data = json.dumps(dict(Staff_ID=1)),
                                    content_type='application/json')
         assert response.status_code == 200
         learning_journey = response.get_json()['data']
@@ -184,11 +206,11 @@ def test_get_courses_by_one_learning_journey_no_learning_journey():
 
 def test_update_learning_journey():
     with app.test_client() as test_client:
-        response = test_client.put(f"/learning_journey/{lj['Learning_Journey_ID']}",
+        response = test_client.put(f"/learning_journey/1",
                             data = json.dumps({
-                                "Staff_ID": lj['Staff_ID'],
+                                "Staff_ID": 1,
                                 "Learning_Journey": {
-                                    "Learning_Journey_ID": lj['Learning_Journey_ID'],
+                                    "Learning_Journey_ID": 1,
                                     "Courses": [
                                         {
                                             "Course_Category": "Core",
@@ -232,11 +254,11 @@ def test_update_learning_journey():
 
 def test_update_courses_in_learning_journey():
     with app.test_client() as test_client:
-        response = test_client.put(f"/learning_journey/{lj['Learning_Journey_ID']}",
+        response = test_client.put(f"/learning_journey/1",
                             data = json.dumps({
-                                "Staff_ID": lj['Staff_ID'],
+                                "Staff_ID": 1,
                                 "Learning_Journey": {
-                                    "Learning_Journey_ID": lj['Learning_Journey_ID'],
+                                    "Learning_Journey_ID": 1,
                                     "Courses": [
                                         {
                                             "Course_Category": "Core",
@@ -271,11 +293,11 @@ def test_update_courses_in_learning_journey():
 
 def test_update_courses_in_learning_journey_no_courses():
     with app.test_client() as test_client:
-        response = test_client.put(f"/learning_journey/{lj['Learning_Journey_ID']}",
+        response = test_client.put(f"/learning_journey/1",
                             data = json.dumps({
-                                "Staff_ID": lj['Staff_ID'],
+                                "Staff_ID": 1,
                                 "Learning_Journey": {
-                                    "Learning_Journey_ID": lj['Learning_Journey_ID'],
+                                    "Learning_Journey_ID": 1,
                                     "Courses": [],
                                     "Description": "test",
                                     "Learning_Journey_Name": "Learning Journey for Full Stack Developer",
@@ -372,9 +394,9 @@ def test_update_courses_in_learning_journey_no_courses():
 
 def test_delete_learning_journey():
     with app.test_client() as test_client:
-        response = test_client.delete(f"/learning_journey/{lj['Learning_Journey_ID']}",
+        response = test_client.delete(f"/learning_journey/1",
             data = json.dumps({
-                "Staff_ID": lj['Staff_ID']
+                "Staff_ID": 1
             }),
             headers = {
                 "Content-Type": "application/json"
@@ -390,7 +412,7 @@ def test_delete_learning_journey():
         # )
         assert response.status_code == 200
         assert response.get_json()['error'] == False
-        assert response.get_json()['message'] == f"Learning Journey ID: {lj['Learning_Journey_ID']} has been deleted"
+        assert response.get_json()['message'] == f"Learning Journey ID: 1 has been deleted"
         # assert response2.status_code == 200
         # assert response2.get_json()['error'] == False
         # assert response2.get_json()['message'] == f"Learning Journey ID: {lj2['Learning_Journey_ID']} has been deleted"
@@ -398,16 +420,15 @@ def test_delete_learning_journey():
 
 def test_delete_learning_journey_not_found():
     with app.test_client() as test_client:
-        response = test_client.delete(f"/learning_journey/{lj['Learning_Journey_ID']}",
+        response = test_client.delete(f"/learning_journey/99",
             data = json.dumps({
-                "Staff_ID": lj['Staff_ID']
+                "Staff_ID": 1
             }),
             headers = {
                 "Content-Type": "application/json"
             }
         )
         assert response.status_code == 406
-        assert response.get_json()['message'] == f"There is no Learning Journeys with ID: {lj['Learning_Journey_ID']}"
+        assert response.get_json()['message'] == f"There is no Learning Journeys with ID: 99"
         assert response.get_json()['error'] == True 
         assert response.get_json()['code'] == 406
-        tearDown()

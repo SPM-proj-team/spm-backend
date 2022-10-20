@@ -133,7 +133,7 @@ CREATE TABLE `Job_Role` (
 
 LOCK TABLES `Job_Role` WRITE;
 /*!40000 ALTER TABLE `Job_Role` DISABLE KEYS */;
-INSERT INTO `Job_Role` VALUES (1,'Operation Slave','Staff','Operations','Slavery is no go. Please promote me'),(2,'Sales Manager\n','Manager','Sales',''),(3,'Sales Rep\n','Staff','Sales',''),(4,'Operation Manager','Manager','Operations',''),(5,'Repair Engineer\n','Staff','Operations',''),(6,'Senior Roving Servic','Staff','Operations',''),(7,'Junior Roving Servic','Staff','Operations',''),(8,'HR and Admin Manager','Manager','HR and Admin\n',''),(9,'Operation Planning\n','Staff','HR and Admin\n',''),(10,'Admin and Call Cente','Staff','HR and Admin\n',''),(11,'Finance Manager\n','Manager','Finance',''),(12,'Finance Executive','Staff','Finance',''),(13,'Managing Director','Director','Executive Management','test');
+INSERT INTO `Job_Role` VALUES (1,'Operation Slave','Staff','Operations','Slavery is no go. Please promote me'),(2,'Sales Manager','Manager','Sales',''),(3,'Sales Rep','Staff','Sales',''),(4,'Operation Manager','Manager','Operations',''),(5,'Repair Engineer','Staff','Operations',''),(6,'Senior Roving Service','Staff','Operations',''),(7,'Junior Roving Service','Staff','Operations',''),(8,'HR and Admin Manager','Manager','HR and Admin',''),(9,'Operation Planning','Staff','HR and Admin',''),(10,'Admin and Call Cente','Staff','HR and Admin',''),(11,'Finance Manager','Manager','Finance',''),(12,'Finance Executive','Staff','Finance',''),(13,'Managing Director','Director','Executive Management','test');
 /*!40000 ALTER TABLE `Job_Role` ENABLE KEYS */;
 UNLOCK TABLES;
 
