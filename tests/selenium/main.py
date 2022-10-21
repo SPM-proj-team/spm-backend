@@ -1,3 +1,5 @@
+from tracemalloc import start
+from turtle import back
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
@@ -8,7 +10,7 @@ import role
 import learning_journey
 import helper_function
 import traceback
-
+import os
 backend_url = "http://localhost:5000/"
 frontend_url = "http://localhost:8080/"
 # Start selenium
@@ -29,56 +31,22 @@ def startDriver():
 
     driver = webdriver.Chrome(service=chrome_service, options=chrome_options)
 
-    #  go in url
-    try:
-        driver.get(frontend_url)
-        helper_function.testFormatSingle("Running of home page", True)
-    except Exception as e:
-        helper_function.testFormatSingle("Running of home page", False)
-        print(e)
-        traceback.print_exc()
-        return False
+    driver.get(frontend_url)
+    print(learning_journey.checkLearningJourney(driver,backend_url,frontend_url))
+    os.system("mysql -uroot < ../sql/test_spm.sql")
+    print(role.updateRoleTest(driver,backend_url,frontend_url))
+    os.system("mysql -uroot < ../sql/test_spm.sql")
+    print(role.createRoleTest(driver,backend_url,frontend_url))
+    os.system("mysql -uroot < ../sql/test_spm.sql")
+    print(role.deleteRoleTest(driver,backend_url,frontend_url))
+    os.system("mysql -uroot < ../sql/test_spm.sql")
+    print(role.SearchRoleTest(driver,backend_url,frontend_url))
+    os.system("mysql -uroot < ../sql/test_spm.sql")
+    print(learning_journey.updateLearningJourneyTest(driver,backend_url,frontend_url))
+    os.system("mysql -uroot < ../sql/test_spm.sql")
+    print(learning_journey.createLearningJourneyTest(driver,backend_url,frontend_url))
+    os.system("mysql -uroot < ../sql/test_spm.sql")
+    print(learning_journey.deleteLearningJourneyTest(driver,backend_url,frontend_url))
+    os.system("mysql -uroot < ../sql/test_spm.sql")
     
-    ## Test get learning journeys for staff
-    try:
-        learning_journey.checkLearningJourney(driver,backend_url,frontend_url)
-        # pass
-    except Exception as e:
-        print(e)
-        traceback.print_exc()
-        return False
-    # Test update and deletion of job roles
-    try:
-        role.updateRoleTest(driver,backend_url,frontend_url)
-    except Exception as e:
-        print(e)
-        traceback.print_exc()
-        return False
-    try:
-        role.createRoleTest(driver,backend_url,frontend_url)
-    except Exception as e:
-        print(e)
-        traceback.print_exc()
-        return False
-
-    try:
-        role.deleteRoleTest(driver,backend_url,frontend_url)
-    except Exception as e:
-        print(e)
-        traceback.print_exc()
-        return False
-
-    try:
-        role.SearchRoleTest(driver,backend_url,frontend_url)
-    except Exception as e:
-        print(e)
-        traceback.print_exc()
-        return False
-    driver.quit()
-    return True
-    
-
 startDriver()
-# RoleRequest = requests.get(backend_url+"roles")
-# RoleCount = len(json.loads(RoleRequest.text)["data"])
-# print(RoleCount)
