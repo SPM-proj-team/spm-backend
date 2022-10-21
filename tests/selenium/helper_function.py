@@ -8,7 +8,9 @@ def testFormatCount(name, count, correctCount):
     print("Test status: " + str(count == correctCount))
     print("="*8)
     if(count != correctCount):
-        raise Exception(name +": Incorrect Count --- \nActual: "+str(count) +" \nCorrect: " + str(correctCount))
+        return False
+    else:
+        return True
 
 def testFormatSingle(name, status):
     print("="*8)
@@ -16,7 +18,8 @@ def testFormatSingle(name, status):
     print("Test status: " + str(status))
     print("="*8)
     if(status == False):
-        raise Exception(name +": Error")
-
+        return False
+    else:
+        return True
 def quitFormaT(str):
     print(str +": Fail")
