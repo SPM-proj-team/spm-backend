@@ -75,9 +75,9 @@ def updateRoleTest(driver,backend_url,frontend_url):
     slaveSkillCount = len(slaveRoleSST["Skills"])
     helper_function.testFormatCount("Updated No. Of Skills", slaveSkillCount, prevSlaveSkillCount+1)
 
-    # fixed the data back to original
-    jsonstr = '{"Job_ID":1,"Job_Role":"Operation Slave","Job_Title":"Staff","Department":"Operations","Description":"Slavery is no go. Please promote me","Skills":["S001","S002","S003","S005","S006"]}'
-    requestFixed= requests.put(backend_url+"/roles",  json = json.loads(jsonstr))
+    # # fixed the data back to original
+    # jsonstr = '{"Job_ID":1,"Job_Role":"Operation Slave","Job_Title":"Staff","Department":"Operations","Description":"Slavery is no go. Please promote me","Skills":["S001","S002","S003","S005","S006"]}'
+    # requestFixed= requests.put(backend_url+"/roles",  json = json.loads(jsonstr))
 
 def createRoleTest(driver,backend_url,frontend_url):
     prevRoleRequest = requests.get(backend_url+"roles")
@@ -93,11 +93,7 @@ def createRoleTest(driver,backend_url,frontend_url):
     createCreateRoleBtn = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//h5[text()='Create New Roles']"))
     )
-    try:
-        createCreateRoleBtn.click()
-        helper_function.testFormatSingle("Going to Create New Roles", True)
-    except:
-        helper_function.testFormatSingle("Going to Create New Roles", False)
+    createCreateRoleBtn.click()
     jobRoleNameInput = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//input[@id='job_role']"))
     )
@@ -145,7 +141,7 @@ def createRoleTest(driver,backend_url,frontend_url):
     time.sleep(2)
     RoleRequest = requests.get(backend_url+"roles")
     RoleCount = len(json.loads(RoleRequest.text)["data"])
-    helper_function.testFormatCount("Updated No. Of Roles", RoleCount, prevRoleCount+1)
+    return helper_function.testFormatCount("Updated No. Of Roles", RoleCount, prevRoleCount+1)
 
 def deleteRoleTest(driver,backend_url,frontend_url):
     driver.get(frontend_url)
@@ -159,11 +155,8 @@ def deleteRoleTest(driver,backend_url,frontend_url):
     createUpdateRoleBtn = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//h5[text()='Update & Delete Roles']"))
     )
-    try:
-        createUpdateRoleBtn.click()
-        helper_function.testFormatSingle("Going to Update & delete Roles", True)
-    except:
-        helper_function.testFormatSingle("Going to Update & delete Roles", False)
+    createUpdateRoleBtn.click()
+    helper_function.testFormatSingle("Going to Update & delete Roles", True)
 
     prevRoleRequest = requests.get(backend_url+"roles")
     prevRoleCount = len(json.loads(prevRoleRequest.text)["data"])
@@ -171,9 +164,9 @@ def deleteRoleTest(driver,backend_url,frontend_url):
     RoleSearchBar = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//input[@id='jobRoleInputText']"))
     )
-    RoleSearchBar.send_keys("job role name test")
+    RoleSearchBar.send_keys("operation slave")
     jobRole = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, "//td[text()='job role name test']"))
+        EC.presence_of_element_located((By.XPATH, "//td[text()='Operation Slave']"))
     )
     jobRole.click()
     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
@@ -191,7 +184,7 @@ def deleteRoleTest(driver,backend_url,frontend_url):
     RoleRequest = requests.get(backend_url+"roles")
     RoleCount = len(json.loads(RoleRequest.text)["data"])
   
-    helper_function.testFormatCount("Delete No. Of Roles", RoleCount, prevRoleCount-1)
+    return helper_function.testFormatCount("Delete No. Of Roles", RoleCount, prevRoleCount-1)
 
 def SearchRoleTest(driver,backend_url,frontend_url):
     driver.get(frontend_url)
@@ -206,4 +199,4 @@ def SearchRoleTest(driver,backend_url,frontend_url):
     result = WebDriverWait(driver, 10).until(
         EC.presence_of_all_elements_located((By.XPATH, "//div[contains(@class, 'card-body w-100 text-start')]"))
     )
-    helper_function.testFormatCount("Search result Count",len(result),3)
+    return helper_function.testFormatCount("Search result Count",len(result),3)
