@@ -40,7 +40,7 @@ def startDriver():
     os.system("mysql -uroot < ../sql/test_spm.sql")
     print(role.deleteRoleTest(driver,backend_url,frontend_url))
     os.system("mysql -uroot < ../sql/test_spm.sql")
-    print(role.SearchRoleTest(driver,backend_url,frontend_url))
+    print(role.searchRoleTest(driver,backend_url,frontend_url))
     os.system("mysql -uroot < ../sql/test_spm.sql")
     print(learning_journey.updateLearningJourneyTest(driver,backend_url,frontend_url))
     os.system("mysql -uroot < ../sql/test_spm.sql")

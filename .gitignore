@@ -1,6 +1,6 @@
 app/__pycache__/**
 tests/__pycache__/**
-tests/selenium/__pycache__/**
+tests/selenium_tests/__pycache__/**
 .pytest_cache/**
 .env
 geckodriver.log

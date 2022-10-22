@@ -20,7 +20,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.core.utils import ChromeType
-import traceback
+from selenium_tests import learning_journey, role 
 
 pytestmark = [pytest.mark.e2e]
 
@@ -73,6 +73,7 @@ def startDriver():
     global backend_url
     global frontend_url
     # driver = driver = webdriver.Firefox()
+    # driver.maximize_window()
     driver = webdriver.Chrome(service=chrome_service, options=chrome_options)
     backend_url = "http://localhost:5000/"
     frontend_url = "http://localhost:8080/" 
@@ -116,4 +117,34 @@ def test_run_home_page():
     driver.get(frontend_url)
     assert driver.title ==  "ljps"
 
+def test_get_learning_journey():
+    response = learning_journey.checkLearningJourney(driver, backend_url, frontend_url)
+    assert response ==  True
 
+def test_update_role():
+    response = role.updateRoleTest(driver, backend_url, frontend_url)
+    assert response == True
+
+def test_create_role():
+    response = role.createRoleTest(driver, backend_url, frontend_url)
+    assert response == True
+
+def test_delete_role():
+    response = role.deleteRoleTest(driver, backend_url, frontend_url)
+    assert response == True
+
+def test_search_role():
+    response = role.searchRoleTest(driver, backend_url, frontend_url)
+    assert response == True
+
+# def test_update_learning_journey():
+#     response = learning_journey.updateLearningJourneyTest(driver,backend_url,frontend_url)
+#     assert response == True
+
+# def test_create_learning_journey():
+#     response = learning_journey.createLearningJourneyTest(driver, backend_url, frontend_url)
+#     assert response == True
+
+# def test_delete_learning_journey():
+#     response = learning_journey.deleteLearningJourneyTest(driver, backend_url, frontend_url)
+#     assert response == True

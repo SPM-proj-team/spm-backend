@@ -6,15 +6,20 @@ from selenium.webdriver.common.by import By
 import requests
 import json
 import time
-import helper_function
+from selenium_tests import helper_function
 
 def updateRoleTest(driver,backend_url,frontend_url):
     # going to admin page
+    driver.get(frontend_url)
+    time.sleep(2)
+
     adminBtn = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//a[@href='/Admin']"))
     )
     adminBtn.click()
 
+    driver.execute_script("window.scrollTo(0, document.body.scrollHeight)/2;")
+    time.sleep(2)
     # test update and delete role
     createUpdateRoleBtn = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//h5[text()='Update & Delete Roles']"))
@@ -73,7 +78,7 @@ def updateRoleTest(driver,backend_url,frontend_url):
     slaveRoleRequest = requests.get(backend_url+"/roles/1")
     slaveRoleSST = json.loads(slaveRoleRequest.text)["data"][0]
     slaveSkillCount = len(slaveRoleSST["Skills"])
-    helper_function.testFormatCount("Updated No. Of Skills", slaveSkillCount, prevSlaveSkillCount+1)
+    return helper_function.testFormatCount("Updated No. Of Skills", slaveSkillCount, prevSlaveSkillCount+1)
 
     # # fixed the data back to original
     # jsonstr = '{"Job_ID":1,"Job_Role":"Operation Slave","Job_Title":"Staff","Department":"Operations","Description":"Slavery is no go. Please promote me","Skills":["S001","S002","S003","S005","S006"]}'
@@ -90,6 +95,8 @@ def createRoleTest(driver,backend_url,frontend_url):
         EC.presence_of_element_located((By.XPATH, "//a[@href='/Admin']"))
     )
     adminBtn.click()
+    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    time.sleep(2)
     createCreateRoleBtn = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//h5[text()='Create New Roles']"))
     )
@@ -150,7 +157,8 @@ def deleteRoleTest(driver,backend_url,frontend_url):
     )
     adminBtn.click()
     time.sleep(2)
-
+    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    time.sleep(2)
     # test update and delete role
     createUpdateRoleBtn = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//h5[text()='Update & Delete Roles']"))
@@ -164,9 +172,9 @@ def deleteRoleTest(driver,backend_url,frontend_url):
     RoleSearchBar = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//input[@id='jobRoleInputText']"))
     )
-    RoleSearchBar.send_keys("operation slave")
+    RoleSearchBar.send_keys("managing director")
     jobRole = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, "//td[text()='Operation Slave']"))
+        EC.presence_of_element_located((By.XPATH, "//td[text()='Managing Director']"))
     )
     jobRole.click()
     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
@@ -186,7 +194,7 @@ def deleteRoleTest(driver,backend_url,frontend_url):
   
     return helper_function.testFormatCount("Delete No. Of Roles", RoleCount, prevRoleCount-1)
 
-def SearchRoleTest(driver,backend_url,frontend_url):
+def searchRoleTest(driver,backend_url,frontend_url):
     driver.get(frontend_url)
     viewRoleBtn = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//a[@href='/JobRoles']"))

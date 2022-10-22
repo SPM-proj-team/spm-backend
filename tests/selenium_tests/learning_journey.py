@@ -7,7 +7,7 @@ from selenium.webdriver.common.by import By
 import requests
 import json
 import time
-import helper_function
+from selenium_tests import helper_function
 
 def checkLearningJourney(driver,backend_url,frontend_url):
     # learning journeys test
@@ -65,9 +65,9 @@ def updateLearningJourneyTest(driver,backend_url,frontend_url):
 
 # create 
 def createLearningJourneyTest(driver,backend_url,frontend_url):
-    learningJoruneyRequest = requests.post(backend_url+"learning_journey", json = {"Staff_ID":1})
+    # learningJoruneyRequest = requests.post(backend_url+"learning_journey", json = {"Staff_ID":1})
     # print(learningJoruneyRequest.text)
-    dataCount = len(json.loads(learningJoruneyRequest.text)["data"])
+    # dataCount = len(json.loads(learningJoruneyRequest.text)["data"])
     # fixData = json.dumps(fixData)
     driver.get(frontend_url)
     time.sleep(2)
@@ -76,7 +76,6 @@ def createLearningJourneyTest(driver,backend_url,frontend_url):
     )
     learningJourneys[0].click()
     time.sleep(2)
-
     name = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//input[@id='name']"))
     )
@@ -85,14 +84,13 @@ def createLearningJourneyTest(driver,backend_url,frontend_url):
         EC.presence_of_element_located((By.XPATH, "//textarea[@id='desc']"))
     )
     desc.send_keys("test create learning journey desc")
-
+    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    time.sleep(2)
     nextBtn = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//button[@class='btn btn-primary btn-lg shadow w-100 fw-semibold']"))
     )
     nextBtn.click()
     time.sleep(2)
-
-
     roles = WebDriverWait(driver, 10).until(
         EC.presence_of_all_elements_located((By.XPATH, "//div[@class='ico-card']"))
     )
@@ -107,11 +105,8 @@ def createLearningJourneyTest(driver,backend_url,frontend_url):
     )
     time.sleep(1)
     course1[0].click()
-    driver.execute_script("window.scrollTo(0, document.body.scrollHeight)/2;")
-    time.sleep(2)
-
     createBtn = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, "//button[@class='btn btn-primary rounded-0 rounded-bottom fw-bold']"))
+        EC.presence_of_element_located((By.XPATH, "//button[@class='btn btn-lg btn-primary w-100 shadow fw-semibold']"))
     )
     createBtn.click()
     driver.get(frontend_url)
