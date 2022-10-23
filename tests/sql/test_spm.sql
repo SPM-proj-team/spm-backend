@@ -1,3 +1,6 @@
+-- Below is CLI command to import sql data into local MySQL db (TO-RUN from /spm-backend dir):
+-- mysql -uroot < tests/sql/test_spm.sql
+
 -- MySQL dump 10.13  Distrib 8.0.28, for macos12.0 (arm64)
 --
 -- Host: spm-db.c300l1maonyq.ap-southeast-1.rds.amazonaws.com    Database: test_spm_db
@@ -122,7 +125,7 @@ CREATE TABLE `Job_Role` (
   `Job_Role` varchar(20) NOT NULL,
   `Job_Title` varchar(20) NOT NULL,
   `Department` varchar(20) NOT NULL,
-  `Description` varchar(255) NOT NULL,
+  `Description` TEXT NOT NULL,
   PRIMARY KEY (`Job_ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=220 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -148,7 +151,7 @@ CREATE TABLE `Learning_Journey` (
   `Learning_Journey_ID` int NOT NULL AUTO_INCREMENT,
   `Learning_Journey_Name` varchar(45) NOT NULL,
   `Staff_ID` int NOT NULL,
-  `Description` varchar(256) DEFAULT NULL,
+  `Description` TEXT DEFAULT NULL,
   `Job_Role_ID` int NOT NULL,
   PRIMARY KEY (`Learning_Journey_ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3;
