@@ -5,7 +5,7 @@ Note:
 """
 
 """
-Unit tests for roles 
+Integration tests for roles 
 """
 
 import os

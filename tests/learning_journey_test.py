@@ -5,7 +5,7 @@ Note:
 """
 
 """
-Unit tests for learning journeys 
+Integration tests for learning journeys 
 """
 
 import os
