@@ -4,13 +4,15 @@ from flask import jsonify
 
 class Course(db.Model):
     __tablename__ = 'Course'
-    
     Course_ID = db.Column(db.String, primary_key=True)
     Course_Name = db.Column(db.String)
     Course_Desc = db.Column(db.String)
     Course_Type = db.Column(db.String)
     Course_Status = db.Column(db.String)
     Course_Category = db.Column(db.String)
+    Registrations = db.relationship('Registration', backref='Course')
+    # Registrations = db.relationship('Registration', backref='Course', lazy='dynamic',
+    #                     primaryjoin="Course.Course_ID == Registration.Course_ID")
 
     def json(self):
         return {
