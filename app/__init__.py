@@ -10,10 +10,16 @@ load_dotenv()
 user = environ.get('user') or "placeholderuser" 
 password = environ.get('password') or "placeholderpassword" 
 
+DB_HOSTNAME = environ.get('DB_HOSTNAME') 
+DB_USERNAME = environ.get('DB_USERNAME') 
+DB_PASSWORD = environ.get('DB_PASSWORD') 
+DB_NAME = environ.get('DB_NAME') 
+
 app=Flask(__name__)
 
 CORS(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+mysqlconnector://"+user+":"+password+"@localhost:3306/spm_db"
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+mysqlconnector://"+DB_USERNAME+":"+DB_PASSWORD+"@"+DB_HOSTNAME+":3306/"+DB_NAME
+# print
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_recycle': 299}
 db = SQLAlchemy(app)

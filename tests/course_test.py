@@ -12,10 +12,10 @@ import os
 
 from app import app
 from dotenv import load_dotenv
-from datetime import datetime, timedelta
 import pytest
 from flask import json
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql import text
 
 pytestmark = [pytest.mark.course]
 
@@ -42,56 +42,38 @@ def initialise_db():
 
     global db
     db = SQLAlchemy(app)
-    return db
+    global sql_file
+    sql_file = open('tests/sql/test_spm.sql','r')
+    return db, sql_file
 
 
-# Set up test data in database
-# @pytest.fixture(autouse=True)
-# def role(initialise_db):
-#     print('role')
-#     from app import role
-#     test_role = role.Role(
-#         name = "Analytics Manager",
-#         skills = []
-#     )
-#     db.session.add(test_role)
-#     db.session.commit()
-#     return test_role
+# Fixture to reset database before each test is run
+@pytest.fixture(autouse=True)
+def reset():
+    # Before test commands
+    print('\nResetting test database')
+    sql_command = ''
+    for line in sql_file:
+        # Ignore commented lines
+        if not line.startswith('--') and line.strip('\n'):
+            # Append line to the command string
+            sql_command += line.strip('\n')
 
-# @pytest.fixture(autouse=True)
-# def skill(role):
-#     from app import skill
-#     role_id = role.id
-#     test_skill = skill.Skill(
-#         role_id = role_id,
-#         name = "Business Application",
-#     )
-#     db.session.add(test_skill)
-#     db.session.commit()
-#     return test_skill
-
-# @pytest.fixture(autouse=True)
-# def course(skill):
-#     from app import course
-#     skill_id = skill.id
-#     test_course = course.Course(
-#         name = "Business Application",
-#         duration = 4,
-#         # prereq_course_id = 1,
-#         skills = [skill_id],
-#     )
-#     db.session.add(test_course)
-#     db.session.commit()
-#     return test_course
-
-# def tearDown(): 
-#     print('\n Tearing Down')
-#     from app import role, skill, course
-#     db.session.query(course.Course).delete()
-#     db.session.query(skill.Skill).delete()
-#     db.session.query(role.Role).delete()
-#     db.session.commit()
-#     print('\n Tearing Down Complete')
+            # If the command string ends with ';', it is a full statement
+            if sql_command.endswith(';'):
+                # Try to execute statement and commit it
+                try:
+                    db.session.execute(text(sql_command))
+                    db.session.commit()
+                # Assert in case of error
+                except Exception as e:
+                    print(e)
+                
+                # Finally, clear command string
+                finally:
+                    sql_command = ''
+    # This is where the testing happens
+    yield
 
 
 # Test cases        
@@ -107,29 +89,6 @@ def test_get_all_courses():
 #     with app.test_client() as test_client:
 #         response = test_client.get(f"/course/{course['id']}")
 #         assert response.status_code == 200
-
-
-# def test_get_courses_from_skill(skill):
-#     with app.test_client() as test_client:
-#         retrieve_courses = test_client.get(f"/skill/{skill['id']}")
-
-#         assert retrieve_courses.get_json()["data"]["courses"] == []
-
-# def test_create_course(skill):
-#     with app.test_client() as test_client:
-#         response = test_client.post('/course',
-#                             data = json.dumps({
-#                                 "name": "BAP101",
-#                                 "duration": 5,
-#                                 "skills": [skill.id]
-#                             }),
-#                             headers = {
-#                                 "Content-Type": "application/json"
-#                             }
-#                         )
-#         assert response.status_code == 200
-#         global course
-#         course = response.get_json()['data']
 
 
 # def test_update_course():
@@ -148,11 +107,3 @@ def test_get_all_courses():
 
 #         retrieve_course = test_client.get(f"/course/{course['id']}")
 #         assert retrieve_course.get_json()['data']['name'] == course_name
-
-
-# def test_delete_course():
-#     with app.test_client() as test_client:
-#         response = test_client.delete(f"/course/{course['id']}")
-#         assert response.status_code == 200
-#         tearDown()
-

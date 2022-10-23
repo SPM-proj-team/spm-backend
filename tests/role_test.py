@@ -14,6 +14,7 @@ from dotenv import load_dotenv
 import pytest
 from flask import json
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql import text
 
 pytestmark = [pytest.mark.role]
 
@@ -39,39 +40,87 @@ def initialise_db():
 
     global db
     db = SQLAlchemy(app)
-    return db
+    global sql_file
+    sql_file = open('tests/sql/test_spm.sql','r')
+    return db, sql_file
+
+
+# Fixture to reset database before each test is run
+@pytest.fixture(autouse=True)
+def reset():
+    # Before test commands
+    print('\nResetting test database')
+    sql_command = ''
+    for line in sql_file:
+        # Ignore commented lines
+        if not line.startswith('--') and line.strip('\n'):
+            # Append line to the command string
+            sql_command += line.strip('\n')
+
+            # If the command string ends with ';', it is a full statement
+            if sql_command.endswith(';'):
+                # Try to execute statement and commit it
+                try:
+                    db.session.execute(text(sql_command))
+                    db.session.commit()
+                # Assert in case of error
+                except Exception as e:
+                    print(e)
+                
+                # Finally, clear command string
+                finally:
+                    sql_command = ''
+    # This is where the testing happens
+    yield
+
 
 # Test cases
-# def test_create_role():
-#     with app.test_client() as test_client:
-#         response = test_client.post('/roles',
-#                             data = json.dumps({
-#                                 "Job_Role": "Manager",
-#                                 "Job_Title": "Analytics Manager",
-#                                 "Skills": [],
-#                             }),
-#                             headers = {
-#                                 "Content-Type": "application/json"
-#                             }
-#                         )
-#         assert response.status_code == 200
-#         global role
-#         role = response.get_json()['data']
+def test_create_role():
+    with app.test_client() as test_client:
+        response = test_client.post('/roles',
+                            data = json.dumps({
+                                "Job_Role": "DevOps Engineer",
+                                "Job_Title": "Staff",
+                                "Department": "Technology",
+                                "Description": "Lorem",
+                                "Skills": ["S001", "S002"]
+                            }),
+                            headers = {
+                                "Content-Type": "application/json"
+                            }
+                        )
 
+        assert response.status_code == 200
+        assert response.get_json()['error'] == False
+        jobRole = response.get_json()['data']
 
-# def test_duplicate_create_role():
-#     with app.test_client() as test_client:
-#         response = test_client.post('/roles',
-#                             data = json.dumps({
-#                                 "Job_Role": "Manager",
-#                                 "Job_Title": "Analytics Manager",
-#                                 "Skills": [],
-#                             }),
-#                             headers = {
-#                                 "Content-Type": "application/json"
-#                             }
-#                         )
-#         assert response.status_code == 400
+        getRole = test_client.get(f"/roles/{jobRole['Job_ID']}")
+        data = getRole.get_json()
+        assert data['data'][0]['Job_Role'] == "DevOps Engineer"
+        assert data["data"][0]["Job_Title"] == "Staff"
+        assert data["data"][0]["Department"] == "Technology"
+        assert data["data"][0]["Description"] == "Lorem"
+        assert len(data["data"][0]["Skills"]) == 2
+        
+
+def test_duplicate_create_role():
+    with app.test_client() as test_client:
+        response = test_client.post('/roles',
+                            data = json.dumps({
+                                "Job_Role": "Sales Manager",
+                                "Job_Title": "Manager",
+                                "Department": "Sales",
+                                "Description": "Lorem",
+                                "Skills": ["S001", "S002"]
+                            }),
+                            headers = {
+                                "Content-Type": "application/json"
+                            }
+                        )
+        assert response.status_code == 409
+        assert response.get_json()['code'] == 409
+        assert response.get_json()['error'] == True
+        assert response.get_json()['message'] == "An error occurred while creating job role: Duplicate entry job role already exists"
 
 
 def test_get_all_roles():
@@ -88,64 +137,136 @@ def test_get_single_role():
         assert response.status_code == 200
         assert len(response.get_json()['data']) > 0
 
+
 def test_get_single_role_not_found():
     with app.test_client() as test_client:
-        response = test_client.get(f"/roles/99")
+        response = test_client.get(f"/roles/9999")
         assert response.status_code == 200
         assert len(response.get_json()['data']) == 0
 
 
-# def test_update_role():
-#     role_name = "Analytics Executive"
-#     with app.test_client() as test_client:
-#         response = test_client.put('/roles',
-#                             data = json.dumps({
-#                                 "id": role['id'],
-#                                 "name": role_name,
-#                                 "skills": []
-#                             }),
-#                             headers = {
-#                                 "Content-Type": "application/json"
-#                             }
-#                         )
-#         assert response.status_code == 200
+def test_update_role():
+    with app.test_client() as test_client:
+        response = test_client.put('/roles',
+                            data = json.dumps({
+                                "Job_ID": 1,
+                                "Job_Role": "HR Staff",
+                                "Job_Title": "Staff",
+                                "Department": "HR",
+                                "Description": "Ipsum",
+                                "Skills": ["S003"]
+                            }),
+                            headers = {
+                                "Content-Type": "application/json"
+                            }
+                        )
+        assert response.status_code == 200
+        assert response.get_json()['error'] == False
 
-#         retrieve_role = test_client.get(f"/roles/{role['id']}")
-#         assert retrieve_role.get_json()['data']['name'] == role_name 
+        getRole = test_client.get(f"/roles/1")
+        data = getRole.get_json()
+        assert data["data"][0]["Job_Role"] == "HR Staff"
+        assert data["data"][0]["Job_Title"] == "Staff"
+        assert data["data"][0]["Department"] == "HR"
+        assert data["data"][0]["Description"] == "Ipsum"
+        assert len(data["data"][0]["Skills"]) == 1
 
 
-# def test_duplicate_update_role():
-#     role_name = "Analytics Executive"
-#     with app.test_client() as test_client:
-#         testDuplicateRole = test_client.post('/roles',
-#             data = json.dumps({
-#                 "name": "Finance Executive",
-#                 "skills": []
-#             }),
-#             headers = {
-#                 "Content-Type": "application/json"
-#             }
-#         )
+def test_duplicate_update_role():
+    with app.test_client() as test_client:
+        testDuplicateRole = test_client.post('/roles',
+            data = json.dumps({
+                "Job_Role": "DevOps Engineer",
+                "Job_Title": "Staff",
+                "Department": "Technology",
+                "Description": "Lorem",
+                "Skills": ["S001", "S002"]
+            }),
+            headers = {
+                "Content-Type": "application/json"
+            }
+        )
+
+        assert testDuplicateRole.status_code == 200
+        assert testDuplicateRole.get_json()['error'] == False
+        jobRole = testDuplicateRole.get_json()['data']
                         
-#         response = test_client.put('/roles',
-#                             data = json.dumps({
-#                                 "id": role['id'],
-#                                 "name": role_name,
-#                                 "skills": []
-#                             }),
-#                             headers = {
-#                                 "Content-Type": "application/json"
-#                             }
-#                         )
-#         assert response.status_code == 400
-#         global role2
-#         role2 = testDuplicateRole.get_json()['data']
+        response = test_client.put('/roles',
+            data = json.dumps({
+                "Job_ID": jobRole['Job_ID'],
+                "Job_Role": "Sales Manager",
+                "Job_Title": "Manager",
+                "Department": "Sales",
+                "Description": "Ipsum",
+                "Skills": ["S003"]
+            }),
+            headers = {
+                "Content-Type": "application/json"
+            }
+        )
+        assert response.status_code == 409
+        assert response.get_json()['code'] == 409
+        assert response.get_json()['error'] == True
+        assert response.get_json()['message'] == "An error occurred while updating job role: Duplicate entry job role already exists"
 
-        
 
-# def test_delete_role():
-#     with app.test_client() as test_client:
-#         response = test_client.delete(f"/roles/{role['id']}")
-#         response2 = test_client.delete(f"/roles/{role2['id']}")
-#         assert response.status_code == 200
-#         assert response2.status_code == 200
+def test_update_role_not_found():
+    with app.test_client() as test_client:
+        response = test_client.put('/roles',
+                            data = json.dumps({
+                                "Job_ID": 99,
+                                "Job_Role": "DevOps Engineer",
+                                "Job_Title": "Staff",
+                                "Department": "Technology",
+                                "Description": "Ipsum",
+                                "Skills": ["S001", "S002"]
+                            }),
+                            headers = {
+                                "Content-Type": "application/json"
+                            }
+                        )
+        assert response.status_code == 406
+        assert response.get_json()['code'] == 406
+        assert response.get_json()['error'] == True
+        assert response.get_json()['message'] == "An error occurred while updating job role: Job ID not found"
+
+
+def test_delete_role_associated_learning_journey():
+    with app.test_client() as test_client:
+        response = test_client.delete(f"/roles/1")
+        assert response.get_json()['code'] == 406
+        assert response.get_json()['error'] == True
+        assert response.get_json()['message'] == "An error occurred while deleting job role: Job role id 1 stll have learning journeys associated with it"
+        assert len(response.get_json()['data']['associated_learning_journeys']) > 0
+
+
+def test_delete_role():
+    with app.test_client() as test_client:
+        testDuplicateRole = test_client.post('/roles',
+            data = json.dumps({
+                "Job_Role": "DevOps Engineer",
+                "Job_Title": "Staff",
+                "Department": "Technology",
+                "Description": "Lorem",
+                "Skills": ["S001", "S002"]
+            }),
+            headers = {
+                "Content-Type": "application/json"
+            }
+        )
+
+        assert testDuplicateRole.status_code == 200
+        assert testDuplicateRole.get_json()['error'] == False
+        jobRole = testDuplicateRole.get_json()['data']
+        response = test_client.delete(f"/roles/{jobRole['Job_ID']}")
+        assert response.status_code == 200
+        assert response.get_json()['error'] == False
+
+
+def test_delete_role_not_found():
+    with app.test_client() as test_client:
+        response = test_client.delete(f"/roles/99")
+        assert response.status_code == 406
+        assert response.get_json()['code'] == 406
+        assert response.get_json()['error'] == True
+        assert response.get_json()['message'] == f"An error occurred while deleting job role: Job role id 99 not found"
