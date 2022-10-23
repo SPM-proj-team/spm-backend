@@ -5,7 +5,7 @@ Note:
 """
 
 """
-Unit tests for courses 
+Integration tests for courses 
 """
 
 import os
