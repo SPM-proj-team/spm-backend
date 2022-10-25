@@ -1,38 +1,7 @@
 from app.course import Course
-from app.staff import Staff
+from app.flask import Skill, Staff
 from app import app,db
 from flask import jsonify, request
-
-# Association Tables
-Course_has_Skill = db.Table('Course_has_Skill',
-                    db.Column('Course_ID', db.Integer, db.ForeignKey('Course.Course_ID')),
-                    db.Column('Skill_id', db.Integer, db.ForeignKey('Skill.Skill_ID'))
-                    )
-
-User_has_Skill = db.Table('User_has_Skill',
-                    db.Column('Skill_ID', db.Integer, db.ForeignKey('Skill.Skill_ID')),
-                    db.Column('Staff_ID', db.Integer, db.ForeignKey('Staff.Staff_ID'))
-                )
-
-class Skill(db.Model):
-    __tablename__ = 'Skill'
-    Skill_ID = db.Column(db.Integer, primary_key=True)
-    Name = db.Column(db.String)
-    Courses = db.relationship('Course', secondary=Course_has_Skill, backref='Skills')
-    Users = db.relationship('Staff', secondary=User_has_Skill)
-
-    def json(self):
-        return {
-            "Skill_ID": self.Skill_ID,
-            "Name": self.Name
-        }
-    def jsonWithCourse(self):
-        return {
-            "Skill_ID": self.Skill_ID,
-            "Name": self.Name,
-            "Courses": [course.json() for course in self.Courses]
-        }
-    
 
 @app.route("/skill/test")
 def testSkill():

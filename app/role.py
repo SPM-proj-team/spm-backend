@@ -1,51 +1,7 @@
 from app.learning_journey import LearningJourney
-from app.skill import Skill
+from app.flask import Job_Role, Skill
 from app import app,db
-from flask import jsonify, request
-
-# Association Table
-Role_has_Skill = db.Table('Role_has_Skill',
-                    db.Column('Job_ID', db.Integer, db.ForeignKey('Job_Role.Job_ID')),
-                    db.Column('Skill_ID', db.Integer, db.ForeignKey('Skill.Skill_ID'))
-                    )
-
-class Job_Role(db.Model):
-    __tablename__ = 'Job_Role'
-    Job_ID = db.Column(db.Integer, primary_key=True)
-    Job_Role = db.Column(db.String)
-    Job_Title = db.Column(db.String)
-    Department = db.Column(db.String)
-    Description = db.Column(db.String)
-    Skills = db.relationship('Skill', secondary=Role_has_Skill, backref='Roles')
-    Learning_Journeys = db.relationship('LearningJourney', backref='Job_Role')
-
-    def json(self):
-        return {
-            "Job_ID": self.Job_ID,
-            "Job_Role": self.Job_Role,
-            "Job_Title": self.Job_Title,
-            "Department": self.Department,
-            "Description": self.Description
-        }
-    def jsonWithSkills(self):
-        return {
-            "Job_ID": self.Job_ID,
-            "Job_Role": self.Job_Role,
-            "Job_Title":self.Job_Title,
-            "Department":self.Department,
-            "Description": self.Description,
-            "Skills": [skill.json() for skill in self.Skills]
-        }
-    def jsonWithSkillsCourses(self):
-        return {
-            "Job_ID": self.Job_ID,
-            "Job_Role": self.Job_Role,
-            "Job_Title":self.Job_Title,
-            "Department":self.Department,
-            "Description": self.Description,
-            "Skills": [skill.jsonWithCourse() for skill in self.Skills]
-        }
-        
+from flask import jsonify, request 
 
 @app.route("/role/test")
 def testRole():

@@ -91,19 +91,35 @@ def test_get_all_courses():
 #         assert response.status_code == 200
 
 
-# def test_update_course():
-#     course_name = "BAP102"
-#     with app.test_client() as test_client:
-#         response = test_client.put('/course',
-#                             data = json.dumps({
-#                                 "id": course['id'],
-#                                 "name": course_name,
-#                             }),
-#                             headers = {
-#                                 "Content-Type": "application/json"
-#                             }
-#                         )
-#         assert response.status_code == 200
+def test_update_skills_mapped_to_course():
+    with app.test_client() as test_client:
+        response = test_client.put('/courses',
+                            data = json.dumps({
+                                "Course_ID": "COR001",
+                                "Skills": ["S003"]
+                            }),
+                            headers = {
+                                "Content-Type": "application/json"
+                            }
+                        )
+        assert response.status_code == 200
+        assert response.get_json()["error"] == False
+        data = response.get_json()["data"]
+        assert len(data["Skills"]) == 1
+        assert data["Skills"][0]["Skill_ID"] == "S003"
 
-#         retrieve_course = test_client.get(f"/course/{course['id']}")
-#         assert retrieve_course.get_json()['data']['name'] == course_name
+def test_update_skills_mapped_to_course_not_found():
+    testCourseID = "MGMT999"
+    with app.test_client() as test_client:
+        response = test_client.put('/courses',
+                            data = json.dumps({
+                                "Course_ID": testCourseID,
+                                "Skills": ["S003"]
+                            }),
+                            headers = {
+                                "Content-Type": "application/json"
+                            }
+                        )
+        assert response.status_code == 406
+        assert response.get_json()["error"] == True
+        assert response.get_json()["message"] == f"An error occurred while mapping skills to course: Course ID {testCourseID} not found"
