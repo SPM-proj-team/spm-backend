@@ -1,5 +1,6 @@
 from app import db
 
+
 class Staff(db.Model):
     __tablename__ = 'Staff'
     Staff_ID = db.Column(db.Integer, primary_key=True)
