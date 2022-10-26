@@ -67,8 +67,8 @@ def getLearning_Journeys_byStaffID():
     return jsonify(
         {
             "code": 200,
-            "message": "There are no Learning Journeys.",
-            "error": True
+            "message": "There are no Learning Journeys",
+            "error": False
         }
     ), 200
 
@@ -91,7 +91,7 @@ def getCourses_by_one_LearningJourney(Learning_Journey_ID):
         {
             "code": 200,
             "data": [],
-            "message": "There are no Learning Journeys.",
+            "message": "There are no Learning Journeys",
             "error": False
         }
     ), 200
@@ -158,6 +158,17 @@ def updateLearningJourney(Learning_Journey_ID):
     Staff_ID = request.json['Staff_ID']
     LJ = request.json['Learning_Journey']
     Learning_Journey_ID = LJ["Learning_Journey_ID"]
+    learningJourneyExists = LearningJourney.query.filter_by(
+            Learning_Journey_Name=LJ["Learning_Journey_Name"]).first()
+    if learningJourneyExists and learningJourneyExists.json()["Learning_Journey_ID"] != Learning_Journey_ID:
+        return jsonify(
+                {
+                    "code": 409,
+                    "error": True,
+                    "message": f"An error occurred while updating learning journey: Duplicate learning journey name already exists for staff id {Staff_ID}",
+                    "data": learningJourneyExists.jsonWithCourseAndRole()
+                }
+            ), 200
     selectedLJ = LearningJourney.query.filter_by(
         Learning_Journey_ID=Learning_Journey_ID,
         Staff_ID=Staff_ID).all()
@@ -180,7 +191,6 @@ def updateLearningJourney(Learning_Journey_ID):
         selectedLJ.Learning_Journey_Name = LJ["Learning_Journey_Name"]
         selectedLJ.Role = LJ["Role"]
         selectedLJ.Courses = [course for course in courses]
-        print(courses)
         db.session.commit()
         return jsonify(
             {

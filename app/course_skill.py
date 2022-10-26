@@ -15,13 +15,15 @@ User_has_Skill = db.Table(
 
 class Course(db.Model):
     __tablename__ = 'Course'
-
     Course_ID = db.Column(db.String, primary_key=True)
     Course_Name = db.Column(db.String)
     Course_Desc = db.Column(db.String)
     Course_Type = db.Column(db.String)
     Course_Status = db.Column(db.String)
     Course_Category = db.Column(db.String)
+    Registrations = db.relationship('Registration', backref='Course')
+    # Registrations = db.relationship('Registration', backref='Course', lazy='dynamic',
+    # primaryjoin="Course.Course_ID == Registration.Course_ID")
 
     def json(self):
         return {
@@ -69,32 +71,11 @@ class Skill(db.Model):
         }
 
 
+# Skills API
 @app.route("/skill/test")
 def testSkill():
     return "Skill route is working"
 
-
-# Consider removing this
-
-# @app.route("/skills")
-# def getSkill():
-#     skillList = Skill.query.all()
-#     if len(skillList):
-#         return jsonify(
-#            {
-#                "code": 200,
-#                "data": [skill.json() for skill in skillList],
-#                "error" : False
-#            }
-#        )
-#     return jsonify(
-#         {
-#             "code": 200,
-#             "data": [],
-#             "message": "There are no skills.",
-#             "error" : False
-#         }
-#     ), 200
 
 @app.route("/allskills")
 def getAllSkills():
@@ -120,29 +101,6 @@ def getAllSkills():
 @app.route("/skills")
 def getSkill():
     skillList = Skill.query.all()
-    if len(skillList):
-        return jsonify(
-            {
-                "code": 200,
-                "data": [skill.jsonWithCourse() for skill in skillList],
-                "error": False
-            }
-        ), 200
-    return jsonify(
-        {
-            "code": 200,
-            "data": [],
-            "message": "There are no skills.",
-            "error": False
-        }
-    ), 200
-
-# Consider removing this
-
-# @app.route("/skills", methods=["POST"])
-# def getSkillByID():
-    data = request.get_json()
-    skillList = Skill.query.filter_by(Skill_ID=data["Skill_ID"]).all()
     if len(skillList):
         return jsonify(
             {
@@ -305,6 +263,7 @@ def deleteSkill():
         ), 406
 
 
+# Course API
 @app.route("/course/test")
 def testCourse():
     return "Course route is working"

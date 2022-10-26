@@ -25,9 +25,8 @@ pytestmark = [pytest.mark.learning_journey]
 def load_env():
     load_dotenv()
 
+
 # Set up connection to DB
-
-
 @pytest.fixture(autouse=True)
 def initialise_db():
     db_host = os.environ.get("DB_HOSTNAME")
@@ -121,56 +120,65 @@ def test_create_learning_journey():
         assert data["data"][0]["Role"]['Job_ID'] == 1
         assert len(data["data"][0]["Courses"]) == 1
 
-# def test_duplicate_create_learning_journey():
-#     with app.test_client() as test_client:
-#         response = test_client.post('/learning_journey/create',
-#                             data = json.dumps({
-#                                 "Learning_Journey": {
-#                                     "Courses": [
-#                                         {
-#                                             "Course_Category": "Core",
-#                                             "Course_Desc": "This foundation module aims to introduce students to the fundamental concepts and underlying principles of systems thinking,",
-#                                             "Course_ID": "COR001",
-#                                             "Course_Name": "Systems Thinking and Design",
-#                                             "Course_Status": "Active",
-#                                             "Course_Type": "Internal"
-#                                         }
-#                                     ],
-#                                     "Description": "test",
-#                                     "Learning_Journey_Name": "Learning Journey for Full Stack Developer",
-#                                     "Role": {
-#                                         "Department": "C-suite",
-#                                         "Description": "lorem ipsum",
-#                                         "Job_ID": 1,
-#                                         "Job_Role": "CEO",
-#                                         "Job_Title": "The big boss"
-#                                     },
-#                                     "Staff_ID": 1
-#                                 }
-#                             }),
-#                             headers = {
-#                                 "Content-Type": "application/json"
-#                             }
-#                         )
-#         assert response.status_code == 200
-#         assert response.get_json()['code'] == 409
-#         assert response.get_json()['error'] == True
-#         assert response.get_json()['message'] == "An error occurred while creating learning journey: Duplicate learning journey name already exists for staff id 1"
+
+def test_duplicate_create_learning_journey():
+    staff_id = 2
+    with app.test_client() as test_client:
+        response = test_client.post(
+            '/learning_journey/create',
+            data=json.dumps(
+                {
+                    "Learning_Journey": {
+                        "Courses": [
+                            {
+                                "Course_Category": "Core",
+                                "Course_Desc": "This foundation module aims to introduce students to the fundamental concepts and underlying principles of systems thinking,",
+                                "Course_ID": "COR001",
+                                "Course_Name": "Systems Thinking and Design",
+                                "Course_Status": "Active",
+                                "Course_Type": "Internal"}],
+                        "Description": "test",
+                        "Learning_Journey_Name": "Advanced Learning Journey",
+                        "Role": {
+                            "Department": "C-suite",
+                            "Description": "lorem ipsum",
+                            "Job_ID": 1,
+                            "Job_Role": "CEO",
+                            "Job_Title": "The big boss"},
+                        "Staff_ID": staff_id}}),
+            headers={
+                "Content-Type": "application/json"})
+        assert response.status_code == 200
+        assert response.get_json()['code'] == 409
+        assert response.get_json()['error']
+        assert response.get_json()[
+            'message'] == f"An error occurred while creating learning journey: Duplicate learning journey name already exists for staff id {staff_id}"
 
 
-# def test_invalid_special_characters_create_learning_journey(course):
-#     with app.test_client() as test_client:
-#         response = test_client.post('/learning_journey',
-#                             data = json.dumps({
-#                                 "learning_journey_name": "Journey!!!#",
-#                                 # "username": 1,
-#                                 "course_id": course.id,
-#                             }),
-#                             headers = {
-#                                 "Content-Type": "application/json"
-#                             }
-#                         )
-#         assert response.status_code == 400
+def test_create_learning_journey_no_courses():
+    with app.test_client() as test_client:
+        response = test_client.post(
+            '/learning_journey/create',
+            data=json.dumps(
+                {
+                    "Learning_Journey": {
+                        "Courses": [],
+                        "Description": "test",
+                        "Learning_Journey_Name": "Learning Journey for Full Stack Developer",
+                        "Role": {
+                            "Department": "C-suite",
+                            "Description": "lorem ipsum",
+                            "Job_ID": 1,
+                            "Job_Role": "CEO",
+                            "Job_Title": "The big boss"},
+                        "Staff_ID": 1}}),
+            headers={
+                "Content-Type": "application/json"})
+        assert response.status_code == 200
+        assert response.get_json()['code'] == 404
+        assert response.get_json()['error']
+        assert response.get_json(
+        )['message'] == "There should at least be 1 course in the Learning Journey"
 
 
 def test_get_learning_journeys_by_staff_id():
@@ -179,8 +187,20 @@ def test_get_learning_journeys_by_staff_id():
                                     data=json.dumps(dict(Staff_ID=1)),
                                     content_type='application/json')
         assert response.status_code == 200
+        assert response.get_json()["error"] == False
         all_learning_journeys = response.get_json()['data']
         assert len(all_learning_journeys) > 0
+
+
+def test_get_learning_journeys_by_staff_id_no_learning_journeys():
+    with app.test_client() as test_client:
+        response = test_client.post('/learning_journey',
+                                    data=json.dumps(dict(Staff_ID=0)),
+                                    content_type='application/json')
+        assert response.status_code == 200
+        assert response.get_json()["error"] == False
+        assert response.get_json(
+        )["message"] == "There are no Learning Journeys"
 
 
 def test_get_courses_by_one_learning_journey():
@@ -189,6 +209,7 @@ def test_get_courses_by_one_learning_journey():
                                     data=json.dumps(dict(Staff_ID=1)),
                                     content_type='application/json')
         assert response.status_code == 200
+        assert response.get_json()["error"] == False
         learning_journey = response.get_json()['data']
         assert len(learning_journey) > 0
 
@@ -196,40 +217,44 @@ def test_get_courses_by_one_learning_journey():
 def test_get_courses_by_one_learning_journey_no_learning_journey():
     with app.test_client() as test_client:
         response = test_client.post("/learning_journey/1",
-                                    data=json.dumps(dict(Staff_ID=2)),
+                                    data=json.dumps(dict(Staff_ID=0)),
                                     content_type='application/json')
         assert response.status_code == 200
-        learning_journey = response.get_json()['data']
-        assert len(learning_journey) == 0
-        message = response.get_json()['message']
-        assert message == "There are no Learning Journeys."
+        assert response.get_json()["error"] == False
+        assert len(response.get_json()['data']) == 0
+        assert response.get_json()['message'] == "There are no Learning Journeys"
 
 
 def test_update_learning_journey():
     with app.test_client() as test_client:
-        response = test_client.put("/learning_journey/1",
-                                   data=json.dumps({"Staff_ID": 1,
-                                                    "Learning_Journey": {"Learning_Journey_ID": 1,
-                                                                         "Courses": [{"Course_Category": "Core",
-                                                                                      "Course_Desc": "This foundation module aims to introduce students to the fundamental concepts and underlying principles of systems thinking",
-                                                                                      "Course_ID": "COR001",
-                                                                                      "Course_Name": "Systems Thinking and Design",
-                                                                                      "Course_Status": "Active",
-                                                                                      "Course_Type": "Internal"},
-                                                                                     {"Course_Category": "Core",
-                                                                                      "Course_Desc": "Apply Lean Six Sigma methodology and statistical tools such as Minitab to be used in process analytics",
-                                                                                      "Course_ID": "COR002",
-                                                                                      "Course_Name": "Lean Six Sigma Green Belt Certification",
-                                                                                      "Course_Status": "Active",
-                                                                                      "Course_Type": "Internal"}],
-                                                                         "Description": "test",
-                                                                         "Learning_Journey_Name": "Learning Journey for Full Stack",
-                                                                         "Role": {"Department": "C-suite",
-                                                                                  "Description": "lorem ipsum",
-                                                                                  "Job_ID": 1,
-                                                                                  "Job_Role": "CEO",
-                                                                                  "Job_Title": "The big boss"}}}),
-                                   headers={"Content-Type": "application/json"})
+        response = test_client.put(
+            "/learning_journey/1",
+            data=json.dumps(
+                {
+                    "Staff_ID": 1,
+                    "Learning_Journey": {"Learning_Journey_ID": 1,
+                                         "Courses": [{"Course_Category": "Core",
+                                                      "Course_Desc": "This foundation module aims to introduce students to the fundamental concepts and underlying principles of systems thinking",
+                                                      "Course_ID": "COR001",
+                                                      "Course_Name": "Systems Thinking and Design",
+                                                      "Course_Status": "Active",
+                                                      "Course_Type": "Internal"},
+                                                     {"Course_Category": "Core",
+                                                      "Course_Desc": "Apply Lean Six Sigma methodology and statistical tools such as Minitab to be used in process analytics",
+                                                      "Course_ID": "COR002",
+                                                      "Course_Name": "Lean Six Sigma Green Belt Certification",
+                                                      "Course_Status": "Active",
+                                                      "Course_Type": "Internal"}],
+                                         "Description": "test",
+                                         "Learning_Journey_Name": "Learning Journey for Full Stack",
+                                         "Role": {"Department": "C-suite",
+                                                  "Description": "lorem ipsum",
+                                                  "Job_ID": 1,
+                                                  "Job_Role": "CEO",
+                                                  "Job_Title": "The big boss"}}
+                }
+            ),
+            headers={"Content-Type": "application/json"})
         assert response.status_code == 200
         assert response.get_json()['error'] == False
         data = response.get_json()['data'][0]
@@ -299,76 +324,37 @@ def test_update_courses_in_learning_journey_no_courses():
         )['message'] == "There should at least be 1 course in the Learning Journey"
 
 
-# def test_duplicate_update_courses_in_learning_journey():
-#     with app.test_client() as test_client:
-#         testDuplicateLJ = test_client.post('/learning_journey/create',
-#                             data = json.dumps({
-#                                 "Learning_Journey": {
-#                                     "Courses": [
-#                                         {
-#                                             "Course_Category": "Core",
-#                                             "Course_Desc": "This foundation module aims to introduce students to the fundamental concepts and underlying principles of systems thinking,",
-#                                             "Course_ID": "COR001",
-#                                             "Course_Name": "Systems Thinking and Design",
-#                                             "Course_Status": "Active",
-#                                             "Course_Type": "Internal"
-#                                         }
-#                                     ],
-#                                     "Description": "test",
-#                                     "Learning_Journey_Name": "Learning Journey for DevOps Engineer",
-#                                     "Role": {
-#                                         "Department": "C-suite",
-#                                         "Description": "lorem ipsum",
-#                                         "Job_ID": 1,
-#                                         "Job_Role": "CEO",
-#                                         "Job_Title": "The big boss"
-#                                     },
-#                                     "Staff_ID": 1
-#                                 }
-#                             }),
-#                             headers = {
-#                                 "Content-Type": "application/json"
-#                             }
-#                         )
-#         assert testDuplicateLJ.status_code == 200
-#         assert testDuplicateLJ.get_json()['error'] == False
-#         global lj2
-#         lj2 = testDuplicateLJ.get_json()['data'][0]
-
-#         response = test_client.put(f"/learning_journey/{lj2['Learning_Journey_ID']}",
-#                             data = json.dumps({
-#                                 "Staff_ID": lj2['Staff_ID'],
-#                                 "Learning_Journey": {
-#                                     "Learning_Journey_ID": lj2['Learning_Journey_ID'],
-#                                     "Courses": [
-#                                         {
-#                                             "Course_Category": "Core",
-#                                             "Course_Desc": "This foundation module aims to introduce students to the fundamental concepts and underlying principles of systems thinking,",
-#                                             "Course_ID": "COR001",
-#                                             "Course_Name": "Systems Thinking and Design",
-#                                             "Course_Status": "Active",
-#                                             "Course_Type": "Internal"
-#                                         }
-#                                     ],
-#                                     "Description": "test",
-#                                     "Learning_Journey_Name": lj['Learning_Journey_Name'],
-#                                     "Role": {
-#                                         "Department": "C-suite",
-#                                         "Description": "lorem ipsum",
-#                                         "Job_ID": 1,
-#                                         "Job_Role": "CEO",
-#                                         "Job_Title": "The big boss"
-#                                     }
-#                                 }
-#                             }),
-#                             headers = {
-#                                 "Content-Type": "application/json"
-#                             }
-#                         )
-#         assert response.status_code == 200
-#         assert response.get_json()['code'] == 409
-#         assert response.get_json()['error'] == True
-#         assert response.get_json()['message'] == "An error occurred while updating learning journey: Duplicate learning journey name already exists for staff id 1."
+def test_duplicate_update_learning_journey():
+    staff_id = 1
+    with app.test_client() as test_client:
+        response = test_client.put('/learning_journey/1',
+                                   data=json.dumps({"Staff_ID": staff_id,
+                                                    "Learning_Journey": {"Learning_Journey_ID": 1,
+                                                                         "Courses": [{"Course_Category": "Core",
+                                                                                      "Course_Desc": "This foundation module aims to introduce students to the fundamental concepts and underlying principles of systems thinking",
+                                                                                      "Course_ID": "COR001",
+                                                                                      "Course_Name": "Systems Thinking and Design",
+                                                                                      "Course_Status": "Active",
+                                                                                      "Course_Type": "Internal"},
+                                                                                     {"Course_Category": "Core",
+                                                                                      "Course_Desc": "Apply Lean Six Sigma methodology and statistical tools such as Minitab to be used in process analytics",
+                                                                                      "Course_ID": "COR002",
+                                                                                      "Course_Name": "Lean Six Sigma Green Belt Certification",
+                                                                                      "Course_Status": "Active",
+                                                                                      "Course_Type": "Internal"}],
+                                                                         "Description": "test",
+                                                                         "Learning_Journey_Name": "Advanced Learning Journey",
+                                                                         "Role": {"Department": "C-suite",
+                                                                                  "Description": "lorem ipsum",
+                                                                                  "Job_ID": 1,
+                                                                                  "Job_Role": "CEO",
+                                                                                  "Job_Title": "The big boss"}}}),
+                                   headers={"Content-Type": "application/json"})
+        assert response.status_code == 200
+        assert response.get_json()['code'] == 409
+        assert response.get_json()['error']
+        assert response.get_json()[
+            'message'] == f"An error occurred while updating learning journey: Duplicate learning journey name already exists for staff id {staff_id}"
 
 
 def test_delete_learning_journey():
@@ -381,21 +367,10 @@ def test_delete_learning_journey():
                                           "Content-Type": "application/json"
                                       }
                                       )
-        # response2 = test_client.delete(f"/learning_journey/{lj2['Learning_Journey_ID']}",
-        #     data = json.dumps({
-        #         "Staff_ID": lj2['Staff_ID']
-        #     }),
-        #     headers = {
-        #         "Content-Type": "application/json"
-        #     }
-        # )
         assert response.status_code == 200
         assert response.get_json()['error'] == False
         assert response.get_json(
         )['message'] == "Learning Journey ID: 1 has been deleted"
-        # assert response2.status_code == 200
-        # assert response2.get_json()['error'] == False
-        # assert response2.get_json()['message'] == f"Learning Journey ID: {lj2['Learning_Journey_ID']} has been deleted"
 
 
 def test_delete_learning_journey_not_found():

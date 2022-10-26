@@ -25,9 +25,8 @@ pytestmark = [pytest.mark.role]
 def load_env():
     load_dotenv()
 
+
 # Set up connection to DB
-
-
 @pytest.fixture(autouse=True)
 def initialise_db():
     db_host = os.environ.get("DB_HOSTNAME")
@@ -132,6 +131,7 @@ def test_get_all_roles():
     with app.test_client() as test_client:
         response = test_client.get('/roles')
         assert response.status_code == 200
+        assert response.get_json()["error"] == False
         all_roles = response.get_json()['data']
         assert len(all_roles) > 0
 
@@ -140,6 +140,7 @@ def test_get_single_role():
     with app.test_client() as test_client:
         response = test_client.get("/roles/1")
         assert response.status_code == 200
+        assert response.get_json()["error"] == False
         assert len(response.get_json()['data']) > 0
 
 
@@ -147,6 +148,7 @@ def test_get_single_role_not_found():
     with app.test_client() as test_client:
         response = test_client.get("/roles/9999")
         assert response.status_code == 200
+        assert response.get_json()["error"] == False
         assert len(response.get_json()['data']) == 0
 
 

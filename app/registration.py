@@ -41,7 +41,7 @@ def getRegistration():
         {
             "code": 200,
             "data": [],
-            "message": "There are no Registrations.",
+            "message": "There are no Registrations",
             "error": False
         }
     ), 200
@@ -50,8 +50,7 @@ def getRegistration():
 @app.route("/registration", methods=["POST"])
 def getRegistrationbyStaffID():
     Staff_ID = int(request.json['Staff_ID'])
-    regList = Registration.query.filter_by(Staff_ID=130001).all()
-    print(Staff_ID)
+    regList = Registration.query.filter_by(Staff_ID=Staff_ID).all()
     if len(regList):
         return jsonify(
             {
@@ -63,7 +62,7 @@ def getRegistrationbyStaffID():
     return jsonify(
         {
             "code": 200,
-            "message": "There are no Registrations.",
-            "error": True
+            "message": "There are no Registrations",
+            "error": False
         }
     ), 200
