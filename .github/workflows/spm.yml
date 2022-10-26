@@ -60,18 +60,18 @@ jobs:
         mysql -h ${{ secrets.DB_HOSTNAME }} --port 3306 -u${{ secrets.DB_USERNAME }} -p${{ secrets.DB_PASSWORD }} < tests/sql/test_spm.sql
         mysql -h ${{ secrets.DB_HOSTNAME }} --port 3306 -e "SHOW schemas;" -u${{ secrets.DB_USERNAME }} -p${{ secrets.DB_PASSWORD }}
 
-    - name: Lint with flake8
-      run: |
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 250 chars wide. 
-        flake8 . --count --exit-zero --extend-ignore=E402,E712,F401 --max-complexity=10 --max-line-length=250 --statistics
+#     - name: Lint with flake8
+#       run: |
+#         # stop the build if there are Python syntax errors or undefined names
+#         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+#         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+#         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
     - name: Clone frontend repo 
       uses: actions/checkout@v3
       with:
         repository: SPM-proj-team/spm-frontend
-        ref: sprint-3
+        ref: sprint-2
         token: ${{ secrets.ACCESS_TOKEN }}
         path: './spm-frontend'
     
