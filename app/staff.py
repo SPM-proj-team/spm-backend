@@ -5,7 +5,7 @@ from flask import jsonify
 
 class Staff(db.Model):
     __tablename__ = 'Staff'
-    Staff_ID = db.Column(db.String, primary_key=True)
+    Staff_ID = db.Column(db.Integer, primary_key=True)
     Staff_FName = db.Column(db.String)
     Staff_LName = db.Column(db.String)
     Dept = db.Column(db.String)
