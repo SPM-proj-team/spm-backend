@@ -22,9 +22,7 @@ class Course(db.Model):
     Course_Status = db.Column(db.String)
     Course_Category = db.Column(db.String)
     Registrations = db.relationship('Registration', backref='Course')
-    # Registrations = db.relationship('Registration', backref='Course', lazy='dynamic',
-    # primaryjoin="Course.Course_ID == Registration.Course_ID")
-
+    
     def json(self):
         return {
             "Course_ID": self.Course_ID,
