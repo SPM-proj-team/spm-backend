@@ -1,4 +1,4 @@
-from app import app,db
+from app import app, db
 from flask import jsonify
 
 
@@ -12,7 +12,7 @@ class Course(db.Model):
     Course_Category = db.Column(db.String)
     Registrations = db.relationship('Registration', backref='Course')
     # Registrations = db.relationship('Registration', backref='Course', lazy='dynamic',
-    #                     primaryjoin="Course.Course_ID == Registration.Course_ID")
+    # primaryjoin="Course.Course_ID == Registration.Course_ID")
 
     def json(self):
         return {
@@ -23,6 +23,7 @@ class Course(db.Model):
             "Course_Status": self.Course_Status,
             "Course_Category": self.Course_Category,
         }
+
     def jsonWithSkill(self):
         return {
             "Course_ID": self.Course_ID,
@@ -34,27 +35,28 @@ class Course(db.Model):
             "Skills": [skill.json() for skill in self.Skills]
         }
 
+
 @app.route("/course/test")
 def testCourse():
     return "Course route is working"
+
 
 @app.route("/courses")
 def getCourse():
     courseList = Course.query.all()
     if len(courseList):
         return jsonify(
-           {
-               "code": 200,
-               "data": [course.jsonWithSkill() for course in courseList],
-               "error" : False
-           }
-       )
+            {
+                "code": 200,
+                "data": [course.jsonWithSkill() for course in courseList],
+                "error": False
+            }
+        )
     return jsonify(
         {
             "code": 200,
             "data": [],
             "message": "There are no course.",
-            "error" : False
+            "error": False
         }
     ), 200
-
