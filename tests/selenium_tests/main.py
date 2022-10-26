@@ -13,7 +13,7 @@ frontend_url = "http://localhost:8080/"
 
 
 def startDriver():
-    
+
     # chrome_service = Service(ChromeDriverManager(
     #     chrome_type=ChromeType.CHROMIUM).install("./chromedriver"))
     # chrome_options = Options()
@@ -30,7 +30,7 @@ def startDriver():
     #     chrome_options.add_argument(option)
 
     # driver = webdriver.Chrome(service=chrome_service, options=chrome_options)
-    
+
     driver = webdriver.Firefox(executable_path=GeckoDriverManager().install())
     driver.fullscreen_window()
     driver.get(frontend_url)

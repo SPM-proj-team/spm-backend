@@ -66,6 +66,61 @@ INSERT INTO `Course` VALUES
 UNLOCK TABLES;
 
 --
+-- Table structure for table `Job_Role`
+--
+
+DROP TABLE IF EXISTS `Job_Role`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Job_Role` (
+  `Job_ID` int NOT NULL AUTO_INCREMENT,
+  `Job_Role` varchar(20) NOT NULL,
+  `Job_Title` varchar(20) NOT NULL,
+  `Department` varchar(20) NOT NULL,
+  `Description` TEXT NOT NULL,
+  PRIMARY KEY (`Job_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=220 DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Job_Role`
+--
+
+LOCK TABLES `Job_Role` WRITE;
+/*!40000 ALTER TABLE `Job_Role` DISABLE KEYS */;
+INSERT INTO `Job_Role` VALUES 
+(1,'testRole1','Staff','Operations','testRole1 Description');
+/*!40000 ALTER TABLE `Job_Role` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Role_has_Skill`
+--
+
+DROP TABLE IF EXISTS `Role_has_Skill`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Role_has_Skill` (
+  `Job_ID` int NOT NULL,
+  `Skill_ID` char(13) NOT NULL,
+  KEY `Job_ID` (`Job_ID`),
+  KEY `Skill_ID` (`Skill_ID`),
+  CONSTRAINT `Role_has_Skill_ibfk_1` FOREIGN KEY (`Job_ID`) REFERENCES `Job_Role` (`Job_ID`),
+  CONSTRAINT `Role_has_Skill_ibfk_2` FOREIGN KEY (`Skill_ID`) REFERENCES `Skill` (`Skill_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+LOCK TABLES `Role_has_Skill` WRITE;
+/*!40000 ALTER TABLE `Role_has_Skill` DISABLE KEYS */;
+INSERT INTO `Role_has_Skill` VALUES 
+(1,'S001'),
+(1,'S002'),
+(1,'S003'),
+(1,'S004');
+/*!40000 ALTER TABLE `Role_has_Skill` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `Course_has_Skill`
 --
 

@@ -25,9 +25,8 @@ pytestmark = [pytest.mark.skill]
 def load_env():
     load_dotenv()
 
+
 # Set up connection to DB
-
-
 @pytest.fixture(autouse=True)
 def initialise_db():
     db_host = os.environ.get("DB_HOSTNAME")
@@ -113,39 +112,22 @@ def test_duplicate_create_skill():
             "message"] == "An error occurred while creating skill: Duplicate entry skill name already exists"
 
 
-# def test_invalid_special_characters_create_skill(role):
-#     with app.test_client() as test_client:
-#         response = test_client.post('/skills',
-#                             data = json.dumps({
-#                                 # "role_id": role.id,
-#                                 "name": "Invalid Skill!!!@@",
-#                             }),
-#                             headers = {
-#                                 "Content-Type": "application/json"
-#                             }
-#                         )
-#         assert response.status_code == 400
-
-
 def test_get_all_skills():
     with app.test_client() as test_client:
-        response = test_client.get('/skills')
+        response = test_client.get('/allskills')
         assert response.status_code == 200
+        assert response.get_json()["error"] == False
         all_skills = response.get_json()['data']
         assert len(all_skills) > 0
 
 
-# def test_get_single_skill():
-#     with app.test_client() as test_client:
-#         response = test_client.get(f"/skills/{skill['id']}")
-#         assert response.status_code == 200
-
-
-# def test_get_skills_from_role(role):
-#     with app.test_client() as test_client:
-#         retrieve_skills = test_client.get(f"/role/{role['id']}")
-
-#         assert retrieve_skills.get_json()["data"]["Skills"] == []
+def test_get_all_skills_with_courses():
+    with app.test_client() as test_client:
+        response = test_client.get('/skills')
+        assert response.status_code == 200
+        assert response.get_json()["error"] == False
+        all_skills_with_courses = response.get_json()['data']
+        assert len(all_skills_with_courses) > 0
 
 
 def test_update_skill():

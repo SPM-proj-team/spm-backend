@@ -11,7 +11,7 @@ from selenium_tests import helper_function
 def checkLearningJourney(driver, backend_url, frontend_url):
     # learning journeys test
     driver.get(frontend_url)
-    helper_function.Login(driver,frontend_url)
+    helper_function.Login(driver, frontend_url)
     time.sleep(2)
     # print("//div[contains(@class, 'card-body shadow-sm')]")
     learningJourneys = WebDriverWait(
@@ -36,7 +36,7 @@ def updateLearningJourneyTest(driver, backend_url, frontend_url):
     # fixData = json.loads(learningJoruneyRequest.text)["data"][0]
     # fixData = json.dumps(fixData)
     driver.get(frontend_url)
-    helper_function.Login(driver,frontend_url)
+    helper_function.Login(driver, frontend_url)
     time.sleep(2)
     learningJourneys = WebDriverWait(
         driver, 3).until(
@@ -88,7 +88,7 @@ def createLearningJourneyTest(driver, backend_url, frontend_url):
     # dataCount = len(json.loads(learningJoruneyRequest.text)["data"])
     # fixData = json.dumps(fixData)
     driver.get(frontend_url)
-    helper_function.Login(driver,frontend_url)
+    helper_function.Login(driver, frontend_url)
     time.sleep(2)
     learningJourneys = WebDriverWait(
         driver, 3).until(
@@ -148,7 +148,7 @@ def createLearningJourneyTest(driver, backend_url, frontend_url):
 
 def deleteLearningJourneyTest(driver, backend_url, frontend_url):
     driver.get(frontend_url)
-    helper_function.Login(driver,frontend_url)
+    helper_function.Login(driver, frontend_url)
     time.sleep(2)
     learningJourneys = WebDriverWait(
         driver, 3).until(
