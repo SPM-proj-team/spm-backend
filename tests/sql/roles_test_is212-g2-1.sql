@@ -61,8 +61,39 @@ LOCK TABLES `Job_Role` WRITE;
 /*!40000 ALTER TABLE `Job_Role` DISABLE KEYS */;
 INSERT INTO `Job_Role` VALUES 
 (1,'testRole1','Staff','Operations','testRole1 Description'),
-(1,'testRole2','Manager','Sales','testRole2 Description');
+(2,'testRole2','Manager','Sales','testRole2 Description');
 /*!40000 ALTER TABLE `Job_Role` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Course_has_Skill`
+--
+
+DROP TABLE IF EXISTS `Course_has_Skill`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Course_has_Skill` (
+  `Skill_ID` varchar(13) NOT NULL,
+  `Course_ID` varchar(20) NOT NULL,
+  KEY `Course_ID` (`Course_ID`),
+  KEY `Skill_ID` (`Skill_ID`),
+  CONSTRAINT `Course_has_Skill_ibfk_1` FOREIGN KEY (`Course_ID`) REFERENCES `Course` (`Course_ID`),
+  CONSTRAINT `Course_has_Skill_ibfk_2` FOREIGN KEY (`Skill_ID`) REFERENCES `Skill` (`Skill_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Course_has_Skill`
+--
+
+LOCK TABLES `Course_has_Skill` WRITE;
+/*!40000 ALTER TABLE `Course_has_Skill` DISABLE KEYS */;
+INSERT INTO `Course_has_Skill` VALUES 
+('S001','COR001'),
+('S002','COR001'),
+('S003','COR002'),
+('S004','COR002');
+/*!40000 ALTER TABLE `Course_has_Skill` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
