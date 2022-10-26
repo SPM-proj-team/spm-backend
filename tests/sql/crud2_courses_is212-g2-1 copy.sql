@@ -61,7 +61,9 @@ LOCK TABLES `Course` WRITE;
 /*!40000 ALTER TABLE `Course` DISABLE KEYS */;
 INSERT INTO `Course` VALUES 
 ('COR001','testCourse1','Description for testCourse1','Internal','Active','Core'),
-('COR002','testCourse2','Description for testCourse2','Internal','Active','Core');
+('COR002','testCourse2','Description for testCourse2','Internal','Active','Core'),
+('COR003','testCourse3','Description for testCourse3','Internal','Active','Core');
+
 /*!40000 ALTER TABLE `Course` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -143,7 +145,8 @@ LOCK TABLES `Skill` WRITE;
 /*!40000 ALTER TABLE `Skill` DISABLE KEYS */;
 INSERT INTO `Skill` VALUES 
 ('S001','testSkill1'),
-('S002','testSkill2');
+('S002','testSkill2'),
+('S003','testSkill3');
 /*!40000 ALTER TABLE `Skill` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -171,7 +174,8 @@ CREATE TABLE `Learning_Journey_has_Course` (
 LOCK TABLES `Learning_Journey_has_Course` WRITE;
 /*!40000 ALTER TABLE `Learning_Journey_has_Course` DISABLE KEYS */;
 INSERT INTO `Learning_Journey_has_Course` VALUES 
-('COR002',1);
+('COR002',1),
+('COR003',1);
 /*!40000 ALTER TABLE `Learning_Journey_has_Course` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -200,7 +204,11 @@ LOCK TABLES `Course_has_Skill` WRITE;
 /*!40000 ALTER TABLE `Course_has_Skill` DISABLE KEYS */;
 INSERT INTO `Course_has_Skill` VALUES 
 ('S001','COR001'),
-('S002','COR002');
+('S001','COR002'),
+('S002','COR002')
+('S002','COR003')
+('S003','COR001')
+('S003','COR003');
 /*!40000 ALTER TABLE `Course_has_Skill` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -225,7 +233,8 @@ LOCK TABLES `Role_has_Skill` WRITE;
 /*!40000 ALTER TABLE `Role_has_Skill` DISABLE KEYS */;
 INSERT INTO `Role_has_Skill` VALUES 
 (1,'S001'),
-(1,'S002');
+(1,'S002'),
+(1,'S003');
 /*!40000 ALTER TABLE `Role_has_Skill` ENABLE KEYS */;
 UNLOCK TABLES;
 
