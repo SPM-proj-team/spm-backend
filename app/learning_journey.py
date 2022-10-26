@@ -18,11 +18,10 @@ class LearningJourney(db.Model):
     __tablename__ = 'Learning_Journey'
     Learning_Journey_ID = db.Column(db.Integer, primary_key=True)
     Learning_Journey_Name = db.Column(db.String)
-    Staff_ID = db.Column(db.Integer)
+    Staff_ID = db.Column(db.Integer, db.ForeignKey('Staff.Staff_ID'))
     Description = db.Column(db.String)
     Courses = db.relationship('Course', secondary=Learning_Journey_has_Course)
     Job_Role_ID = db.Column(db.Integer, db.ForeignKey('Job_Role.Job_ID'))
-
     def json(self):
         return {
             "Learning_Journey_ID": self.Learning_Journey_ID,
@@ -39,6 +38,14 @@ class LearningJourney(db.Model):
             "Description": self.Description,
             "Courses": [course.json() for course in self.Courses],
             "Role": self.Job_Role.json()
+        }
+    def jsonWithStaff(self):
+        return {
+            "Learning_Journey_ID": self.Learning_Journey_ID,
+            "Learning_Journey_Name": self.Learning_Journey_Name,
+            "Staff_ID": self.Staff_ID,
+            "Description": self.Description,
+            "Staff": self.Staff.json()
         }
 
 
