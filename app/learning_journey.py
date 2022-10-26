@@ -22,6 +22,7 @@ class LearningJourney(db.Model):
     Description = db.Column(db.String)
     Courses = db.relationship('Course', secondary=Learning_Journey_has_Course)
     Job_Role_ID = db.Column(db.Integer, db.ForeignKey('Job_Role.Job_ID'))
+
     def json(self):
         return {
             "Learning_Journey_ID": self.Learning_Journey_ID,
@@ -39,6 +40,7 @@ class LearningJourney(db.Model):
             "Courses": [course.json() for course in self.Courses],
             "Role": self.Job_Role.json()
         }
+
     def jsonWithStaff(self):
         return {
             "Learning_Journey_ID": self.Learning_Journey_ID,

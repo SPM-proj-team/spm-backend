@@ -1,4 +1,4 @@
-from app import app,db
+from app import app, db
 from flask import jsonify, request
 
 
@@ -20,43 +20,46 @@ class Registration(db.Model):
             "Course": self.Course.json(),
         }
 
+
 @app.route("/registration/test")
 def testRegistration():
     return "Registration route is working"
+
 
 @app.route("/registration")
 def getRegistration():
     regList = Registration.query.all()
     if len(regList):
         return jsonify(
-           {
-               "code": 200,
-               "data": [reg.json() for reg in regList],
-               "error" : False
-           }
-       )
+            {
+                "code": 200,
+                "data": [reg.json() for reg in regList],
+                "error": False
+            }
+        )
     return jsonify(
         {
             "code": 200,
             "data": [],
             "message": "There are no Registrations.",
-            "error" : False
+            "error": False
         }
     ), 200
+
 
 @app.route("/registration", methods=["POST"])
 def getRegistrationbyStaffID():
     Staff_ID = int(request.json['Staff_ID'])
-    regList = Registration.query.filter_by(Staff_ID = 130001).all()
+    regList = Registration.query.filter_by(Staff_ID=130001).all()
     print(Staff_ID)
     if len(regList):
         return jsonify(
-           {
-               "code": 200,
-               "data": [reg.json() for reg in regList],
-               "error": False
-           }
-       ), 200
+            {
+                "code": 200,
+                "data": [reg.json() for reg in regList],
+                "error": False
+            }
+        ), 200
     return jsonify(
         {
             "code": 200,
@@ -64,4 +67,3 @@ def getRegistrationbyStaffID():
             "error": True
         }
     ), 200
-

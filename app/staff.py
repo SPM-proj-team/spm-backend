@@ -1,5 +1,4 @@
-from app import app,db
-from app.learning_journey import LearningJourney
+from app import app, db
 from flask import jsonify
 
 
@@ -13,7 +12,7 @@ class Staff(db.Model):
     Role_ID = db.Column(db.Integer, db.ForeignKey('Access_Role.Role_ID'))
     LearningJourney = db.relationship('LearningJourney', backref='Staff')
     Registrations = db.relationship('Registration', backref='Staff')
-    
+
     def json(self):
         return {
             "Staff_ID": self.Staff_ID,
@@ -22,6 +21,7 @@ class Staff(db.Model):
             "Dept": self.Dept,
             "Email": self.Email,
         }
+
     def jsonWithAccessRole(self):
         return {
             "Staff_ID": self.Staff_ID,
@@ -32,27 +32,28 @@ class Staff(db.Model):
             "Access_Role": self.Access_Role.json()
         }
 
+
 @app.route("/staff/test")
 def testStaff():
     return "staff route is working"
+
 
 @app.route("/staff")
 def getStaff():
     staffList = Staff.query.all()
     if len(staffList):
         return jsonify(
-           {
-               "code": 200,
-               "data": [staff.jsonWithAccessRole() for staff in staffList],
-               "error" : False
-           }
-       )
+            {
+                "code": 200,
+                "data": [staff.jsonWithAccessRole() for staff in staffList],
+                "error": False
+            }
+        )
     return jsonify(
         {
             "code": 200,
             "data": [],
             "message": "There are no staff.",
-            "error" : False
+            "error": False
         }
     ), 200
-
