@@ -1,13 +1,13 @@
 from app.learning_journey import LearningJourney
-from app.course_skill import Skill
-from app import app, db
+from app.skill import Skill
+from app import app,db
 from flask import jsonify, request
 
-Role_has_Skill = db.Table(
-    'Role_has_Skill', db.Column(
-        'Job_ID', db.Integer, db.ForeignKey('Job_Role.Job_ID')), db.Column(
-            'Skill_ID', db.Integer, db.ForeignKey('Skill.Skill_ID')))
-
+# Association Table
+Role_has_Skill = db.Table('Role_has_Skill',
+                    db.Column('Job_ID', db.Integer, db.ForeignKey('Job_Role.Job_ID')),
+                    db.Column('Skill_ID', db.Integer, db.ForeignKey('Skill.Skill_ID'))
+                    )
 
 class Job_Role(db.Model):
     __tablename__ = 'Job_Role'
@@ -16,10 +16,7 @@ class Job_Role(db.Model):
     Job_Title = db.Column(db.String)
     Department = db.Column(db.String)
     Description = db.Column(db.String)
-    Skills = db.relationship(
-        'Skill',
-        secondary=Role_has_Skill,
-        backref='Roles')
+    Skills = db.relationship('Skill', secondary=Role_has_Skill, backref='Roles')
     Learning_Journeys = db.relationship('LearningJourney', backref='Job_Role')
 
     def json(self):
@@ -30,44 +27,41 @@ class Job_Role(db.Model):
             "Department": self.Department,
             "Description": self.Description
         }
-
     def jsonWithSkills(self):
         return {
             "Job_ID": self.Job_ID,
             "Job_Role": self.Job_Role,
-            "Job_Title": self.Job_Title,
-            "Department": self.Department,
+            "Job_Title":self.Job_Title,
+            "Department":self.Department,
             "Description": self.Description,
             "Skills": [skill.json() for skill in self.Skills]
         }
-
     def jsonWithSkillsCourses(self):
         return {
             "Job_ID": self.Job_ID,
             "Job_Role": self.Job_Role,
-            "Job_Title": self.Job_Title,
-            "Department": self.Department,
+            "Job_Title":self.Job_Title,
+            "Department":self.Department,
             "Description": self.Description,
             "Skills": [skill.jsonWithCourse() for skill in self.Skills]
         }
-
+        
 
 @app.route("/role/test")
 def testRole():
     return "role route is working"
-
 
 @app.route("/roles")
 def getRole():
     roleList = Job_Role.query.all()
     if len(roleList):
         return jsonify(
-            {
-                "code": 200,
-                "error": False,
-                "data": [role.jsonWithSkills() for role in roleList]
-            }
-        ), 200
+           {
+               "code": 200,
+               "error": False,
+               "data": [role.jsonWithSkills() for role in roleList]
+           }
+       ), 200
     return jsonify(
         {
             "code": 200,
@@ -75,19 +69,18 @@ def getRole():
             "data": []
         }
     ), 200
-
 
 @app.route("/roles/<int:id>")
-def getRoleByID(id: int):
-    roleList = Job_Role.query.filter_by(Job_ID=id).all()
+def getRoleByID(id : int):
+    roleList = Job_Role.query.filter_by(Job_ID = id).all()
     if len(roleList):
         return jsonify(
-            {
-                "code": 200,
-                "error": False,
-                "data": [role.jsonWithSkillsCourses() for role in roleList]
-            }
-        ), 200
+           {
+               "code": 200,
+               "error": False,
+               "data": [role.jsonWithSkillsCourses() for role in roleList]
+           }
+       ), 200
     return jsonify(
         {
             "code": 200,
@@ -95,12 +88,11 @@ def getRoleByID(id: int):
             "data": []
         }
     ), 200
-
 
 @app.route("/roles", methods=["POST"])
 def createRole():
     """
-    Sample Request
+    Sample Request 
     {
         "Job_Role": "Sales Manager",
         "Job_Title": "Manager",
@@ -111,8 +103,7 @@ def createRole():
     """
     data = request.get_json()
     try:
-        roleExists = Job_Role.query.filter_by(
-            Job_Role=data["Job_Role"]).first()
+        roleExists = Job_Role.query.filter_by(Job_Role=data["Job_Role"]).first()
         if roleExists:
             return jsonify(
                 {
@@ -131,8 +122,7 @@ def createRole():
         jobRole = Job_Role(**jobRoleData)
         db.session.add(jobRole)
         db.session.commit()
-        skills = db.session.query(Skill).filter(
-            Skill.Skill_ID.in_(data["Skills"])).all()
+        skills = db.session.query(Skill).filter(Skill.Skill_ID.in_(data["Skills"])).all()
         jobRole.Skills = [skill for skill in skills]
         db.session.commit()
         return jsonify(
@@ -153,11 +143,10 @@ def createRole():
             }
         ), 406
 
-
 @app.route("/roles", methods=["PUT"])
 def updateRole():
     """
-    Sample Request
+    Sample Request 
     {
         "Job_ID": 4,
         "Job_Role": "HR Staff",
@@ -170,7 +159,7 @@ def updateRole():
     data = request.get_json()
     try:
         jobID = data["Job_ID"]
-        jobRole = Job_Role.query.filter_by(Job_ID=jobID).first()
+        jobRole = Job_Role.query.filter_by(Job_ID = jobID).first()
         if not jobRole:
             return jsonify(
                 {
@@ -180,9 +169,8 @@ def updateRole():
                     "data": data
                 }
             ), 406
-
-        roleExists = Job_Role.query.filter_by(
-            Job_Role=data["Job_Role"]).first()
+        
+        roleExists = Job_Role.query.filter_by(Job_Role=data["Job_Role"]).first()
         if roleExists and roleExists.json()["Job_ID"] != jobID:
             return jsonify(
                 {
@@ -192,8 +180,7 @@ def updateRole():
                     "data": roleExists.jsonWithSkillsCourses()
                 }
             ), 409
-        skills = db.session.query(Skill).filter(
-            Skill.Skill_ID.in_(data["Skills"])).all()
+        skills = db.session.query(Skill).filter(Skill.Skill_ID.in_(data["Skills"])).all()
         jobRole.Job_Role = data["Job_Role"]
         jobRole.Job_Title = data["Job_Title"]
         jobRole.Department = data["Department"]
@@ -218,11 +205,10 @@ def updateRole():
             }
         ), 406
 
-
 @app.route("/roles/<int:id>", methods=["DELETE"])
-def deleteRole(id: int):
+def deleteRole(id : int):
     try:
-        jobRole = Job_Role.query.filter_by(Job_ID=id).first()
+        jobRole = Job_Role.query.filter_by(Job_ID = id).first()
         if not jobRole:
             return jsonify(
                 {
@@ -232,8 +218,7 @@ def deleteRole(id: int):
                     "data": []
                 }
             ), 406
-        learningJourneys = LearningJourney.query.filter_by(
-            Job_Role_ID=id).all()
+        learningJourneys = LearningJourney.query.filter_by(Job_Role_ID = id).all()
         if len(learningJourneys) > 0:
             return jsonify(
                 {
