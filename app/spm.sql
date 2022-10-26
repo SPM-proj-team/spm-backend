@@ -164,6 +164,7 @@ CREATE TABLE `Learning_Journey` (
 LOCK TABLES `Learning_Journey` WRITE;
 /*!40000 ALTER TABLE `Learning_Journey` DISABLE KEYS */;
 INSERT INTO `Learning_Journey` VALUES (1,'10:13pm 17 Oct --- Learning Journey for GODS',1,'ur mum gay ur dad lesbian ur granny a tranny ur sister a mister\ndescription testing update of the Learning Journey (2)',1),(2,'Learning Journey for Dummies (Sales Role) -- ',1,'lorem ipsum for dummies I HATE SALES',2),(3,'Advanced Learning Journey',2,'updateds',3);
+INSERT INTO `Learning_Journey` VALUES (4,'10:13pm 17 Oct --- Learning Journey for GODS',140002,'just test journey journey',1),(5,'Learning Journey for Dummies (Sales Role) -- ',140002,'lorem ipsum for dummies I HATE SALES',2),(6,'Advanced Learning Journey',140002,'updateds',3);
 /*!40000 ALTER TABLE `Learning_Journey` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -191,6 +192,9 @@ CREATE TABLE `Learning_Journey_has_Course` (
 LOCK TABLES `Learning_Journey_has_Course` WRITE;
 /*!40000 ALTER TABLE `Learning_Journey_has_Course` DISABLE KEYS */;
 INSERT INTO `Learning_Journey_has_Course` VALUES ('COR001',1),('COR002',1),('FIN001',1),('SAL002',1),('COR001',2),('COR002',2),('FIN001',2),('SAL002',2),('COR001',3),('COR002',3);
+
+INSERT INTO `Learning_Journey_has_Course` VALUES ('COR001',4),('COR002',4),('FIN001',4),('SAL002',4),('COR001',5),('COR002',5),('FIN001',5),('SAL002',5),('COR001',6),('COR002',6);
+
 /*!40000 ALTER TABLE `Learning_Journey_has_Course` ENABLE KEYS */;
 UNLOCK TABLES;
 
