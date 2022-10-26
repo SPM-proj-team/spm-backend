@@ -10,6 +10,7 @@ from selenium_tests import helper_function
 def updateRoleTest(driver, backend_url, frontend_url):
     # going to admin page
     driver.get(frontend_url)
+    helper_function.Login(driver,frontend_url)
     time.sleep(2)
 
     adminBtn = WebDriverWait(driver, 10).until(
@@ -100,6 +101,7 @@ def createRoleTest(driver, backend_url, frontend_url):
     prevRoleCount = len(json.loads(prevRoleRequest.text)["data"])
 
     driver.get(frontend_url)
+    helper_function.Login(driver,frontend_url)
     #  go to admin page
     adminBtn = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//a[@href='/Admin']"))
@@ -169,6 +171,7 @@ def createRoleTest(driver, backend_url, frontend_url):
 
 def deleteRoleTest(driver, backend_url, frontend_url):
     driver.get(frontend_url)
+    helper_function.Login(driver,frontend_url)
     adminBtn = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//a[@href='/Admin']"))
     )
@@ -218,6 +221,7 @@ def deleteRoleTest(driver, backend_url, frontend_url):
 
 def searchRoleTest(driver, backend_url, frontend_url):
     driver.get(frontend_url)
+    helper_function.Login(driver,frontend_url)
     viewRoleBtn = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//a[@href='/JobRoles']"))
     )
