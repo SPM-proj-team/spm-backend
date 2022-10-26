@@ -9,6 +9,7 @@ class Registration(db.Model):
     Staff_ID = db.Column(db.Integer, db.ForeignKey('Staff.Staff_ID'))
     Reg_Status = db.Column(db.String)
     Completion_Status = db.Column(db.String)
+    
 
     def json(self):
         return {

@@ -22,7 +22,8 @@ class Course(db.Model):
     Course_Type = db.Column(db.String)
     Course_Status = db.Column(db.String)
     Course_Category = db.Column(db.String)
-
+    Registrations = db.relationship('Registration', backref='Course')
+    
     def json(self):
         return {
             "Course_ID": self.Course_ID,
