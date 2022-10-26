@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.firefox import GeckoDriverManager
 from webdriver_manager.core.utils import ChromeType
 import role
 import learning_journey
@@ -12,24 +13,28 @@ frontend_url = "http://localhost:8080/"
 
 
 def startDriver():
-    chrome_service = Service(ChromeDriverManager(
-        chrome_type=ChromeType.CHROMIUM).install())
-    chrome_options = Options()
-    options = [
-        "--headless",
-        "--disable-gpu",
-        "--window-size=1920,1200",
-        "--ignore-certificate-errors",
-        "--disable-extensions",
-        "--no-sandbox",
-        "--disable-dev-shm-usage"
-    ]
-    for option in options:
-        chrome_options.add_argument(option)
+    
+    # chrome_service = Service(ChromeDriverManager(
+    #     chrome_type=ChromeType.CHROMIUM).install("./chromedriver"))
+    # chrome_options = Options()
+    # options = [
+    #     "--headless",
+    #     "--disable-gpu",
+    #     "--window-size=1920,1200",
+    #     "--ignore-certificate-errors",
+    #     "--disable-extensions",
+    #     "--no-sandbox",
+    #     "--disable-dev-shm-usage"
+    # ]
+    # for option in options:
+    #     chrome_options.add_argument(option)
 
-    driver = webdriver.Chrome(service=chrome_service, options=chrome_options)
-
+    # driver = webdriver.Chrome(service=chrome_service, options=chrome_options)
+    
+    driver = webdriver.Firefox(executable_path=GeckoDriverManager().install())
+    driver.fullscreen_window()
     driver.get(frontend_url)
+    # print('running first function')
     print(
         learning_journey.checkLearningJourney(
             driver,

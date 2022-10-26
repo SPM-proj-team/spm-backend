@@ -5,9 +5,11 @@ import requests
 import json
 import time
 from selenium_tests import helper_function
+# import helper_function
 
 
 def updateRoleTest(driver, backend_url, frontend_url):
+    # print("test")
     # going to admin page
     driver.get(frontend_url)
     helper_function.Login(driver,frontend_url)

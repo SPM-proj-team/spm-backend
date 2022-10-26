@@ -35,17 +35,18 @@ def Login(driver,frontend_url):
             driver, 3).until(
             EC.presence_of_all_elements_located(
                 (By.XPATH, "//input[@type='email']")))
-        email.send_keys("john.doe@test.com.sg")
+        email[0].send_keys("john.doe@test.com.sg")
         id = WebDriverWait(
             driver, 3).until(
             EC.presence_of_all_elements_located(
                 (By.XPATH, "//input[@type='number']")))
-        id.send_keys("1")
+        id[0].send_keys("1")
         
         loginBtn = WebDriverWait(
             driver, 3).until(
             EC.presence_of_all_elements_located(
                 (By.XPATH, "//button[text()='Login']")))
-        loginBtn.click()
-    except:
+        loginBtn[0].click()
+    except Exception as e:
+        # print(e)
         pass
