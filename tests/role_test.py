@@ -114,7 +114,7 @@ def test_duplicate_create_role():
                                         "Job_Title": "Manager",
                                         "Department": "Sales",
                                         "Description": "Lorem",
-                                        "Skills": ["S001", "S002"]
+                                        "Skills": [1, 2]
                                     }),
                                     headers={
                                         "Content-Type": "application/json"
@@ -187,7 +187,7 @@ def test_duplicate_update_role():
                                                  "Job_Title": "Staff",
                                                  "Department": "Technology",
                                                  "Description": "Lorem",
-                                                 "Skills": ["S001", "S002"]
+                                                 "Skills": [1, 2]
                                              }),
                                              headers={
                                                  "Content-Type": "application/json"
@@ -205,7 +205,7 @@ def test_duplicate_update_role():
                                        "Job_Title": "Manager",
                                        "Department": "Sales",
                                        "Description": "Ipsum",
-                                       "Skills": ["S003"]
+                                       "Skills": [3]
                                    }),
                                    headers={
                                        "Content-Type": "application/json"
@@ -227,7 +227,7 @@ def test_update_role_not_found():
                                        "Job_Title": "Staff",
                                        "Department": "Technology",
                                        "Description": "Ipsum",
-                                       "Skills": ["S001", "S002"]
+                                       "Skills": [1, 2]
                                    }),
                                    headers={
                                        "Content-Type": "application/json"
@@ -259,7 +259,7 @@ def test_delete_role():
                                                  "Job_Title": "Staff",
                                                  "Department": "Technology",
                                                  "Description": "Lorem",
-                                                 "Skills": ["S001", "S002"]
+                                                 "Skills": [1, 2]
                                              }),
                                              headers={
                                                  "Content-Type": "application/json"

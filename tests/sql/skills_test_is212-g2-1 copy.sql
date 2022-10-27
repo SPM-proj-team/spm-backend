@@ -72,7 +72,7 @@ DROP TABLE IF EXISTS `Role_has_Skill`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Role_has_Skill` (
   `Job_ID` int NOT NULL,
-  `Skill_ID` char(13) NOT NULL,
+  `Skill_ID` int NOT NULL,
   KEY `Job_ID` (`Job_ID`),
   KEY `Skill_ID` (`Skill_ID`),
   CONSTRAINT `Role_has_Skill_ibfk_1` FOREIGN KEY (`Job_ID`) REFERENCES `Job_Role` (`Job_ID`),
@@ -83,10 +83,10 @@ CREATE TABLE `Role_has_Skill` (
 LOCK TABLES `Role_has_Skill` WRITE;
 /*!40000 ALTER TABLE `Role_has_Skill` DISABLE KEYS */;
 INSERT INTO `Role_has_Skill` VALUES 
-(1,'S001'),
-(1,'S002'),
-(2,'S003'),
-(2,'S004');
+(1,1),
+(1,2),
+(2,3),
+(2,4);
 /*!40000 ALTER TABLE `Role_has_Skill` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -98,7 +98,7 @@ DROP TABLE IF EXISTS `Skill`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Skill` (
-  `Skill_ID` char(13) NOT NULL,
+  `Skill_ID` int NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL,
   PRIMARY KEY (`Skill_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
@@ -111,10 +111,10 @@ CREATE TABLE `Skill` (
 LOCK TABLES `Skill` WRITE;
 /*!40000 ALTER TABLE `Skill` DISABLE KEYS */;
 INSERT INTO `Skill` VALUES 
-('S001','testSkill1'),
-('S002','testSkill2'),
-('S003','testSkill3'),
-('S004','testSkill4');
+(1,'testSkill1'),
+(2,'testSkill2'),
+(3,'testSkill3'),
+(4,'testSkill4');
 /*!40000 ALTER TABLE `Skill` ENABLE KEYS */;
 UNLOCK TABLES;
 

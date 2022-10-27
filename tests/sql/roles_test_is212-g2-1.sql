@@ -73,7 +73,7 @@ DROP TABLE IF EXISTS `Course_has_Skill`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Course_has_Skill` (
-  `Skill_ID` varchar(13) NOT NULL,
+  `Skill_ID` int NOT NULL,
   `Course_ID` varchar(20) NOT NULL,
   KEY `Course_ID` (`Course_ID`),
   KEY `Skill_ID` (`Skill_ID`),
@@ -89,10 +89,10 @@ CREATE TABLE `Course_has_Skill` (
 LOCK TABLES `Course_has_Skill` WRITE;
 /*!40000 ALTER TABLE `Course_has_Skill` DISABLE KEYS */;
 INSERT INTO `Course_has_Skill` VALUES 
-('S001','COR001'),
-('S002','COR001'),
-('S003','COR002'),
-('S004','COR002');
+(1,'COR001'),
+(2,'COR001'),
+(3,'COR002'),
+(4,'COR002');
 /*!40000 ALTER TABLE `Course_has_Skill` ENABLE KEYS */;
 UNLOCK TABLES;
 
