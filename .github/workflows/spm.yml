@@ -90,8 +90,7 @@ jobs:
     - name: run front-end in background
       run: |
          cd ./spm-frontend &&
-         npm run serve
-         sleep 20
+         npm run serve &&
          cd ../
 
     - name: Run backend in background
