@@ -91,6 +91,7 @@ jobs:
       run: |
          cd ./spm-frontend &&
          npm run serve
+         sleep 20
          cd ../
 
     - name: Run backend in background
