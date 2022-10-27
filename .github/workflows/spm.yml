@@ -3,7 +3,7 @@
 
 name: SPM
 
-on: [push, pull_request]
+on: [push, pull_request, workflow_call]
 
 jobs:
   build:
