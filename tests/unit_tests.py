@@ -1,6 +1,6 @@
 import unittest
 
-from app import Job_Role, Course, Skill, LearningJourney
+from app import Job_Role, Course, Skill, LearningJourney, Registration, Staff, Access_Role
 
 
 class TestJobRole(unittest.TestCase):
@@ -64,6 +64,33 @@ class TestLearningJourney(unittest.TestCase):
             'Description': 'My first journey'
         })
 
+
+class TestAccessRole(unittest.TestCase):
+    def test_json(self):
+        ar1 = Access_Role(
+            Role_Name="testRole"
+        )
+        self.assertEqual(ar1.json(), {
+            'Role_ID': None,
+            'Role_Name': 'testRole'
+        })
+
+
+class TestStaff(unittest.TestCase):
+    def test_json(self):
+        s1 = Staff(
+            Staff_FName = "FirstName",
+            Staff_LName = "LastName",
+            Dept = "Department",
+            Email = "Email"
+        )
+        self.assertEqual(s1.json(), {
+            'Staff_ID': None,
+            'Staff_FName': 'FirstName',
+            'Staff_LName': 'LastName',
+            'Dept': 'Department',
+            'Email': 'Email'
+        })
 
 if __name__ == "__main__":
     unittest.main()
