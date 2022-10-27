@@ -85,12 +85,14 @@ jobs:
       run: |
         cd ./spm-frontend &&
         npm install &&
+        sleep 10 &&
         cd ../
         
-    - name: run front-end in background
+    - name: Run front-end in background
       run: |
          cd ./spm-frontend &&
          npm run serve &&
+         sleep 20 &&
          cd ../
 
     - name: Run backend in background
