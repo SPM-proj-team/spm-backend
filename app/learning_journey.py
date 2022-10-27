@@ -114,7 +114,7 @@ def createLearningJourney():
                     "message": f"An error occurred while creating learning journey: Duplicate learning journey name already exists for staff id {data['Staff_ID']}",
                     "data": learningJourneyExists.jsonWithCourseAndRole()
                 }
-            ), 200
+            ), 409
         for course in data['Courses']:
             courseID.append(course['Course_ID'])
         if len(courseID) == 0:
@@ -125,7 +125,7 @@ def createLearningJourney():
                     "error": True,
                     "message": "There should at least be 1 course in the Learning Journey"
                 }
-            ), 200
+            ), 404
         courses = Course.query.filter(Course.Course_ID.in_(courseID))
         learningJourney.Learning_Journey_Name = data['Learning_Journey_Name']
         learningJourney.Staff_ID = data['Staff_ID']
@@ -150,7 +150,7 @@ def createLearningJourney():
                 "message": f"An error occurred while creating learning journey: {e}",
                 "data": data
             }
-        ), 200
+        ), 406
 
 
 @app.route("/learning_journey/<int:Learning_Journey_ID>", methods=["PUT"])
@@ -168,7 +168,7 @@ def updateLearningJourney(Learning_Journey_ID):
                     "message": f"An error occurred while updating learning journey: Duplicate learning journey name already exists for staff id {Staff_ID}",
                     "data": learningJourneyExists.jsonWithCourseAndRole()
                 }
-            ), 200
+            ), 409
     selectedLJ = LearningJourney.query.filter_by(
         Learning_Journey_ID=Learning_Journey_ID,
         Staff_ID=Staff_ID).all()

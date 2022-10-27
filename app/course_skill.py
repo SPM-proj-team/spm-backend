@@ -276,7 +276,7 @@ def getCourse():
                 "data": [course.jsonWithSkill() for course in courseList],
                 "error": False
             }
-        )
+        ), 200
     return jsonify(
         {
             "code": 200,

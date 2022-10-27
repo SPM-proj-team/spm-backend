@@ -148,7 +148,6 @@ def test_duplicate_create_learning_journey():
                         "Staff_ID": staff_id}}),
             headers={
                 "Content-Type": "application/json"})
-        assert response.status_code == 200
         assert response.get_json()['code'] == 409
         assert response.get_json()['error']
         assert response.get_json()[
@@ -174,7 +173,6 @@ def test_create_learning_journey_no_courses():
                         "Staff_ID": 1}}),
             headers={
                 "Content-Type": "application/json"})
-        assert response.status_code == 200
         assert response.get_json()['code'] == 404
         assert response.get_json()['error']
         assert response.get_json(
@@ -350,7 +348,6 @@ def test_duplicate_update_learning_journey():
                                                                                   "Job_Role": "CEO",
                                                                                   "Job_Title": "The big boss"}}}),
                                    headers={"Content-Type": "application/json"})
-        assert response.status_code == 200
         assert response.get_json()['code'] == 409
         assert response.get_json()['error']
         assert response.get_json()[
