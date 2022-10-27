@@ -77,7 +77,7 @@ jobs:
       uses: actions/checkout@v3
       with:
         repository: SPM-proj-team/spm-frontend
-        ref: sprint-2
+        ref: sprint-3
         token: ${{ secrets.ACCESS_TOKEN }}
         path: './spm-frontend'
     
