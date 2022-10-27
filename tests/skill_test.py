@@ -82,7 +82,6 @@ def test_create_skill():
     with app.test_client() as test_client:
         response = test_client.post('/skills',
                                     data=json.dumps({
-                                        "Skill_ID": "S099",
                                         "Name": "Solidity",
                                         "Courses": ["FIN001", "FIN002"]
                                     }),
@@ -134,7 +133,7 @@ def test_update_skill():
     with app.test_client() as test_client:
         response = test_client.put('/skills',
                                    data=json.dumps({
-                                       "Skill_ID": "S001",
+                                       "Skill_ID": 1,
                                        "Name": "Ethereum",
                                        "Courses": ["FIN001"]
                                    }),
@@ -153,7 +152,7 @@ def test_duplicate_update_role():
     with app.test_client() as test_client:
         response = test_client.put('/skills',
                                    data=json.dumps({
-                                       "Skill_ID": "S001",
+                                       "Skill_ID": 1,
                                        "Name": "People Management",
                                        "Courses": ["FIN001"]
                                    }),
@@ -191,7 +190,7 @@ def test_delete_skill():
     with app.test_client() as test_client:
         response = test_client.delete("/skills",
                                       data=json.dumps({
-                                          "Skill_ID": "S001"
+                                          "Skill_ID": 1
                                       }),
                                       headers={
                                           "Content-Type": "application/json"

@@ -86,7 +86,7 @@ def test_create_role():
                                         "Job_Title": "Staff",
                                         "Department": "Technology",
                                         "Description": "Lorem",
-                                        "Skills": ["S001", "S002"]
+                                        "Skills": [1, 2]
                                     }),
                                     headers={
                                         "Content-Type": "application/json"
@@ -161,7 +161,7 @@ def test_update_role():
                                        "Job_Title": "Staff",
                                        "Department": "HR",
                                        "Description": "Ipsum",
-                                       "Skills": ["S003"]
+                                       "Skills": [3]
                                    }),
                                    headers={
                                        "Content-Type": "application/json"

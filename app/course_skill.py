@@ -141,7 +141,6 @@ def createSkill():
             ), 409
         skill = Skill()
         courses = Course.query.filter(Course.Course_ID.in_(data["Courses"]))
-        skill.Skill_ID = data["Skill_ID"]
         skill.Name = data["Name"]
         skill.Courses = [course for course in courses]
         db.session.add(skill)

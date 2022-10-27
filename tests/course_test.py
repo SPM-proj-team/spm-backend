@@ -92,7 +92,7 @@ def test_update_skills_mapped_to_course():
         response = test_client.put('/courses',
                                    data=json.dumps({
                                        "Course_ID": "COR001",
-                                       "Skills": ["S003"]
+                                       "Skills": [3]
                                    }),
                                    headers={
                                        "Content-Type": "application/json"
@@ -102,7 +102,7 @@ def test_update_skills_mapped_to_course():
         assert response.get_json()["error"] == False
         data = response.get_json()["data"]
         assert len(data["Skills"]) == 1
-        assert data["Skills"][0]["Skill_ID"] == "S003"
+        assert data["Skills"][0]["Skill_ID"] == 3
 
 
 def test_update_skills_mapped_to_course_not_found():
