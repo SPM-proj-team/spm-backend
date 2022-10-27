@@ -19,7 +19,13 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=10
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Clone backend repo 
+      uses: actions/checkout@v3
+      with:
+        repository: SPM-proj-team/spm-backend
+        ref: sprint-3
+        token: ${{ secrets.ACCESS_TOKEN }}
+        
     - name: Set up Python 3.10
       uses: actions/setup-python@v3
       with:
