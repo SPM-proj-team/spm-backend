@@ -80,11 +80,31 @@ jobs:
         ref: sprint-3
         token: ${{ secrets.ACCESS_TOKEN }}
         path: './spm-frontend'
+        
+    - name: Cache node modules
+      uses: actions/cache@v3
+      id: myCacheStep
+      env:
+        cache-name: cache-node-modules
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hasfiles('**/package-lock.json')}}
+        restore-keys: |
+          ${{ runner.os }}-build-${{env.cache-name}}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
     
-    - name: Install frontend dependencies and run frontend service in background 
+    - name: Install frontend dependencies 
+      if: steps.myCacheStep.outputs.cache-hit != 'true'
       run: |
         cd ./spm-frontend &&
         npm install &&
+        cd ../
+    
+    
+    - name: Run front end service in background
+      run: |
+        cd ./spm-frontend &&
         npm run serve &
         sleep 20 &&
         cd ../
