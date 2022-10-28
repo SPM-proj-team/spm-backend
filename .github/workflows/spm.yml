@@ -3,7 +3,7 @@
 
 name: SPM
 
-on: [push, pull_request]
+on: [push, pull_request, workflow_call]
 
 jobs:
   build:
@@ -19,7 +19,13 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=10
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Clone backend repo 
+      uses: actions/checkout@v3
+      with:
+        repository: SPM-proj-team/spm-backend
+        ref: sprint-3
+        token: ${{ secrets.ACCESS_TOKEN }}
+        
     - name: Set up Python 3.10
       uses: actions/setup-python@v3
       with:
@@ -75,13 +81,19 @@ jobs:
         token: ${{ secrets.ACCESS_TOKEN }}
         path: './spm-frontend'
     
-    - name: Install frontend dependencies and run frontend service in background 
+    - name: Install frontend dependencies  
       run: |
         cd ./spm-frontend &&
-        npm install &&
-        npm run serve &
-        sleep 20 &&
+        npm install &
+        sleep 10 &&
         cd ../
+        
+    - name: Run front-end in background
+      run: |
+         cd ./spm-frontend &&
+         npm run serve &
+         sleep 20 &&
+         cd ../
 
     - name: Run backend in background
       run: |

@@ -7,8 +7,10 @@ from webdriver_manager.core.utils import ChromeType
 import role
 import learning_journey
 import os
+import skill
 backend_url = "http://localhost:5000/"
 frontend_url = "http://localhost:8080/"
+
 # Start selenium
 
 
@@ -66,7 +68,8 @@ def startDriver():
             driver,
             backend_url,
             frontend_url))
-    os.system("mysql -uroot < ../sql/test_spm.sql")
+    # os.system("mysql -uroot < ../sql/test_spm.sql")
+    # print(skill.updateSkillTest(driver,backend_url,frontend_url))
 
 
 startDriver()
