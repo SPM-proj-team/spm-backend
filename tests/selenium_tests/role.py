@@ -4,8 +4,8 @@ from selenium.webdriver.common.by import By
 import requests
 import json
 import time
-from selenium_tests import helper_function
-# import helper_function
+# from selenium_tests import helper_function
+import helper_function
 
 
 def updateRoleTest(driver, backend_url, frontend_url):
