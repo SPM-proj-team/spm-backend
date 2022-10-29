@@ -221,17 +221,16 @@ def updateSkill():
         ), 406
 
 
-@app.route("/skills", methods=["DELETE"])
-def deleteSkill():
+@app.route("/skills/<int:id>", methods=["DELETE"])
+def deleteSkill(id: int):
     try:
-        Skill_ID = request.json['Skill_ID']
-        skill = Skill.query.filter_by(Skill_ID=Skill_ID).first()
+        skill = Skill.query.filter_by(Skill_ID=id).first()
         if not skill:
             return jsonify(
                 {
                     "code": 406,
                     "error": True,
-                    "message": f"An error occurred while deleting skill: Skill ID {Skill_ID} not found",
+                    "message": f"An error occurred while deleting skill: Skill ID {id} not found",
                     "data": []
                 }
             ), 406
@@ -245,7 +244,7 @@ def deleteSkill():
             {
                 "code": 200,
                 "error": False,
-                "message": f"Skill ID: {Skill_ID} has been deleted",
+                "message": f"Skill ID: {id} has been deleted",
             }
         ), 200
     except Exception as e:
@@ -255,7 +254,7 @@ def deleteSkill():
                 "code": 406,
                 "error": True,
                 "message": f"An error occurred while deleting skill: {e}",
-                "data": {"Skill_ID": Skill_ID}
+                "data": {"Skill_ID": id}
             }
         ), 406
 
