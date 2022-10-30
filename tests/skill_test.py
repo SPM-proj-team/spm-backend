@@ -188,31 +188,16 @@ def test_update_skill_not_found():
 
 def test_delete_skill():
     with app.test_client() as test_client:
-        response = test_client.delete("/skills",
-                                      data=json.dumps({
-                                          "Skill_ID": 1
-                                      }),
-                                      headers={
-                                          "Content-Type": "application/json"
-                                      }
-                                      )
-
+        response = test_client.delete("/skills/1")
         assert response.status_code == 200
         assert response.get_json()['error'] == False
 
 
 def test_delete_skill_not_found():
     with app.test_client() as test_client:
-        response = test_client.delete("/skills",
-                                      data=json.dumps({
-                                          "Skill_ID": "S999"
-                                      }),
-                                      headers={
-                                          "Content-Type": "application/json"
-                                      }
-                                      )
+        response = test_client.delete("/skills/999")
         assert response.status_code == 406
         assert response.get_json()['code'] == 406
         assert response.get_json()['error']
         assert response.get_json()[
-            'message'] == "An error occurred while deleting skill: Skill ID S999 not found"
+            'message'] == "An error occurred while deleting skill: Skill ID 999 not found"
