@@ -146,12 +146,12 @@ def test_search_role():
 
 def test_update_learning_journey():
     response = learning_journey.updateLearningJourneyTest(driver,backend_url,frontend_url)
-    assert response == True
+    assert response
 
 def test_create_learning_journey():
     response = learning_journey.createLearningJourneyTest(driver, backend_url, frontend_url)
-    assert response == True
+    assert response
 
 def test_delete_learning_journey():
     response = learning_journey.deleteLearningJourneyTest(driver, backend_url, frontend_url)
-    assert response == True
+    assert response

@@ -151,6 +151,8 @@ def deleteLearningJourneyTest(driver, backend_url, frontend_url):
     driver.get(frontend_url)
     helper_function.Login(driver, frontend_url)
     time.sleep(2)
+    prevLJRequest = requests.post(backend_url + "learning_journey", json = {"Staff_ID": 1})
+    prevLJCount = len(json.loads(prevLJRequest.text)["data"])
     learningJourneys = WebDriverWait(
         driver, 3).until(
         EC.presence_of_all_elements_located(
@@ -173,12 +175,10 @@ def deleteLearningJourneyTest(driver, backend_url, frontend_url):
         driver, 3).until(
         EC.presence_of_all_elements_located(
             (By.XPATH, "//div[contains(@class, 'card-body shadow-sm')]")))
-    if len(learningJourneys) == 1:
-        return helper_function.testFormatSingle(
-            "Delete Learning Journey test", True)
-    else:
-        return helper_function.testFormatSingle(
-            "Delete Learning Journey test", False)
+    LJRequest = requests.post(backend_url + "learning_journey", json = {"Staff_ID": 1})
+    LJCount = len(json.loads(LJRequest.text)["data"])
+    return helper_function.testFormatCount(
+        "Delete No. Of LJs", LJCount, prevLJCount - 1)
 
 def searchLearningJourneyTest(driver, backend_url, frontend_url):
     driver.get(frontend_url)
