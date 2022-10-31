@@ -221,10 +221,11 @@ def updateSkill():
         ), 406
 
 
-@app.route("/skills/<int:id>", methods=["DELETE"])
-def deleteSkill(id: int):
+@app.route("/skills/<id>", methods=["DELETE"])
+def deleteSkill(id):
     try:
-        skill = Skill.query.filter_by(Skill_ID=id).first()
+        Skill_ID = id
+        skill = Skill.query.filter_by(Skill_ID=Skill_ID).first()
         if not skill:
             return jsonify(
                 {
@@ -249,6 +250,7 @@ def deleteSkill(id: int):
         ), 200
     except Exception as e:
         db.session.rollback()
+        Skill_ID = request.json['Skill_ID']
         return jsonify(
             {
                 "code": 406,
