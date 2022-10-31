@@ -25,6 +25,7 @@ def updateSkill():
     response = requests.put(url, json=data)
     return response.elapsed.total_seconds()
 
+
 def deleteSkill():
     url = "http://localhost:5000/skills/S099"
     response = requests.delete(url)
