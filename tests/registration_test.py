@@ -106,7 +106,7 @@ def test_get_registration_by_staff_id_no_registrations():
     with app.test_client() as test_client:
         response = test_client.post('/registration',
                                     data=json.dumps({
-                                        "Staff_ID": 1
+                                        "Staff_ID": 2
                                     }),
                                     headers={
                                         "Content-Type": "application/json"

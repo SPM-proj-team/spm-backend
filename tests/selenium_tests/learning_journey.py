@@ -96,6 +96,7 @@ def createLearningJourneyTest(driver, backend_url, frontend_url):
             (By.XPATH, "//a[@href='/CreateLearningJourney']")))
     learningJourneys[0].click()
     time.sleep(2)
+    
     name = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//input[@id='name']"))
     )
