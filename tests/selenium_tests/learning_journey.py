@@ -178,3 +178,38 @@ def deleteLearningJourneyTest(driver, backend_url, frontend_url):
     else:
         return helper_function.testFormatSingle(
             "Delete Learning Journey test", False)
+
+def searchLearningJourneyTest(driver, backend_url, frontend_url):
+    driver.get(frontend_url)
+    helper_function.Login(driver, frontend_url)
+    time.sleep(2)
+    ljSearchBar = WebDriverWait(
+        driver, 10).until(
+        EC.presence_of_element_located(
+            (By.XPATH, "//input[@type='search']")))
+
+    ljSearchBar.send_keys("GODS")
+
+    results = WebDriverWait(
+        driver, 3).until(
+        EC.presence_of_all_elements_located(
+            (By.XPATH, "//button[@class='list-group-item d-flex justify-content-between align-items-start']")))
+    if len(results) != 1:
+        return helper_function.testFormatSingle(
+            "Search Function Learning Journey Test", False)
+    driver.get(frontend_url)
+    ljSearchBar1 = WebDriverWait(
+        driver, 10).until(
+        EC.presence_of_element_located(
+            (By.XPATH, "//input[@type='search']")))
+    ljSearchBar1.send_keys("learning")
+    results1 = WebDriverWait(
+        driver, 3).until(
+        EC.presence_of_all_elements_located(
+            (By.XPATH, "//button[@class='list-group-item d-flex justify-content-between align-items-start']")))
+    if len(results1) != 2:
+        print('second')
+        return helper_function.testFormatSingle(
+            "Search Function Learning Journey Test", False)
+    return helper_function.testFormatSingle(
+            "Search Function Learning Journey Test", True)

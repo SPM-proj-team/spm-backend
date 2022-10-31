@@ -36,7 +36,7 @@ def startDriver():
     # driver = webdriver.Chrome(service=chrome_service, options=chrome_options)
 
     firefox_options = Options()
-    firefox_options.add_argument("--headless")
+    # firefox_options.add_argument("--headless")
     driver = webdriver.Firefox(executable_path=GeckoDriverManager().install(),options=firefox_options)
     driver.fullscreen_window()
     driver.get(frontend_url)
@@ -72,12 +72,15 @@ def startDriver():
     #         driver,
     #         backend_url,
     #         frontend_url))
-    os.system("mysql -uroot < ../sql/test_spm.sql")
-    print(skill.updateSkillTest(driver,backend_url,frontend_url))
-    os.system("mysql -uroot < ../sql/test_spm.sql")
-    print(skill.createSkillTest(driver,backend_url,frontend_url))
-    os.system("mysql -uroot < ../sql/test_spm.sql")
-    print(skill.deleteRoleTest(driver,backend_url,frontend_url))
+    # os.system("mysql -uroot < ../sql/test_spm.sql")
+    # print(skill.updateSkillTest(driver,backend_url,frontend_url))
+    # os.system("mysql -uroot < ../sql/test_spm.sql")
+    # print(skill.createSkillTest(driver,backend_url,frontend_url))
+    # os.system("mysql -uroot < ../sql/test_spm.sql")
+    # print(skill.deleteRoleTest(driver,backend_url,frontend_url))
+    # os.system("mysql -uroot < ../sql/test_spm.sql")
+    print(learning_journey.searchLearningJourneyTest(driver,backend_url,frontend_url))
+    
 
 
 
