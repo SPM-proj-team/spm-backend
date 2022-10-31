@@ -18,7 +18,7 @@ class Registration(db.Model):
             "Staff": self.Staff.json(),
             "Reg_Status": self.Reg_Status,
             "Completion_Status": self.Completion_Status,
-            "Course": self.Course.json(),
+            "Course": self.Course.jsonWithSkill(),
         }
 
 
@@ -67,3 +67,4 @@ def getRegistrationbyStaffID():
             "error": False
         }
     ), 200
+
