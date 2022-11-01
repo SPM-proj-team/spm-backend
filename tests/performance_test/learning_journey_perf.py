@@ -2,7 +2,7 @@ import requests
 
 
 def learning_journey():
-    url = "http://localhost:5000/learningjourney"
+    url = "http://localhost:5000/learning_journey"
     data = {
         "Staff_ID": "STF001"
     }
@@ -11,7 +11,7 @@ def learning_journey():
 
 
 def createLearningJourney():
-    url = "http://localhost:5000/learningjourney"
+    url = "http://localhost:5000/learning_journey"
     data = {
         "Staff_ID": 1,
         "Learning_Journey": {
@@ -36,7 +36,7 @@ def createLearningJourney():
     return response.elapsed.total_seconds()
 
 def updateLearningJourney():
-    url = "http://localhost:5000/learningjourney/1"
+    url = "http://localhost:5000/learning_journey/1"
     data = {
         "Staff_ID": 1,
         "Learning_Journey": {
@@ -61,7 +61,7 @@ def updateLearningJourney():
     return response.elapsed.total_seconds()
 
 def deleteLearningJourney():
-    url = "http://localhost:5000/learningjourney/1"
+    url = "http://localhost:5000/learning_journey/1"
     data = {
         "Staff_ID": 1,
     }

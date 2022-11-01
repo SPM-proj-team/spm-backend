@@ -83,9 +83,8 @@ jobs:
     
     - name: Install frontend dependencies  
       run: |
-        cd ./spm-frontend &&
-        npm install &
-        sleep 10 &&
+        cd ./spm-frontend
+        npm install
         cd ../
         
     - name: Run front-end in background
@@ -99,6 +98,7 @@ jobs:
       run: |
         ( python run.py > /dev/null 2> /dev/null & ) &
         sleep 5
+    
 
     - name: Run unit tests
       run: |
@@ -115,17 +115,19 @@ jobs:
         export PYTHONPATH='.'
         pytest -v -m "e2e"
     
-    - name: Run local k6 perf test
-      uses: grafana/k6-actions@v0.2.0
-      with:
-        filename: tests/perf_tests/test.js
-        flags: --out json=results.json
-      
-    - name: Upload perf test results
+    - name: Install k6
+      run: |
+        curl https://github.com/loadimpact/k6/releases/download/v0.26.2/k6-v0.26.2-linux64.tar.gz -L | tar xvz --strip-components 1
+
+    - name: Run local k6 performance test
+      run: |
+        ./k6 run tests/performance_test/test.js
+    
+    - name: Store k6 performance test results
       uses: actions/upload-artifact@v3
       with:
-        name: k6-perf-report
-        path: results.json
+        name: k6-summary-report
+        path: ./summary.json
 
     - name: Clean running services 
       run: |

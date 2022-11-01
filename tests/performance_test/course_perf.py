@@ -9,7 +9,7 @@ def updateCourse():
     url = "http://localhost:5000/courses/FIN001"
     data = {
         "Course_ID": "COR001",
-        "Skills": ["S003"]
+        "Skills": [3]
     }
     response = requests.put(url, json=data)
     return response.elapsed.total_seconds()

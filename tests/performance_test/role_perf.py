@@ -12,7 +12,7 @@ def createRole():
         "Job_Title": "Manager",
         "Department": "Sales",
         "Description": "Lorem ipsum",
-        "Skills": ["S001", "S002"]
+        "Skills": [1, 2]
     }
     response = requests.post(url, json=data)
     return response.elapsed.total_seconds()
