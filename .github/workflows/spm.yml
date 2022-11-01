@@ -115,16 +115,16 @@ jobs:
         export PYTHONPATH='.'
         pytest -v -m "e2e"
     
-    - name: Run local k6 perf test
-      uses: grafana/k6-actions@v0.2.0
+    - name: Run local k6 performance test
+      uses: grafana/k6-action@v0.2.0
       with:
-        filename: tests/perf_tests/test.js
+        filename: tests/performance_test/test.js
         flags: --out json=results.json
       
-    - name: Upload perf test results
+    - name: Upload performance test results
       uses: actions/upload-artifact@v3
       with:
-        name: k6-perf-report
+        name: k6-performance-report
         path: results.json
 
     - name: Clean running services 
