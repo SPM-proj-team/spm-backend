@@ -116,6 +116,7 @@ def createLearningJourneyTest(driver, backend_url, frontend_url):
         EC.presence_of_all_elements_located(
             (By.XPATH, "//div[@class='ico-card']")))
     roles[0].click()
+    time.sleep(1)
     courseAccordions = WebDriverWait(
         driver, 10).until(
         EC.presence_of_all_elements_located(
