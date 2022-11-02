@@ -12,6 +12,7 @@ import os
 from app import app
 from dotenv import load_dotenv
 import pytest
+import chromedriver_autoinstaller
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import text
 from selenium import webdriver
@@ -55,8 +56,7 @@ def initialise_db():
 # Set up driver
 @pytest.fixture(autouse=True)
 def startDriver():
-    chrome_service = Service(ChromeDriverManager(
-        chrome_type=ChromeType.CHROMIUM).install())
+    chromedriver_autoinstaller.install()
     chrome_options = Options()
     options = [
         "--headless",
@@ -75,9 +75,9 @@ def startDriver():
     global frontend_url
     # driver = driver = webdriver.Firefox()
     # driver.maximize_window()
-    driver = webdriver.Chrome(service=chrome_service, options=chrome_options)
-    backend_url = "http://localhost:5000/"
-    frontend_url = "http://localhost:8080/"
+    driver = webdriver.Chrome(options=chrome_options)
+    backend_url = "http://127.0.0.1:5000/"
+    frontend_url = "http://127.0.0.1:8080/"
 
     return driver, backend_url, frontend_url
 
