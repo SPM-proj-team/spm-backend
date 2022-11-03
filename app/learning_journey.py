@@ -103,18 +103,6 @@ def createLearningJourney():
         courseID = []
         learningJourney = LearningJourney()
         data = request.json['Learning_Journey']
-        learningJourneyExists = LearningJourney.query.filter_by(
-            Learning_Journey_Name=data['Learning_Journey_Name'],
-            Staff_ID=data['Staff_ID']).first()
-        if learningJourneyExists:
-            return jsonify(
-                {
-                    "code": 409,
-                    "error": True,
-                    "message": f"An error occurred while creating learning journey: Duplicate learning journey name already exists for staff id {data['Staff_ID']}",
-                    "data": learningJourneyExists.jsonWithCourseAndRole()
-                }
-            ), 409
         for course in data['Courses']:
             courseID.append(course['Course_ID'])
         if len(courseID) == 0:
@@ -158,17 +146,6 @@ def updateLearningJourney(Learning_Journey_ID):
     Staff_ID = request.json['Staff_ID']
     LJ = request.json['Learning_Journey']
     Learning_Journey_ID = LJ["Learning_Journey_ID"]
-    learningJourneyExists = LearningJourney.query.filter_by(
-            Learning_Journey_Name=LJ["Learning_Journey_Name"]).first()
-    if learningJourneyExists and learningJourneyExists.json()["Learning_Journey_ID"] != Learning_Journey_ID:
-        return jsonify(
-                {
-                    "code": 409,
-                    "error": True,
-                    "message": f"An error occurred while updating learning journey: Duplicate learning journey name already exists for staff id {Staff_ID}",
-                    "data": learningJourneyExists.jsonWithCourseAndRole()
-                }
-            ), 409
     selectedLJ = LearningJourney.query.filter_by(
         Learning_Journey_ID=Learning_Journey_ID,
         Staff_ID=Staff_ID).all()

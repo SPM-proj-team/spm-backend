@@ -121,39 +121,6 @@ def test_create_learning_journey():
         assert len(data["data"][0]["Courses"]) == 1
 
 
-def test_duplicate_create_learning_journey():
-    staff_id = 2
-    with app.test_client() as test_client:
-        response = test_client.post(
-            '/learning_journey/create',
-            data=json.dumps(
-                {
-                    "Learning_Journey": {
-                        "Courses": [
-                            {
-                                "Course_Category": "Core",
-                                "Course_Desc": "This foundation module aims to introduce students to the fundamental concepts and underlying principles of systems thinking,",
-                                "Course_ID": "COR001",
-                                "Course_Name": "Systems Thinking and Design",
-                                "Course_Status": "Active",
-                                "Course_Type": "Internal"}],
-                        "Description": "test",
-                        "Learning_Journey_Name": "Advanced Learning Journey",
-                        "Role": {
-                            "Department": "C-suite",
-                            "Description": "lorem ipsum",
-                            "Job_ID": 1,
-                            "Job_Role": "CEO",
-                            "Job_Title": "The big boss"},
-                        "Staff_ID": staff_id}}),
-            headers={
-                "Content-Type": "application/json"})
-        assert response.get_json()['code'] == 409
-        assert response.get_json()['error']
-        assert response.get_json()[
-            'message'] == f"An error occurred while creating learning journey: Duplicate learning journey name already exists for staff id {staff_id}"
-
-
 def test_create_learning_journey_no_courses():
     with app.test_client() as test_client:
         response = test_client.post(
@@ -320,38 +287,6 @@ def test_update_courses_in_learning_journey_no_courses():
         assert response.get_json()['error']
         assert response.get_json(
         )['message'] == "There should at least be 1 course in the Learning Journey"
-
-
-def test_duplicate_update_learning_journey():
-    staff_id = 1
-    with app.test_client() as test_client:
-        response = test_client.put('/learning_journey/1',
-                                   data=json.dumps({"Staff_ID": staff_id,
-                                                    "Learning_Journey": {"Learning_Journey_ID": 1,
-                                                                         "Courses": [{"Course_Category": "Core",
-                                                                                      "Course_Desc": "This foundation module aims to introduce students to the fundamental concepts and underlying principles of systems thinking",
-                                                                                      "Course_ID": "COR001",
-                                                                                      "Course_Name": "Systems Thinking and Design",
-                                                                                      "Course_Status": "Active",
-                                                                                      "Course_Type": "Internal"},
-                                                                                     {"Course_Category": "Core",
-                                                                                      "Course_Desc": "Apply Lean Six Sigma methodology and statistical tools such as Minitab to be used in process analytics",
-                                                                                      "Course_ID": "COR002",
-                                                                                      "Course_Name": "Lean Six Sigma Green Belt Certification",
-                                                                                      "Course_Status": "Active",
-                                                                                      "Course_Type": "Internal"}],
-                                                                         "Description": "test",
-                                                                         "Learning_Journey_Name": "Advanced Learning Journey",
-                                                                         "Role": {"Department": "C-suite",
-                                                                                  "Description": "lorem ipsum",
-                                                                                  "Job_ID": 1,
-                                                                                  "Job_Role": "CEO",
-                                                                                  "Job_Title": "The big boss"}}}),
-                                   headers={"Content-Type": "application/json"})
-        assert response.get_json()['code'] == 409
-        assert response.get_json()['error']
-        assert response.get_json()[
-            'message'] == f"An error occurred while updating learning journey: Duplicate learning journey name already exists for staff id {staff_id}"
 
 
 def test_delete_learning_journey():
