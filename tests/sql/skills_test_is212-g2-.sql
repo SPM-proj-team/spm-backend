@@ -88,38 +88,6 @@ INSERT INTO `Access_Role` VALUES (1,'Admin'),(2,'User'),(3,'Manager'),(4,'Traine
 UNLOCK TABLES;
 
 --
--- Table structure for table `Course`
---
-
-DROP TABLE IF EXISTS `Course`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `Course` (
-  `Course_ID` varchar(20) NOT NULL,
-  `Course_Name` varchar(45) NOT NULL,
-  `Course_Desc` varchar(255) NOT NULL,
-  `Course_Type` varchar(10) NOT NULL,
-  `Course_Status` varchar(15) NOT NULL,
-  `Course_Category` varchar(50) NOT NULL,
-  PRIMARY KEY (`Course_ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Course`
---
-
-LOCK TABLES `Course` WRITE;
-/*!40000 ALTER TABLE `Course` DISABLE KEYS */;
-INSERT INTO `Course` VALUES 
-('COR001','testCourse1','Description for testCourse1','Internal','Active','Core'),
-('COR002','testCourse2','Description for testCourse2','Internal','Active','Core'),
-('COR003','testCourse3','Description for testCourse3','Internal','Active','Core');
-
-/*!40000 ALTER TABLE `Course` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `Job_Role`
 --
 
@@ -143,36 +111,36 @@ CREATE TABLE `Job_Role` (
 LOCK TABLES `Job_Role` WRITE;
 /*!40000 ALTER TABLE `Job_Role` DISABLE KEYS */;
 INSERT INTO `Job_Role` VALUES 
-(1,'testRole1','Staff','Operations','testRole1 Description');
+(1,'testRole1','Staff','Operations','testRole1 Description'),
+(2,'testRole2','Manager','Sales','testRole2 Description');
 /*!40000 ALTER TABLE `Job_Role` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `Learning_Journey`
+-- Table structure for table `Role_has_Skill`
 --
 
-DROP TABLE IF EXISTS `Learning_Journey`;
+DROP TABLE IF EXISTS `Role_has_Skill`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `Learning_Journey` (
-  `Learning_Journey_ID` int NOT NULL AUTO_INCREMENT,
-  `Learning_Journey_Name` varchar(45) NOT NULL,
-  `Staff_ID` int NOT NULL,
-  `Description` TEXT DEFAULT NULL,
-  `Job_Role_ID` int NOT NULL,
-  PRIMARY KEY (`Learning_Journey_ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3;
+CREATE TABLE `Role_has_Skill` (
+  `Job_ID` int NOT NULL,
+  `Skill_ID` int NOT NULL,
+  KEY `Job_ID` (`Job_ID`),
+  KEY `Skill_ID` (`Skill_ID`),
+  CONSTRAINT `Role_has_Skill_ibfk_1` FOREIGN KEY (`Job_ID`) REFERENCES `Job_Role` (`Job_ID`),
+  CONSTRAINT `Role_has_Skill_ibfk_2` FOREIGN KEY (`Skill_ID`) REFERENCES `Skill` (`Skill_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `Learning_Journey`
---
-
-LOCK TABLES `Learning_Journey` WRITE;
-/*!40000 ALTER TABLE `Learning_Journey` DISABLE KEYS */;
-INSERT INTO `Learning_Journey` VALUES 
-(1,'testLearningJourney1',140002,'testLearningJourney1 Description',1);
-/*!40000 ALTER TABLE `Learning_Journey` ENABLE KEYS */;
+LOCK TABLES `Role_has_Skill` WRITE;
+/*!40000 ALTER TABLE `Role_has_Skill` DISABLE KEYS */;
+INSERT INTO `Role_has_Skill` VALUES 
+(1,1),
+(1,2),
+(2,3),
+(2,4);
+/*!40000 ALTER TABLE `Role_has_Skill` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -198,95 +166,9 @@ LOCK TABLES `Skill` WRITE;
 INSERT INTO `Skill` VALUES 
 (1,'testSkill1'),
 (2,'testSkill2'),
-(3,'testSkill3');
+(3,'testSkill3'),
+(4,'testSkill4');
 /*!40000 ALTER TABLE `Skill` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `Learning_Journey_has_Course`
---
-
-DROP TABLE IF EXISTS `Learning_Journey_has_Course`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `Learning_Journey_has_Course` (
-  `Course_ID` varchar(20) NOT NULL,
-  `Learning_Journey_ID` int NOT NULL,
-  PRIMARY KEY (`Course_ID`,`Learning_Journey_ID`),
-  KEY `Learning_Journey_ID` (`Learning_Journey_ID`),
-  CONSTRAINT `Learning_Journey_has_Course_ibfk_1` FOREIGN KEY (`Course_ID`) REFERENCES `Course` (`Course_ID`),
-  CONSTRAINT `Learning_Journey_has_Course_ibfk_2` FOREIGN KEY (`Learning_Journey_ID`) REFERENCES `Learning_Journey` (`Learning_Journey_ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Learning_Journey_has_Course`
---
-
-LOCK TABLES `Learning_Journey_has_Course` WRITE;
-/*!40000 ALTER TABLE `Learning_Journey_has_Course` DISABLE KEYS */;
-INSERT INTO `Learning_Journey_has_Course` VALUES 
-('COR001',1);
-/*!40000 ALTER TABLE `Learning_Journey_has_Course` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `Course_has_Skill`
---
-
-DROP TABLE IF EXISTS `Course_has_Skill`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `Course_has_Skill` (
-  `Skill_ID` int NOT NULL,
-  `Course_ID` varchar(20) NOT NULL,
-  KEY `Course_ID` (`Course_ID`),
-  KEY `Skill_ID` (`Skill_ID`),
-  CONSTRAINT `Course_has_Skill_ibfk_1` FOREIGN KEY (`Course_ID`) REFERENCES `Course` (`Course_ID`),
-  CONSTRAINT `Course_has_Skill_ibfk_2` FOREIGN KEY (`Skill_ID`) REFERENCES `Skill` (`Skill_ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `Course_has_Skill`
---
-
-LOCK TABLES `Course_has_Skill` WRITE;
-/*!40000 ALTER TABLE `Course_has_Skill` DISABLE KEYS */;
-INSERT INTO `Course_has_Skill` VALUES 
-(1,'COR001'),
-(1,'COR002'),
-(2,'COR002')
-(2,'COR003')
-(3,'COR001')
-(3,'COR003');
-/*!40000 ALTER TABLE `Course_has_Skill` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `Role_has_Skill`
---
-
-DROP TABLE IF EXISTS `Role_has_Skill`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `Role_has_Skill` (
-  `Job_ID` int NOT NULL,
-  `Skill_ID` int NOT NULL,
-  KEY `Job_ID` (`Job_ID`),
-  KEY `Skill_ID` (`Skill_ID`),
-  CONSTRAINT `Role_has_Skill_ibfk_1` FOREIGN KEY (`Job_ID`) REFERENCES `Job_Role` (`Job_ID`),
-  CONSTRAINT `Role_has_Skill_ibfk_2` FOREIGN KEY (`Skill_ID`) REFERENCES `Skill` (`Skill_ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
-LOCK TABLES `Role_has_Skill` WRITE;
-/*!40000 ALTER TABLE `Role_has_Skill` DISABLE KEYS */;
-INSERT INTO `Role_has_Skill` VALUES 
-(1,1),
-(1,2),
-(1,3);
-/*!40000 ALTER TABLE `Role_has_Skill` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --

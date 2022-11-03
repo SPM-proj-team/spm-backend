@@ -226,7 +226,8 @@ CREATE TABLE `Learning_Journey_has_Course` (
 LOCK TABLES `Learning_Journey_has_Course` WRITE;
 /*!40000 ALTER TABLE `Learning_Journey_has_Course` DISABLE KEYS */;
 INSERT INTO `Learning_Journey_has_Course` VALUES 
-('COR001',1);
+('COR002',1),
+('COR003',1);
 /*!40000 ALTER TABLE `Learning_Journey_has_Course` ENABLE KEYS */;
 UNLOCK TABLES;
 

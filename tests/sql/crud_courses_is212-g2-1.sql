@@ -34,6 +34,58 @@ CREATE DATABASE /*!32312 IF NOT EXISTS*/ `test_spm_db` /*!40100 DEFAULT CHARACTE
 
 USE `test_spm_db`;
 
+--
+-- Table structure for table `Staff`
+--
+
+DROP TABLE IF EXISTS `Staff`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Staff` (
+  `Staff_ID` int NOT NULL AUTO_INCREMENT,
+  `Staff_FName` varchar(50) NOT NULL,
+  `Staff_LName` varchar(50) NOT NULL,
+  `Dept` varchar(50) NOT NULL,
+  `Email` varchar(50) DEFAULT NULL,
+  `Role_ID` int NOT NULL,
+  PRIMARY KEY (`Staff_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=171009 DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Staff`
+--
+
+LOCK TABLES `Staff` WRITE;
+/*!40000 ALTER TABLE `Staff` DISABLE KEYS */;
+INSERT INTO `Staff` VALUES 
+(140002,'Susan','Goh','Sales','Susan.Goh@allinone.com.sg',2);
+/*!40000 ALTER TABLE `Staff` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Access_Role`
+--
+
+DROP TABLE IF EXISTS `Access_Role`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Access_Role` (
+  `Role_ID` int NOT NULL AUTO_INCREMENT,
+  `Role_Name` varchar(20) NOT NULL,
+  PRIMARY KEY (`Role_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Access_Role`
+--
+
+LOCK TABLES `Access_Role` WRITE;
+/*!40000 ALTER TABLE `Access_Role` DISABLE KEYS */;
+INSERT INTO `Access_Role` VALUES (1,'Admin'),(2,'User'),(3,'Manager'),(4,'Trainer');
+/*!40000 ALTER TABLE `Access_Role` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `Course`
@@ -117,7 +169,7 @@ CREATE TABLE `Learning_Journey` (
 LOCK TABLES `Learning_Journey` WRITE;
 /*!40000 ALTER TABLE `Learning_Journey` DISABLE KEYS */;
 INSERT INTO `Learning_Journey` VALUES 
-(1,'testLearningJourney1',1,'testLearningJourney1 Description',1);
+(1,'testLearningJourney1',140002,'testLearningJourney1 Description',1);
 /*!40000 ALTER TABLE `Learning_Journey` ENABLE KEYS */;
 UNLOCK TABLES;
 

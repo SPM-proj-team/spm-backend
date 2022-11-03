@@ -29,11 +29,63 @@ SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '';
 --
 -- Current Database: `test_spm_db`
 --
-
+DROP DATABASE IF EXISTS `test_spm_db`;
 CREATE DATABASE /*!32312 IF NOT EXISTS*/ `test_spm_db` /*!40100 DEFAULT CHARACTER SET utf8 */ /*!80016 DEFAULT ENCRYPTION='N' */;
 
 USE `test_spm_db`;
 
+--
+-- Table structure for table `Staff`
+--
+
+DROP TABLE IF EXISTS `Staff`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Staff` (
+  `Staff_ID` int NOT NULL AUTO_INCREMENT,
+  `Staff_FName` varchar(50) NOT NULL,
+  `Staff_LName` varchar(50) NOT NULL,
+  `Dept` varchar(50) NOT NULL,
+  `Email` varchar(50) DEFAULT NULL,
+  `Role_ID` int NOT NULL,
+  PRIMARY KEY (`Staff_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=171009 DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Staff`
+--
+
+LOCK TABLES `Staff` WRITE;
+/*!40000 ALTER TABLE `Staff` DISABLE KEYS */;
+INSERT INTO `Staff` VALUES 
+(130001,'Jack','Sim','Chairman','jack.sim@allinone.com.sg',1);
+/*!40000 ALTER TABLE `Staff` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Access_Role`
+--
+
+DROP TABLE IF EXISTS `Access_Role`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Access_Role` (
+  `Role_ID` int NOT NULL AUTO_INCREMENT,
+  `Role_Name` varchar(20) NOT NULL,
+  PRIMARY KEY (`Role_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Access_Role`
+--
+
+LOCK TABLES `Access_Role` WRITE;
+/*!40000 ALTER TABLE `Access_Role` DISABLE KEYS */;
+INSERT INTO `Access_Role` VALUES (1,'Admin'),(2,'User'),(3,'Manager'),(4,'Trainer');
+/*!40000 ALTER TABLE `Access_Role` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `Skill`
@@ -59,6 +111,53 @@ INSERT INTO `Skill` VALUES
 (1,'testSkill1');
 /*!40000 ALTER TABLE `Skill` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `Course`
+--
+
+DROP TABLE IF EXISTS `Course`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Course` (
+  `Course_ID` varchar(20) NOT NULL,
+  `Course_Name` varchar(45) NOT NULL,
+  `Course_Desc` varchar(255) NOT NULL,
+  `Course_Type` varchar(10) NOT NULL,
+  `Course_Status` varchar(15) NOT NULL,
+  `Course_Category` varchar(50) NOT NULL,
+  PRIMARY KEY (`Course_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Course`
+--
+
+LOCK TABLES `Course` WRITE;
+/*!40000 ALTER TABLE `Course` DISABLE KEYS */;
+INSERT INTO `Course` VALUES 
+('COR001','testCourse1','Description for testCourse1','Internal','Active','Core'),
+('COR002','testCourse2','Description for testCourse2','Internal','Active','Core');
+/*!40000 ALTER TABLE `Course` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Course_has_Skill`
+--
+
+DROP TABLE IF EXISTS `Course_has_Skill`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `Course_has_Skill` (
+  `Skill_ID` int NOT NULL,
+  `Course_ID` varchar(20) NOT NULL,
+  KEY `Course_ID` (`Course_ID`),
+  KEY `Skill_ID` (`Skill_ID`),
+  CONSTRAINT `Course_has_Skill_ibfk_1` FOREIGN KEY (`Course_ID`) REFERENCES `Course` (`Course_ID`),
+  CONSTRAINT `Course_has_Skill_ibfk_2` FOREIGN KEY (`Skill_ID`) REFERENCES `Skill` (`Skill_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping routines for database 'test_spm_db'
