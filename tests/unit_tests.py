@@ -6,7 +6,7 @@ from app import Job_Role, Course, Skill, LearningJourney, Registration, Staff, A
 class TestJobRole(unittest.TestCase):
     def test_json(self):
         j1 = Job_Role(
-            Job_Role='Operation staff', 
+            Job_Role='Operation staff',
             Job_Title='Staff',
             Department='Operations',
             Description='A staff of operations'
@@ -19,6 +19,7 @@ class TestJobRole(unittest.TestCase):
             'Description': 'A staff of operations'
         })
 
+
 class TestCourse(unittest.TestCase):
     def test_json(self):
         c1 = Course(
@@ -27,8 +28,7 @@ class TestCourse(unittest.TestCase):
             Course_Desc='Equip student with knowledge about agile approach regarding software project development',
             Course_Type='Type_1',
             Course_Status='Open',
-            Course_Category='Course_Category_1'
-        )
+            Course_Category='Course_Category_1')
         self.assertEqual(c1.json(), {
             'Course_ID': 'IS212',
             'Course_Name': 'Software Project Management',
@@ -37,6 +37,7 @@ class TestCourse(unittest.TestCase):
             'Course_Status': 'Open',
             'Course_Category': 'Course_Category_1'
         })
+
 
 class TestSkill(unittest.TestCase):
     def test_json(self):
@@ -47,6 +48,7 @@ class TestSkill(unittest.TestCase):
             'Skill_ID': None,
             'Name': 'Jira'
         })
+
 
 class TestLearningJourney(unittest.TestCase):
     def test_json(self):
@@ -61,7 +63,7 @@ class TestLearningJourney(unittest.TestCase):
             'Staff_ID': 1,
             'Description': 'My first journey'
         })
- 
+
 
 class TestAccessRole(unittest.TestCase):
     def test_json(self):

@@ -1,23 +1,21 @@
-from tracemalloc import start
-from turtle import back
 from selenium import webdriver
 # from selenium.webdriver.chrome.options import Options
 # from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.firefox.service import Service
 from selenium.webdriver.firefox.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.firefox import GeckoDriverManager
 from webdriver_manager.core.utils import ChromeType
-import requests, json
 import role
 import learning_journey
-import helper_function
-import traceback
 import os
 import skill
 backend_url = "http://localhost:5000/"
 frontend_url = "http://localhost:8080/"
 
 # Start selenium
+
+
 def startDriver():
 
     # chrome_service = Service(ChromeDriverManager(

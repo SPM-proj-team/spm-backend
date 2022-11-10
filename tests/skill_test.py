@@ -5,21 +5,22 @@ Note:
 """
 
 """
-Unit tests for skills 
+Integration tests for skills
 """
 
-import os
 
+import os
 from app import app
 from dotenv import load_dotenv
 import pytest
 from flask import json
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import text
-
 pytestmark = [pytest.mark.skill]
 
 #  Load function to read from .env
+
+
 @pytest.fixture(scope='session', autouse=True)
 def load_env():
     load_dotenv()
@@ -43,7 +44,7 @@ def initialise_db():
     global db
     db = SQLAlchemy(app)
     global sql_file
-    sql_file = open('tests/sql/test_spm.sql','r')
+    sql_file = open('tests/sql/test_spm.sql', 'r')
     return db, sql_file
 
 
@@ -68,7 +69,7 @@ def reset():
                 # Assert in case of error
                 except Exception as e:
                     print(e)
-                
+
                 # Finally, clear command string
                 finally:
                     sql_command = ''
