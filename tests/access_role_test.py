@@ -5,7 +5,7 @@ Note:
 """
 
 """
-Integration tests for courses
+Integration tests for access role
 """
 
 
@@ -13,10 +13,9 @@ import os
 from app import app
 from dotenv import load_dotenv
 import pytest
-from flask import json
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import text
-pytestmark = [pytest.mark.course]
+pytestmark = [pytest.mark.accessrole]
 
 #  Load function to read from .env
 
@@ -78,46 +77,10 @@ def reset():
 
 
 # Test cases
-def test_get_all_courses():
+def test_get_all_access_roles():
     with app.test_client() as test_client:
-        response = test_client.get('/courses')
+        response = test_client.get('/accessrole')
         assert response.status_code == 200
         assert response.get_json()["error"] == False
-        all_courses = response.get_json()['data']
-        assert len(all_courses) > 0
-
-
-def test_update_skills_mapped_to_course():
-    with app.test_client() as test_client:
-        response = test_client.put('/courses',
-                                   data=json.dumps({
-                                       "Course_ID": "COR001",
-                                       "Skills": [3]
-                                   }),
-                                   headers={
-                                       "Content-Type": "application/json"
-                                   }
-                                   )
-        assert response.status_code == 200
-        assert response.get_json()["error"] == False
-        data = response.get_json()["data"]
-        assert len(data["Skills"]) == 1
-        assert data["Skills"][0]["Skill_ID"] == 3
-
-
-def test_update_skills_mapped_to_course_not_found():
-    testCourseID = "MGMT999"
-    with app.test_client() as test_client:
-        response = test_client.put('/courses',
-                                   data=json.dumps({
-                                       "Course_ID": testCourseID,
-                                       "Skills": ["S003"]
-                                   }),
-                                   headers={
-                                       "Content-Type": "application/json"
-                                   }
-                                   )
-        assert response.status_code == 406
-        assert response.get_json()["error"]
-        assert response.get_json()[
-            "message"] == f"An error occurred while mapping skills to course: Course ID {testCourseID} not found"
+        all_access_roles = response.get_json()['data']
+        assert len(all_access_roles) > 0

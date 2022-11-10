@@ -41,11 +41,6 @@ jobs:
     - name: Remove Chrome
       run: sudo apt purge google-chrome-stable
 
-    - name: Remove default Chromium
-      run: sudo apt purge chromium-browser
-
-    - name: Install a new Chromium
-      run: sudo apt install -y chromium-browser
 
     - name: Create env file
       run: |
@@ -66,12 +61,12 @@ jobs:
         mysql -h ${{ secrets.DB_HOSTNAME }} --port 3306 -u${{ secrets.DB_USERNAME }} -p${{ secrets.DB_PASSWORD }} < tests/sql/test_spm.sql
         mysql -h ${{ secrets.DB_HOSTNAME }} --port 3306 -e "SHOW schemas;" -u${{ secrets.DB_USERNAME }} -p${{ secrets.DB_PASSWORD }}
 
-#     - name: Lint with flake8
-#       run: |
-#         # stop the build if there are Python syntax errors or undefined names
-#         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-#         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-#         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    - name: Lint with flake8
+      run: |
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings. The GitHub editor is 250 chars wide. 
+        flake8 . --count --exit-zero --extend-ignore=E402,E712,F401 --max-complexity=10 --max-line-length=250 --statistics
 
     - name: Clone frontend repo 
       uses: actions/checkout@v3
@@ -79,32 +74,20 @@ jobs:
         repository: SPM-proj-team/spm-frontend
         ref: sprint-3
         token: ${{ secrets.ACCESS_TOKEN }}
-#        path: './spm-frontend'
+        path: './spm-frontend'
+    
+    - name: Install frontend dependencies  
+      run: |
+        cd ./spm-frontend
+        npm install
+        cd ../
         
-    - name: Cache node modules
-      uses: actions/cache@v3
-      id: myCacheStep
-      env:
-        cache-name: cache-node-modules
-      with:
-        path: '~/.npm'
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashfiles('**/package-lock.json')}}
-        restore-keys: |
-          ${{ runner.os }}-build-${{env.cache-name}}-
-          ${{ runner.os }}-build-
-          ${{ runner.os }}-
-    
-    - name: Install frontend dependencies 
-      if: steps.myCacheStep.outputs.cache-hit != 'true'
+    - name: Run front-end in background
       run: |
-        npm install 
-
-    
-    
-    - name: Run front end service in background
-      run: |
-        npm run serve &
-        sleep 20 
+         cd ./spm-frontend &&
+         npm run serve &
+         sleep 20 &&
+         cd ../
 
     - name: Run backend in background
       run: |
@@ -125,6 +108,20 @@ jobs:
       run: |
         export PYTHONPATH='.'
         pytest -v -m "e2e"
+    
+    - name: Install k6
+      run: |
+        curl https://github.com/loadimpact/k6/releases/download/v0.26.2/k6-v0.26.2-linux64.tar.gz -L | tar xvz --strip-components 1
+
+    - name: Run local k6 performance test
+      run: |
+        ./k6 run tests/performance_test/test.js
+    
+    - name: Store k6 performance test results
+      uses: actions/upload-artifact@v3
+      with:
+        name: k6-summary-report
+        path: ./summary.json
 
     - name: Clean running services 
       run: |
