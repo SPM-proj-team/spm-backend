@@ -1,7 +1,7 @@
 # Instructions to run Backend 
 ## Docker
 1. Start local database
-2. Create .env file with values (do change the username and passsword according to your database credentials)
+2. Create .env file with values in ./app directory (do change the username and passsword according to your database credentials)
 ```
 # Docker 
 DB_HOSTNAME=host.docker.internal
