@@ -5,14 +5,14 @@ Note:
 """
 
 """
-End to end testing 
+End to end testing
 """
 
 import os
-
 from app import app
 from dotenv import load_dotenv
 import pytest
+import chromedriver_autoinstaller
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import text
 from selenium import webdriver
@@ -20,11 +20,12 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.core.utils import ChromeType
-from selenium_tests import learning_journey, role 
-
+from selenium_tests import learning_journey, role
 pytestmark = [pytest.mark.e2e]
 
 #  Load function to read from .env
+
+
 @pytest.fixture(scope='session', autouse=True)
 def load_env():
     load_dotenv()
@@ -48,14 +49,14 @@ def initialise_db():
     global db
     db = SQLAlchemy(app)
     global sql_file
-    sql_file = open('tests/sql/test_spm.sql','r')
+    sql_file = open('tests/sql/test_spm.sql', 'r')
     return db, sql_file
 
 
 # Set up driver
 @pytest.fixture(autouse=True)
 def startDriver():
-    chrome_service = Service(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install())
+    chromedriver_autoinstaller.install()
     chrome_options = Options()
     options = [
         "--headless",
@@ -74,9 +75,9 @@ def startDriver():
     global frontend_url
     # driver = driver = webdriver.Firefox()
     # driver.maximize_window()
-    driver = webdriver.Chrome(service=chrome_service, options=chrome_options)
-    backend_url = "http://localhost:5000/"
-    frontend_url = "http://localhost:8080/" 
+    driver = webdriver.Chrome(options=chrome_options)
+    backend_url = "http://127.0.0.1:5000/"
+    frontend_url = "http://127.0.0.1:8080/"
 
     return driver, backend_url, frontend_url
 
@@ -102,7 +103,7 @@ def reset():
                 # Assert in case of error
                 except Exception as e:
                     print(e)
-                
+
                 # Finally, clear command string
                 finally:
                     sql_command = ''
@@ -112,39 +113,45 @@ def reset():
     driver.close()
 
 
-# Test cases 
+# Test cases
 def test_run_home_page():
     driver.get(frontend_url)
-    assert driver.title ==  "ljps"
+    assert driver.title == "ljps"
+
 
 def test_get_learning_journey():
-    response = learning_journey.checkLearningJourney(driver, backend_url, frontend_url)
-    assert response ==  True
+    response = learning_journey.checkLearningJourney(
+        driver, backend_url, frontend_url)
+    assert response
+
 
 def test_update_role():
     response = role.updateRoleTest(driver, backend_url, frontend_url)
-    assert response == True
+    assert response
+
 
 def test_create_role():
     response = role.createRoleTest(driver, backend_url, frontend_url)
-    assert response == True
+    assert response
+
 
 def test_delete_role():
     response = role.deleteRoleTest(driver, backend_url, frontend_url)
-    assert response == True
+    assert response
+
 
 def test_search_role():
     response = role.searchRoleTest(driver, backend_url, frontend_url)
-    assert response == True
+    assert response
 
-# def test_update_learning_journey():
-#     response = learning_journey.updateLearningJourneyTest(driver,backend_url,frontend_url)
-#     assert response == True
+def test_update_learning_journey():
+    response = learning_journey.updateLearningJourneyTest(driver,backend_url,frontend_url)
+    assert response
 
-# def test_create_learning_journey():
-#     response = learning_journey.createLearningJourneyTest(driver, backend_url, frontend_url)
-#     assert response == True
+def test_create_learning_journey():
+    response = learning_journey.createLearningJourneyTest(driver, backend_url, frontend_url)
+    assert response
 
-# def test_delete_learning_journey():
-#     response = learning_journey.deleteLearningJourneyTest(driver, backend_url, frontend_url)
-#     assert response == True
+def test_delete_learning_journey():
+    response = learning_journey.deleteLearningJourneyTest(driver, backend_url, frontend_url)
+    assert response
