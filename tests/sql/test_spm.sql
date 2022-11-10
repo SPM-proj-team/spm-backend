@@ -163,7 +163,7 @@ CREATE TABLE `Learning_Journey` (
 
 LOCK TABLES `Learning_Journey` WRITE;
 /*!40000 ALTER TABLE `Learning_Journey` DISABLE KEYS */;
-INSERT INTO `Learning_Journey` VALUES (1,'10:13pm 17 Oct --- Learning Journey for GODS',1,'ur mum gay ur dad lesbian ur granny a tranny ur sister a mister\ndescription testing update of the Learning Journey (2)',1),(2,'Learning Journey for Dummies (Sales Role) -- ',1,'lorem ipsum for dummies I HATE SALES',2),(3,'Advanced Learning Journey',2,'updateds',3);
+INSERT INTO `Learning_Journey` VALUES (1,'10:13pm 17 Oct --- Learning Journey for GODS',1,'description testing update of the Learning Journey (2)',1),(2,'Learning Journey for Dummies (Sales Role) -- ',1,'lorem ipsum for dummies I HATE SALES',2),(3,'Advanced Learning Journey',2,'updateds',3);
 /*!40000 ALTER TABLE `Learning_Journey` ENABLE KEYS */;
 UNLOCK TABLES;
 
