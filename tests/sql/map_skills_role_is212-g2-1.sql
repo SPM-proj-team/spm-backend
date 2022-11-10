@@ -134,7 +134,7 @@ CREATE TABLE `Roles` (
 LOCK TABLES `Roles` WRITE;
 /*!40000 ALTER TABLE `Roles` DISABLE KEYS */;
 INSERT INTO `Roles` VALUES 
-(1,'testRoles1');
+(1,'testRoles1'),
 (2,'testRoles2');
 /*!40000 ALTER TABLE `Roles` ENABLE KEYS */;
 UNLOCK TABLES;

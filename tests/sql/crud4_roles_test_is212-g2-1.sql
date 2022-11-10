@@ -159,9 +159,7 @@ LOCK TABLES `Role_has_Skill` WRITE;
 /*!40000 ALTER TABLE `Role_has_Skill` DISABLE KEYS */;
 INSERT INTO `Role_has_Skill` VALUES 
 (1,1),
-(1,2),
-(2,1),
-(2,2);
+(1,2);
 /*!40000 ALTER TABLE `Role_has_Skill` ENABLE KEYS */;
 UNLOCK TABLES;
 
